@@ -105,56 +105,56 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INGS-01 | — | Pending |
-| INGS-02 | — | Pending |
-| INGS-03 | — | Pending |
-| INGS-04 | — | Pending |
-| INGS-05 | — | Pending |
-| INGS-06 | — | Pending |
-| INGS-07 | — | Pending |
-| ACCT-01 | — | Pending |
-| ACCT-02 | — | Pending |
-| ACCT-03 | — | Pending |
-| ACCT-04 | — | Pending |
-| ACCT-05 | — | Pending |
-| ACCT-06 | — | Pending |
-| ACCT-07 | — | Pending |
-| ACCT-08 | — | Pending |
-| ACCT-09 | — | Pending |
-| COMP-01 | — | Pending |
-| COMP-02 | — | Pending |
-| COMP-03 | — | Pending |
-| COMP-04 | — | Pending |
-| COMP-05 | — | Pending |
-| COMP-06 | — | Pending |
-| COMP-07 | — | Pending |
-| COMM-01 | — | Pending |
-| COMM-02 | — | Pending |
-| COMM-03 | — | Pending |
-| COMM-04 | — | Pending |
-| COMM-05 | — | Pending |
-| COMM-06 | — | Pending |
-| COMM-07 | — | Pending |
-| DASH-01 | — | Pending |
-| DASH-02 | — | Pending |
-| DASH-03 | — | Pending |
-| DASH-04 | — | Pending |
-| DASH-05 | — | Pending |
-| DASH-06 | — | Pending |
-| DASH-07 | — | Pending |
-| DASH-08 | — | Pending |
-| INFR-01 | — | Pending |
-| INFR-02 | — | Pending |
-| INFR-03 | — | Pending |
-| INFR-04 | — | Pending |
-| INFR-05 | — | Pending |
-| INFR-06 | — | Pending |
+| INFR-01 | Phase 1 | Pending |
+| INFR-02 | Phase 1 | Pending |
+| INFR-03 | Phase 1 | Pending |
+| INFR-04 | Phase 1 | Pending |
+| INFR-05 | Phase 1 | Pending |
+| INFR-06 | Phase 1 | Pending |
+| INGS-01 | Phase 2 | Pending |
+| INGS-02 | Phase 2 | Pending |
+| INGS-03 | Phase 2 | Pending |
+| INGS-04 | Phase 2 | Pending |
+| INGS-05 | Phase 2 | Pending |
+| INGS-06 | Phase 2 | Pending |
+| INGS-07 | Phase 2 | Pending |
+| ACCT-01 | Phase 3 | Pending |
+| ACCT-05 | Phase 3 | Pending |
+| ACCT-06 | Phase 3 | Pending |
+| ACCT-07 | Phase 3 | Pending |
+| ACCT-08 | Phase 3 | Pending |
+| ACCT-09 | Phase 3 | Pending |
+| ACCT-02 | Phase 4 | Pending |
+| ACCT-03 | Phase 4 | Pending |
+| ACCT-04 | Phase 4 | Pending |
+| DASH-08 | Phase 4 | Pending |
+| COMP-01 | Phase 5 | Pending |
+| COMP-02 | Phase 5 | Pending |
+| COMP-03 | Phase 5 | Pending |
+| COMP-04 | Phase 5 | Pending |
+| COMP-05 | Phase 5 | Pending |
+| COMP-06 | Phase 5 | Pending |
+| COMP-07 | Phase 5 | Pending |
+| COMM-01 | Phase 6 | Pending |
+| COMM-02 | Phase 6 | Pending |
+| COMM-03 | Phase 6 | Pending |
+| COMM-04 | Phase 6 | Pending |
+| COMM-05 | Phase 6 | Pending |
+| COMM-06 | Phase 6 | Pending |
+| COMM-07 | Phase 6 | Pending |
+| DASH-01 | Phase 7 | Pending |
+| DASH-02 | Phase 7 | Pending |
+| DASH-03 | Phase 7 | Pending |
+| DASH-07 | Phase 7 | Pending |
+| DASH-04 | Phase 8 | Pending |
+| DASH-05 | Phase 8 | Pending |
+| DASH-06 | Phase 8 | Pending |
 
 **Coverage:**
 - v1 requirements: 44 total
-- Mapped to phases: 0
-- Unmapped: 44 (mapped during roadmap creation)
+- Mapped to phases: 44
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-26 after initial definition*
+*Last updated: 2026-02-26 after roadmap creation — all 44 requirements mapped*
