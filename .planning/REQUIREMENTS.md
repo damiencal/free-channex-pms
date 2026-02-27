@@ -7,13 +7,13 @@
 
 ### Data Ingestion
 
-- [ ] **INGS-01**: System can import Airbnb earnings/transaction CSV exports with schema validation
-- [ ] **INGS-02**: System can import VRBO reservation/financial CSV exports with schema validation
-- [ ] **INGS-03**: System supports manual entry of RVshare bookings and financials
-- [ ] **INGS-04**: System can import Mercury bank transaction CSV exports with schema validation
-- [ ] **INGS-05**: System validates CSV column headers and data types on every import
-- [ ] **INGS-06**: System archives raw CSV files before processing for audit trail
-- [ ] **INGS-07**: System normalizes all platform data into a unified booking and transaction schema
+- [x] **INGS-01**: System can import Airbnb earnings/transaction CSV exports with schema validation
+- [x] **INGS-02**: System can import VRBO reservation/financial CSV exports with schema validation
+- [x] **INGS-03**: System supports manual entry of RVshare bookings and financials
+- [x] **INGS-04**: System can import Mercury bank transaction CSV exports with schema validation
+- [x] **INGS-05**: System validates CSV column headers and data types on every import
+- [x] **INGS-06**: System archives raw CSV files before processing for audit trail
+- [x] **INGS-07**: System normalizes all platform data into a unified booking and transaction schema
 
 ### Accounting
 
@@ -111,13 +111,13 @@
 | INFR-04 | Phase 1 | Pending |
 | INFR-05 | Phase 1 | Pending |
 | INFR-06 | Phase 1 | Pending |
-| INGS-01 | Phase 2 | Pending |
-| INGS-02 | Phase 2 | Pending |
-| INGS-03 | Phase 2 | Pending |
-| INGS-04 | Phase 2 | Pending |
-| INGS-05 | Phase 2 | Pending |
-| INGS-06 | Phase 2 | Pending |
-| INGS-07 | Phase 2 | Pending |
+| INGS-01 | Phase 2 | Complete |
+| INGS-02 | Phase 2 | Complete |
+| INGS-03 | Phase 2 | Complete |
+| INGS-04 | Phase 2 | Complete |
+| INGS-05 | Phase 2 | Complete |
+| INGS-06 | Phase 2 | Complete |
+| INGS-07 | Phase 2 | Complete |
 | ACCT-01 | Phase 3 | Pending |
 | ACCT-05 | Phase 3 | Pending |
 | ACCT-06 | Phase 3 | Pending |
@@ -157,4 +157,4 @@
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-26 after roadmap creation — all 44 requirements mapped*
+*Last updated: 2026-02-27 after Phase 2 completion — INGS-01 through INGS-07 marked Complete*

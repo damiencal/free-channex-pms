@@ -77,15 +77,15 @@ Recent decisions affecting current work:
 - [02-02]: resolve_property_id() uses module-level dict cache — only 2 properties; avoids repeated SELECT per record in batch imports
 - [02-02]: All pg_insert on_conflict_do_update set_ dicts must explicitly include updated_at=func.now() — ORM onupdate hooks are not triggered by core INSERT statements
 - [02-02]: create_manual_booking() records archive_path="N/A" in ImportRun — no file involved; ImportRun always recorded for audit consistency
-- [02-03]: Airbnb CSV column names are UNVERIFIED (synthetic fixture) — real export must be inspected before production; Start Date / End Date most likely to differ
-- [02-03]: REQUIRED_HEADERS is frozenset of 5 columns; Start Date / End Date not required (may be absent or renamed in real export)
+- [02-03]: Airbnb CSV column names VERIFIED (2026-02-27) — "Confirmation code" (lowercase c), "Start date"/"End date" (lowercase d); two export formats exist (Transaction History + Pending stays)
+- [02-03]: REQUIRED_HEADERS is frozenset of 5 columns; Start date / End date not required (absent from Payout rows; adapter takes first non-None per group)
 - [02-03]: Empty date cells in parse() are allowed (payout/fee rows omit dates) — adapter takes first non-None date per confirmation code group
 - [02-03]: Missing listing in listing_slug_map produces an error and aborts import — operator must add listing identifier to property YAML config
 - [02-04]: VRBO adapter uses _ReservationGroup accumulator class (not Polars group_by) — per-row error messages with row numbers; supports filling empty guest_name from later rows in same reservation
 - [02-04]: Check In/Check Out split on " - " (space-dash-space) — assumed from VRBO docs; must verify against real export before production use
 - [02-04]: VRBO REQUIRED_HEADERS is 5-column frozenset (subset of all 29 VRBO columns) — only fields needed to build BookingRecord are required; extras ignored
-- [02-05]: Mercury dedup uses composite key (Date+Amount+Description sha256[:16]) — generic Mercury CSV has no native transaction ID; COL_TRANSACTION_ID is commented in source for easy activation when real export is verified
-- [02-05]: Mercury REQUIRED_HEADERS is minimal subset {Date, Description, Amount} — extra columns (Running Balance, Category, etc.) ignored; validate_headers() uses subset check, not equality
+- [02-05]: Mercury VERIFIED (2026-02-27) — native "Tracking ID" column confirmed; dedup uses "mercury-{Tracking ID}" (composite hash removed). Date column is "Date (UTC)", format MM-DD-YYYY with dashes
+- [02-05]: Mercury REQUIRED_HEADERS is {Date (UTC), Description, Amount, Tracking ID} — all confirmed present in real export; extras (Status, Source Account, etc.) ignored
 - [02-06]: ValueError from normalizer caught at API layer and re-raised as HTTPException 422 — keeps normalizer pure Python (not FastAPI-aware)
 - [02-06]: _require_csv_extension rejects non-.csv uploads before reading bytes — fast-fail before any I/O
 - [02-06]: bookings endpoint joins Property table inline via select() — avoids lazy-load, property_slug returned in single query
@@ -103,6 +103,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T18:59:19Z
-Stopped at: Completed 02-06-PLAN.md — Ingestion API (7 endpoints: 3 CSV uploads, 1 manual entry, 3 queries; router registered in app). Phase 2 complete.
+Last session: 2026-02-27
+Stopped at: Phase 2 fully complete. Adapter column names verified against real CSVs and corrected. Real Airbnb listing names committed to config/jay.yaml and config/minnie.yaml. Ready to begin Phase 3 (Accounting Engine).
 Resume file: None
