@@ -12,26 +12,26 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 Phase: 1 of 8 (Foundation)
 Plan: 3 of 5 in current phase
 Status: In progress
-Last activity: 2026-02-27 — Completed 01-03-PLAN.md (SQLAlchemy models + Alembic migrations)
+Last activity: 2026-02-27 — Completed 01-02-PLAN.md (Pydantic Settings config schema)
 
-Progress: [██░░░░░░░░] 8% (2/25 plans estimated)
+Progress: [███░░░░░░░] 12% (3/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 1.5 min
-- Total execution time: 3 min
+- Total plans completed: 3
+- Average duration: 2 min
+- Total execution time: 6 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 2/5 | 3 min | 1.5 min |
+| 01-foundation | 3/5 | 6 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-03 (1 min)
-- Trend: Fast
+- Last 5 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min)
+- Trend: Steady
 
 *Updated after each plan completion*
 
@@ -55,6 +55,9 @@ Recent decisions affecting current work:
 - [01-03]: disable_existing_loggers=False in Alembic fileConfig() — prevents Alembic from silencing app logs after migrations run
 - [01-03]: Integer PK + slug unique business key on Property — int for fast FK joins, slug for human-readable config/URL identity
 - [01-03]: Hand-written initial migration 001 (not autogenerate) — cleaner and more explicit for foundational table
+- [01-02]: PropertyConfig as BaseModel (not BaseSettings) — per-property YAMLs loaded manually via glob, not by pydantic-settings source system
+- [01-02]: Collect-all-errors fail-fast — load_all_properties() accumulates all ValidationErrors before SystemExit; operator sees every problem in one run
+- [01-02]: config.example.yaml excluded by name from property discovery — coexists permanently in config/ for operator reference
 
 ### Pending Todos
 
@@ -68,6 +71,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T16:27:56Z
-Stopped at: Completed 01-03-PLAN.md — SQLAlchemy models + Alembic migrations. Ready for 01-04 (config system).
+Last session: 2026-02-27T16:29:01Z
+Stopped at: Completed 01-02-PLAN.md — Pydantic Settings config schema. Ready for 01-04 or 01-05 (remaining foundation plans).
 Resume file: None
