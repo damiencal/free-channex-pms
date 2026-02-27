@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 2 of 8 (Data Ingestion)
-Plan: 1 of ~5 in current phase
-Status: In progress — 02-01 complete (data layer foundation)
-Last activity: 2026-02-27 — Completed 02-01-PLAN.md (ORM models, schemas, migration 002, config additions)
+Plan: 2 of ~5 in current phase
+Status: In progress — 02-02 complete (normalizer: archive, upsert, ImportRun pipeline)
+Last activity: 2026-02-27 — Completed 02-02-PLAN.md (normalizer.py with ingest_csv, ingest_bank_csv, create_manual_booking)
 
-Progress: [███████░░░] 28% (7/25 plans estimated)
+Progress: [████████░░] 32% (8/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 2 min
-- Total execution time: 12 min
+- Total execution time: 14 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
-| 02-data-ingestion | 1/5 | 2 min | 2 min |
+| 02-data-ingestion | 2/5 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min), 01-06 (1 min), 02-01 (2 min)
+- Last 7 plans: 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min), 01-06 (1 min), 02-01 (2 min), 02-02 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -73,6 +73,10 @@ Recent decisions affecting current work:
 - [02-01]: BookingRecord.property_slug resolved by normalizer (not adapter) — keeps adapters stateless and DB-free
 - [02-01]: check_in_date and check_out_date use sa.Date() (calendar dates only) — DateTime would risk time-zone confusion
 - [02-01]: archive_dir defaults to "./archive" and mounted read-write in Docker — app writes archived CSVs here
+- [02-02]: archive_file() uses Path.write_bytes() not shutil.copy2() — source is in-memory bytes from upload, not a file path
+- [02-02]: resolve_property_id() uses module-level dict cache — only 2 properties; avoids repeated SELECT per record in batch imports
+- [02-02]: All pg_insert on_conflict_do_update set_ dicts must explicitly include updated_at=func.now() — ORM onupdate hooks are not triggered by core INSERT statements
+- [02-02]: create_manual_booking() records archive_path="N/A" in ImportRun — no file involved; ImportRun always recorded for audit consistency
 
 ### Pending Todos
 
@@ -86,6 +90,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T18:44:11Z
-Stopped at: Completed 02-01-PLAN.md — data layer foundation (ORM models, schemas, migration 002, config additions). Ready for 02-02 (CSV ingestion adapters).
+Last session: 2026-02-27T18:49:19Z
+Stopped at: Completed 02-02-PLAN.md — normalizer pipeline (ingest_csv, ingest_bank_csv, create_manual_booking with archive, upsert, ImportRun). Ready for 02-03 (platform CSV adapters: Airbnb, VRBO, Mercury).
 Resume file: None
