@@ -95,6 +95,31 @@ class AppConfig(BaseSettings):
     archive_dir: str = "./archive"
     """Directory for raw CSV archives. Mount as Docker volume for persistence."""
 
+    airbnb_fee_model: str = "split_fee"
+    """Airbnb fee model. One of: 'host_only' or 'split_fee'.
+
+    - 'split_fee': Legacy model — host pays ~3% on top of net payout; guest pays 14-16%.
+      The CSV net amount is already after the host deduction.
+      Use gross = net / (1 - fee_rate) to reconstruct gross revenue.
+    - 'host_only': New model (post-December 2025) — host pays ~15.5% of booking subtotal.
+      The CSV net amount is after the full host deduction.
+      Use same formula: gross = net / (1 - fee_rate).
+
+    NOTE: Switching fee models requires re-recognizing historical bookings.
+    Check Airbnb dashboard > Earnings > Payout Details to confirm your model.
+    """
+
+    airbnb_host_fee_rate: float = 0.03
+    """Airbnb host fee rate as a decimal.
+
+    - 0.03 = 3% for split_fee model (legacy, default)
+    - 0.155 = 15.5% for host_only model (new standard post-December 2025)
+
+    Used with the formula: gross = net / (1 - fee_rate), fee = gross - net.
+    NOTE: This is stored as float in config for simplicity; accounting code converts
+    to Decimal before any arithmetic to avoid floating-point contamination.
+    """
+
     # --- Populated by load_app_config(), not from YAML directly ---
     properties: list[PropertyConfig] = []
     """All validated property configs. Populated at startup by load_app_config()."""

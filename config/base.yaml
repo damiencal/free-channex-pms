@@ -3,3 +3,5 @@
 
 ollama_url: "http://host.docker.internal:11434"
 archive_dir: "./archive"
+airbnb_fee_model: "split_fee"
+airbnb_host_fee_rate: 0.03
