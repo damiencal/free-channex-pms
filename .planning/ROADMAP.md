@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. All property-specific data (unit names, lock codes, resort contacts, templates) lives in config files — no hardcoded values in source code
   4. Database schema deploys via Alembic migration on first start with no manual SQL required
   5. Email and PDF field mapping templates are stored in config files and editable without touching code
-**Plans:** 5 plans
+**Plans:** 6 plans
 
 Plans:
 - [ ] 01-01-PLAN.md — Docker Compose services, Dockerfile, pyproject.toml with uv, .env.example, .gitignore
@@ -41,6 +41,7 @@ Plans:
 - [ ] 01-03-PLAN.md — SQLAlchemy 2.0 models, database engine, and Alembic migration for properties table
 - [ ] 01-04-PLAN.md — FastAPI app with lifespan startup checks, structured logging, and GET /health endpoint
 - [ ] 01-05-PLAN.md — Jinja2 template engine with per-property overrides, PDF field mapping schema, and CLI setup wizard
+- [ ] 01-06-PLAN.md — Gap closure: README setup docs, config-driven resort check-in instructions, entry point fix
 
 ### Phase 2: Data Ingestion
 **Goal**: Real booking and transaction data flows from all three platforms into a unified ledger
@@ -182,11 +183,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/5 | Planning complete | - |
+| 1. Foundation | 5/6 | Gap closure planned | - |
 | 2. Data Ingestion | 0/6 | Not started | - |
 | 3. Accounting Engine | 0/6 | Not started | - |
 | 4. Financial Reports | 0/4 | Not started | - |
