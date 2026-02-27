@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 2 — Data Ingestion (in progress)
+**Current focus:** Phase 3 — Accounting Engine (next)
 
 ## Current Position
 
-Phase: 2 of 8 (Data Ingestion)
-Plan: 4 of ~6 in current phase (02-04 complete)
-Status: In progress — 02-04 complete (VRBO CSV adapter)
-Last activity: 2026-02-27 — Completed 02-04-PLAN.md (VRBO adapter: validate_headers, parse, Reservation ID grouping, Check In/Check Out date range parsing)
+Phase: 2 of 8 (Data Ingestion) — COMPLETE
+Plan: 6 of 6 in phase 2 (02-06 complete)
+Status: Phase 2 complete — ready to begin Phase 3 (Accounting Engine)
+Last activity: 2026-02-27 — Completed 02-06-PLAN.md (Ingestion API: all 7 endpoints, ingestion router registered in app)
 
-Progress: [█████████░] 36% (9/25 plans estimated)
+Progress: [██████████░] 44% (11/25 plans estimated)
 
 ## Performance Metrics
 
@@ -28,10 +28,10 @@ Progress: [█████████░] 36% (9/25 plans estimated)
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
-| 02-data-ingestion | 4/6 | 8 min | 2 min |
+| 02-data-ingestion | 6/6 | 12 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 01-05 (3 min), 01-06 (1 min), 02-01 (2 min), 02-02 (2 min), 02-03 (2 min), 02-04 (4 min), 02-05 (2 min)
+- Last 7 plans: 02-02 (2 min), 02-03 (2 min), 02-04 (4 min), 02-05 (2 min), 02-06 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -86,6 +86,10 @@ Recent decisions affecting current work:
 - [02-04]: VRBO REQUIRED_HEADERS is 5-column frozenset (subset of all 29 VRBO columns) — only fields needed to build BookingRecord are required; extras ignored
 - [02-05]: Mercury dedup uses composite key (Date+Amount+Description sha256[:16]) — generic Mercury CSV has no native transaction ID; COL_TRANSACTION_ID is commented in source for easy activation when real export is verified
 - [02-05]: Mercury REQUIRED_HEADERS is minimal subset {Date, Description, Amount} — extra columns (Running Balance, Category, etc.) ignored; validate_headers() uses subset check, not equality
+- [02-06]: ValueError from normalizer caught at API layer and re-raised as HTTPException 422 — keeps normalizer pure Python (not FastAPI-aware)
+- [02-06]: _require_csv_extension rejects non-.csv uploads before reading bytes — fast-fail before any I/O
+- [02-06]: bookings endpoint joins Property table inline via select() — avoids lazy-load, property_slug returned in single query
+- [02-06]: GET endpoints use limit/offset pagination with sane defaults (100/0 for bookings, 50 for history)
 
 ### Pending Todos
 
@@ -99,6 +103,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T18:53:04Z
-Stopped at: Completed 02-04-PLAN.md — VRBO CSV adapter (validate_headers, Reservation ID grouping, Check In/Check Out date range parsing, VRBO Property ID resolution). Ready for remaining Phase 2 plans.
+Last session: 2026-02-27T18:59:19Z
+Stopped at: Completed 02-06-PLAN.md — Ingestion API (7 endpoints: 3 CSV uploads, 1 manual entry, 3 queries; router registered in app). Phase 2 complete.
 Resume file: None
