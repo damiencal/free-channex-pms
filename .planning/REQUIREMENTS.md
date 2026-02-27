@@ -60,12 +60,12 @@
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Entire system deploys via single `docker-compose up` command
-- [ ] **INFR-02**: All property-specific data lives in configuration files (YAML/JSON), not code
-- [ ] **INFR-03**: System connects to local Ollama instance (no external LLM API calls)
-- [ ] **INFR-04**: Email templates are stored in config and editable without code changes
-- [ ] **INFR-05**: PDF form field mappings are configurable (not hardcoded to one form layout)
-- [ ] **INFR-06**: System persists all data in a local database with volume-mounted storage
+- [x] **INFR-01**: Entire system deploys via single `docker-compose up` command
+- [x] **INFR-02**: All property-specific data lives in configuration files (YAML/JSON), not code
+- [x] **INFR-03**: System connects to local Ollama instance (no external LLM API calls)
+- [x] **INFR-04**: Email templates are stored in config and editable without code changes
+- [x] **INFR-05**: PDF form field mappings are configurable (not hardcoded to one form layout)
+- [x] **INFR-06**: System persists all data in a local database with volume-mounted storage
 
 ## v2 Requirements
 

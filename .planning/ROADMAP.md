@@ -12,7 +12,7 @@ Build a self-hosted vacation rental management platform in eight phases, followi
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Project scaffolding, Docker deployment, config schema, and database with migrations
+- [x] **Phase 1: Foundation** - Project scaffolding, Docker deployment, config schema, and database with migrations
 - [ ] **Phase 2: Data Ingestion** - CSV import pipelines for Airbnb, VRBO, Mercury, and manual RVshare entry with unified booking schema
 - [ ] **Phase 3: Accounting Engine** - Double-entry bookkeeping ledger, multi-platform transaction tracking, and bank reconciliation
 - [ ] **Phase 4: Financial Reports** - P&L statements, balance sheets, income statements, and bank transaction categorization
@@ -187,7 +187,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 5/6 | Gap closure planned | - |
+| 1. Foundation | 6/6 | Complete ✓ | 2026-02-27 |
 | 2. Data Ingestion | 0/6 | Not started | - |
 | 3. Accounting Engine | 0/6 | Not started | - |
 | 4. Financial Reports | 0/4 | Not started | - |
