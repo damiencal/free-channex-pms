@@ -28,6 +28,7 @@ SAMPLE_BOOKING_DATA = {
     "checkout_date": "2026-03-05",
     "lock_code": "1234",
     "site_number": "100",
+    "resort_checkin_instructions": "Located at Test Resort. Please check in at the front desk upon arrival.",
 }
 
 # Template names that must exist in templates/default/

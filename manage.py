@@ -85,6 +85,9 @@ def setup():
     site_number = questionary.text("Resort site/unit number:").ask()
     lock_code = questionary.text("Door lock code:").ask()
     resort_email = questionary.text("Resort contact email:").ask()
+    resort_checkin_instructions = questionary.text(
+        "Resort check-in instructions (e.g., 'Located at Sun Retreats. Check in at Welcome Center.'):"
+    ).ask()
 
     # 4. Confirmation
     typer.echo()
@@ -94,6 +97,7 @@ def setup():
     typer.echo(f"  Site Number:  {site_number}")
     typer.echo(f"  Lock Code:    {lock_code}")
     typer.echo(f"  Resort Email: {resort_email}")
+    typer.echo(f"  Check-in:     {resort_checkin_instructions}")
     typer.echo()
 
     confirm = questionary.confirm("Create this property?", default=True).ask()
@@ -108,6 +112,7 @@ def setup():
         "site_number": site_number,
         "lock_code": lock_code,
         "resort_contact_email": resort_email,
+        "resort_checkin_instructions": resort_checkin_instructions,
     }
 
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)

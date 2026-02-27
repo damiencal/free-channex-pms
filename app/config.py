@@ -54,6 +54,11 @@ class PropertyConfig(BaseModel):
     resort_contact_email: str
     """Email address for booking form submissions."""
 
+    resort_checkin_instructions: str
+    """Resort-specific check-in instructions included in pre-arrival messages.
+    Example: "Located at Sun Retreats Fort Myers Beach. Please check in at the Welcome Center upon arrival."
+    """
+
 
 class AppConfig(BaseSettings):
     """Application-wide configuration loaded from .env + config/base.yaml.

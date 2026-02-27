@@ -9,7 +9,7 @@ Access Instructions:
 - Site/Unit: {{ site_number }}
 - Lock Code: {{ lock_code }}
 
-{{ property_name }} is located at Sun Retreats Fort Myers Beach. Please check in at the Welcome Center upon arrival.
+{{ resort_checkin_instructions }}
 
 If you have any questions before your stay, don't hesitate to reach out.
 

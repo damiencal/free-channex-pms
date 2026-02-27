@@ -10,3 +10,4 @@ display_name: "My Cabin"      # Human-readable name shown in dashboard and repor
 lock_code: "1234"             # Door lock code included in pre-arrival messages
 site_number: "100"            # Resort site/unit number for booking form
 resort_contact_email: "resort@example.com"  # Email address for booking form submissions
+resort_checkin_instructions: "Located at Sun Retreats. Please check in at the Welcome Center upon arrival."  # Resort-specific check-in instructions for pre-arrival messages

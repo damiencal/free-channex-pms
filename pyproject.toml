@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.scripts]
-manage = "manage:app"
+manage = "manage:cli"
 
 [dependency-groups]
 dev = [
