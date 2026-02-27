@@ -1,0 +1,12 @@
+# Property configuration example
+# Copy this file and rename to your property slug (e.g., my-cabin.yaml)
+# Place in the config/ directory alongside base.yaml
+
+# Required fields — all must be present or the app will refuse to start
+# with a clear error message listing every missing field.
+
+slug: "my-cabin"              # Short identifier (lowercase, hyphens ok). Used as folder name and DB key.
+display_name: "My Cabin"      # Human-readable name shown in dashboard and reports
+lock_code: "1234"             # Door lock code included in pre-arrival messages
+site_number: "100"            # Resort site/unit number for booking form
+resort_contact_email: "resort@example.com"  # Email address for booking form submissions

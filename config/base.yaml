@@ -1,0 +1,4 @@
+# System-wide configuration
+# Secrets (database, API keys, SMTP credentials) go in .env, not here
+
+ollama_url: "http://host.docker.internal:11434"
