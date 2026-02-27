@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 3 — Accounting Engine (next)
+**Current focus:** Phase 3 — Accounting Engine (in progress)
 
 ## Current Position
 
-Phase: 2 of 8 (Data Ingestion) — COMPLETE
-Plan: 6 of 6 in phase 2 (02-06 complete)
-Status: Phase 2 complete — ready to begin Phase 3 (Accounting Engine)
-Last activity: 2026-02-27 — Completed 02-06-PLAN.md (Ingestion API: all 7 endpoints, ingestion router registered in app)
+Phase: 3 of 8 (Accounting Engine) — In Progress
+Plan: 1 of 6 in phase 3 (03-01 complete)
+Status: In progress — double-entry ledger core complete; ready for 03-02 (revenue) and Wave-2 plans
+Last activity: 2026-02-27 — Completed 03-01-PLAN.md (Account/JournalEntry/JournalLine ORM models, journal builder, migration 003)
 
-Progress: [██████████░] 44% (11/25 plans estimated)
+Progress: [████████████░] 48% (12/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 2 min
-- Total execution time: 18 min
+- Total execution time: 20 min
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [██████████░] 44% (11/25 plans estimated)
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
+| 03-accounting-engine | 1/6 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 02-02 (2 min), 02-03 (2 min), 02-04 (4 min), 02-05 (2 min), 02-06 (2 min)
+- Last 7 plans: 02-03 (2 min), 02-04 (4 min), 02-05 (2 min), 02-06 (2 min), 03-01 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -90,6 +91,12 @@ Recent decisions affecting current work:
 - [02-06]: _require_csv_extension rejects non-.csv uploads before reading bytes — fast-fail before any I/O
 - [02-06]: bookings endpoint joins Property table inline via select() — avoids lazy-load, property_slug returned in single query
 - [02-06]: GET endpoints use limit/offset pagination with sane defaults (100/0 for bookings, 50 for history)
+- [03-01]: Numeric(12,2) for all Phase 3 monetary amounts (upgraded from 10,2 used in Phase 2 models)
+- [03-01]: source_id as String(256) idempotency key — ON CONFLICT DO NOTHING returns None on duplicate (not error)
+- [03-01]: Stub tables for expenses/loans/reconciliation_matches in migration 003 — Wave-2 plans add ORM models only, no migration conflicts
+- [03-01]: Signed amount on JournalLine (positive=debit, negative=credit) — balance check is sum==0
+- [03-01]: property_id nullable on JournalEntry — None for shared/cross-property entries
+- [03-01]: reconciliation_status defaults to 'unmatched' on bookings and bank_transactions
 
 ### Pending Todos
 
@@ -103,6 +110,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27
-Stopped at: Phase 2 fully complete. Adapter column names verified against real CSVs and corrected. Real Airbnb listing names committed to config/jay.yaml and config/minnie.yaml. Ready to begin Phase 3 (Accounting Engine).
+Last session: 2026-02-27T21:38:27Z
+Stopped at: Completed 03-01-PLAN.md — ledger core complete. Account/JournalEntry/JournalLine models, create_journal_entry() with balance enforcement and idempotent upsert, migration 003 with all 6 Phase 3 tables + 21-account chart of accounts seed + reconciliation_status on bookings/bank_transactions.
 Resume file: None
