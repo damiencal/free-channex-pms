@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 3 of 8 (Accounting Engine) — In Progress
-Plan: 1 of 6 in phase 3 (03-01 complete)
-Status: In progress — double-entry ledger core complete; ready for 03-02 (revenue) and Wave-2 plans
-Last activity: 2026-02-27 — Completed 03-01-PLAN.md (Account/JournalEntry/JournalLine ORM models, journal builder, migration 003)
+Plan: 3 of 6 in phase 3 (03-01, 03-03 complete; 03-02, 03-04, 03-05, 03-06 remain)
+Status: In progress — expense recording complete; ready for 03-02 (revenue), 03-04 (loans), 03-05 (reconciliation)
+Last activity: 2026-02-27 — Completed 03-03-PLAN.md (Expense ORM model, record_expense, bulk_import_expenses, 12 Schedule E categories)
 
-Progress: [████████████░] 48% (12/25 plans estimated)
+Progress: [█████████████░] 52% (13/25 plans estimated)
 
 ## Performance Metrics
 
@@ -29,10 +29,10 @@ Progress: [████████████░] 48% (12/25 plans estimated)
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
-| 03-accounting-engine | 1/6 | 2 min | 2 min |
+| 03-accounting-engine | 2/6 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 02-03 (2 min), 02-04 (4 min), 02-05 (2 min), 02-06 (2 min), 03-01 (2 min)
+- Last 7 plans: 02-04 (4 min), 02-05 (2 min), 02-06 (2 min), 03-01 (2 min), 03-03 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -97,6 +97,10 @@ Recent decisions affecting current work:
 - [03-01]: Signed amount on JournalLine (positive=debit, negative=credit) — balance check is sum==0
 - [03-01]: property_id nullable on JournalEntry — None for shared/cross-property entries
 - [03-01]: reconciliation_status defaults to 'unmatched' on bookings and bank_transactions
+- [03-03]: owner_reimbursable debits liability account 2200 (not expense) — owner paid on company behalf, company owes them back; journal: Dr Owner Reimbursable, Cr Mercury Checking
+- [03-03]: Category-to-account resolved by name lookup at runtime (not hardcoded IDs) — resilient to account reseeding
+- [03-03]: UUID suffix in source_id for expenses — expense:{date}:{uuid4()} prevents idempotency collisions for multiple expenses on same date
+- [03-03]: bulk_import_expenses accepts str/float amounts, converts to Decimal internally — tolerates both CSV (str) and JSON (float) callers
 
 ### Pending Todos
 
@@ -110,6 +114,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T21:38:27Z
-Stopped at: Completed 03-01-PLAN.md — ledger core complete. Account/JournalEntry/JournalLine models, create_journal_entry() with balance enforcement and idempotent upsert, migration 003 with all 6 Phase 3 tables + 21-account chart of accounts seed + reconciliation_status on bookings/bank_transactions.
+Last session: 2026-02-27T21:47:55Z
+Stopped at: Completed 03-03-PLAN.md — Expense ORM model, record_expense() creating balanced journal entry per expense (12 Schedule E categories, owner_reimbursable as liability), bulk_import_expenses() with per-row error collection.
 Resume file: None
