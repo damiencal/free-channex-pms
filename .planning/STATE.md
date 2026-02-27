@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 1 — Foundation (complete), ready to begin Phase 2
+**Current focus:** Phase 2 — Data Ingestion (in progress)
 
 ## Current Position
 
-Phase: 1 of 8 (Foundation)
-Plan: 6 of 6 in current phase (gap closure complete)
-Status: Phase 1 fully complete — 5/5 must-have truths satisfied
-Last activity: 2026-02-27 — Completed 01-06-PLAN.md (gap closure: README, resort_checkin_instructions, entry point fix)
+Phase: 2 of 8 (Data Ingestion)
+Plan: 1 of ~5 in current phase
+Status: In progress — 02-01 complete (data layer foundation)
+Last activity: 2026-02-27 — Completed 02-01-PLAN.md (ORM models, schemas, migration 002, config additions)
 
-Progress: [██████░░░░] 24% (6/25 plans estimated)
+Progress: [███████░░░] 28% (7/25 plans estimated)
 
 ## Performance Metrics
 
@@ -28,9 +28,10 @@ Progress: [██████░░░░] 24% (6/25 plans estimated)
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
+| 02-data-ingestion | 1/5 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 6 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min), 01-06 (1 min)
+- Last 7 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min), 01-06 (1 min), 02-01 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -68,6 +69,10 @@ Recent decisions affecting current work:
 - [01-05]: PDF mapping schema has three source types — booking (from booking data), property (from config), static (hardcoded, e.g., N/A for guest phone per resort policy)
 - [01-06]: resort_checkin_instructions is required (no default) — forces operator to provide property-specific text at config time, not at template-edit time
 - [01-06]: New template variable protocol — adding any variable requires updating SAMPLE_BOOKING_DATA + all property YAMLs + config.example.yaml
+- [02-01]: listing_slug_map is dict[str, str] on PropertyConfig — each property maps platform identifiers to its own slug; normalizer builds unified lookup at import time
+- [02-01]: BookingRecord.property_slug resolved by normalizer (not adapter) — keeps adapters stateless and DB-free
+- [02-01]: check_in_date and check_out_date use sa.Date() (calendar dates only) — DateTime would risk time-zone confusion
+- [02-01]: archive_dir defaults to "./archive" and mounted read-write in Docker — app writes archived CSVs here
 
 ### Pending Todos
 
@@ -81,6 +86,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T17:02:19Z
-Stopped at: Completed 01-06-PLAN.md — Phase 1 gap closure complete. Verification score 5/5. Ready to begin Phase 2 (data ingestion).
+Last session: 2026-02-27T18:44:11Z
+Stopped at: Completed 02-01-PLAN.md — data layer foundation (ORM models, schemas, migration 002, config additions). Ready for 02-02 (CSV ingestion adapters).
 Resume file: None
