@@ -74,15 +74,15 @@ Plans:
   3. User can see unreconciled transactions — platform payouts that have no matching bank deposit and bank deposits that have no matching payout
   4. Expenses can be recorded and categorized (rent, utilities, maintenance, supplies) with each category appearing as a separate line in reports
   5. Loan payments split correctly into principal and interest components in the ledger
-**Plans**: TBD
+**Plans:** 6 plans
 
 Plans:
-- [ ] 03-01: Double-entry journal entry models with debit/credit enforcement and idempotent upsert by stable transaction ID
-- [ ] 03-02: Revenue recognition — booking ingestion triggers journal entries; Airbnb multi-row grouping by confirmation code
-- [ ] 03-03: Expense tracking — categorized expense entry with Schedule E-aligned categories
-- [ ] 03-04: Loan tracking — principal/interest split on loan payments
-- [ ] 03-05: Bank reconciliation — match platform payouts to Mercury deposits; unreconciled queue with mismatch flagging
-- [ ] 03-06: Accounting engine API endpoints (journal entry query, unreconciled list, ledger balance)
+- [ ] 03-01-PLAN.md — Account, JournalEntry, JournalLine models + journal builder with balance enforcement + Alembic migration 003 with chart of accounts seed
+- [ ] 03-02-PLAN.md — Revenue recognition: Airbnb deferred-then-recognized pattern, VRBO/RVshare single-event, configurable fee model
+- [ ] 03-03-PLAN.md — Expense tracking: Expense model, record_expense with journal entry, bulk CSV import, 12 Schedule E categories
+- [ ] 03-04-PLAN.md — Loan tracking: Loan model, record_loan_payment with principal/interest split, loan balance calculation
+- [ ] 03-05-PLAN.md — Bank reconciliation: exact amount + 7-day window matching, auto-match/needs-review/unreconciled queue
+- [ ] 03-06-PLAN.md — Accounting API: 12 endpoints for journal entries, expenses, loans, reconciliation, and account balances
 
 ### Phase 4: Financial Reports
 **Goal**: Users can view accurate P&L statements, balance sheets, and income statements per property, and categorize bank transactions
