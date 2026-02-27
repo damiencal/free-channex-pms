@@ -54,15 +54,15 @@ Plans:
   4. User can manually enter an RVshare booking with all required fields and see it in the unified booking list alongside Airbnb and VRBO bookings
   5. Re-importing the same CSV does not create duplicate records
   6. Raw CSV files are archived with timestamp before processing so every import is auditable
-**Plans**: TBD
+**Plans:** 6 plans
 
 Plans:
-- [ ] 02-01: Airbnb CSV adapter with schema validation, header-hash change detection, and apostrophe/date format normalization
-- [ ] 02-02: VRBO CSV adapter with schema validation and multi-row payout grouping by confirmation code
-- [ ] 02-03: Mercury bank CSV adapter with schema validation and transaction deduplication
-- [ ] 02-04: RVshare manual entry API endpoint and form with all required booking fields
-- [ ] 02-05: Normalizer — canonical BookingRecord/BankTransaction schema, deduplication by stable IDs, DB writes, and raw file archival
-- [ ] 02-06: Ingestion API endpoints (file upload + manual entry) and import status reporting
+- [ ] 02-01-PLAN.md — ORM models (Booking, BankTransaction, ImportRun), Pydantic schemas, Alembic migration, new deps (polars, python-multipart), config additions (archive_dir, listing_slug_map)
+- [ ] 02-02-PLAN.md — Normalizer core: CSV reading, archive-before-write, PostgreSQL upsert with xmax detection, ImportRun recording, property slug resolution
+- [ ] 02-03-PLAN.md — Airbnb CSV adapter: header validation, apostrophe/date normalization, multi-row grouping by confirmation code
+- [ ] 02-04-PLAN.md — VRBO CSV adapter: header validation, payout grouping by Reservation ID, Check In/Check Out date parsing
+- [ ] 02-05-PLAN.md — Mercury CSV adapter: header validation, transaction deduplication key determination, amount parsing
+- [ ] 02-06-PLAN.md — API endpoints: 3 CSV upload routes, RVshare manual entry, import history, bookings list, bank transactions list
 
 ### Phase 3: Accounting Engine
 **Goal**: Every booking and bank transaction is correctly recorded as double-entry journal entries, with platform payouts reconciled against bank deposits
