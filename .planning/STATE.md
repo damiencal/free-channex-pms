@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 3 — Accounting Engine (in progress)
+**Current focus:** Phase 4 — Notifications/Messaging (next)
 
 ## Current Position
 
-Phase: 3 of 8 (Accounting Engine) — In Progress
-Plan: 5 of 6 in phase 3 (03-01, 03-02, 03-03, 03-05 complete; 03-04, 03-06 remain)
-Status: In progress — revenue recognition complete; ready for 03-04 (loans), 03-06 (accounting API)
-Last activity: 2026-02-27 — Completed 03-02-PLAN.md (revenue recognition: recognize_booking_revenue, create_unearned_revenue_entry, record_adjustment_entries, reverse_journal_entry; airbnb_fee_model/airbnb_host_fee_rate config)
+Phase: 3 of 8 (Accounting Engine) — COMPLETE
+Plan: 6 of 6 in phase 3 (all plans complete: 03-01 through 03-06)
+Status: Phase 3 complete — all accounting engine plans done; ready to start Phase 4
+Last activity: 2026-02-27 — Completed 03-06-PLAN.md (accounting API: 14 endpoints, operator-triggered revenue recognition, expense/loan/reconciliation endpoints, registered in app/main.py)
 
-Progress: [███████████████░] 60% (15/25 plans estimated)
+Progress: [████████████████░] 64% (16/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 13
 - Average duration: 2 min
-- Total execution time: 22 min
+- Total execution time: 26 min
 
 **By Phase:**
 
@@ -29,7 +29,7 @@ Progress: [███████████████░] 60% (15/25 plans es
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
-| 03-accounting-engine | 4/6 | 8 min | 2 min |
+| 03-accounting-engine | 6/6 | 12 min | 2 min |
 
 **Recent Trend:**
 - Last 7 plans: 02-06 (2 min), 03-01 (2 min), 03-03 (2 min), 03-05 (2 min), 03-02 (2 min)
@@ -114,6 +114,10 @@ Recent decisions affecting current work:
 - [03-04]: source_id for loan payments: loan_payment:{loan.id}:{payment_ref} — combines entity ID with caller ref for uniqueness across loans
 - [03-04]: interest_rate stored as Numeric(6,4) annual decimal (0.0650 = 6.5%) — informational field; P&I computation happens externally
 - [03-05]: confirm_match upserts — handles both confirming auto-matched records and creating new records for needs_review deposits
+- [03-06]: get_config() (not Depends) in accounting endpoints — AppConfig is module-level singleton loaded at lifespan; direct call avoids per-request overhead
+- [03-06]: recognize-all batch commit per booking with individual rollback on error — one bad booking does not abort the entire batch
+- [03-06]: POST /reconciliation/reject/{match_id} uses query param confirmed_by (not body) — simple action, match_id from path is sufficient
+- [03-06]: Accounting module commit responsibility: modules use db.flush() only; API endpoints call db.commit()
 
 ### Pending Todos
 
@@ -127,6 +131,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T21:48:27Z
-Stopped at: Completed 03-05-PLAN.md — ReconciliationMatch ORM model (booking_id/bank_transaction_id FKs both unique, status, matched_at, confirmed_by); run_reconciliation() batch algorithm with exact-Decimal-amount + 7-day-window matching; confirm_match, reject_match, get_unreconciled.
+Last session: 2026-02-27T21:54:06Z
+Stopped at: Completed 03-06-PLAN.md — 14-endpoint accounting API (journal entries, balances, revenue recognition, expenses, loans, reconciliation); accounting router registered in app/main.py; Phase 3 complete.
 Resume file: None
