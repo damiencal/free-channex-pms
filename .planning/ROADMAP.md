@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffolding, Docker deployment, config schema, and database with migrations
 - [ ] **Phase 2: Data Ingestion** - CSV import pipelines for Airbnb, VRBO, Mercury, and manual RVshare entry with unified booking schema
-- [ ] **Phase 3: Accounting Engine** - Double-entry bookkeeping ledger, multi-platform transaction tracking, and bank reconciliation
+- [x] **Phase 3: Accounting Engine** - Double-entry bookkeeping ledger, multi-platform transaction tracking, and bank reconciliation
 - [ ] **Phase 4: Financial Reports** - P&L statements, balance sheets, income statements, and bank transaction categorization
 - [ ] **Phase 5: Resort PDF Compliance** - Automated PDF form filling, email submission, deadline tracking, and submission audit trail
 - [ ] **Phase 6: Guest Communication** - Booking confirmation and pre-arrival messages via platform messaging with config-driven templates
@@ -189,7 +189,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 |-------|----------------|--------|-----------|
 | 1. Foundation | 6/6 | Complete ✓ | 2026-02-27 |
 | 2. Data Ingestion | 6/6 | Complete ✓ | 2026-02-27 |
-| 3. Accounting Engine | 0/6 | Not started | - |
+| 3. Accounting Engine | 6/6 | Complete ✓ | 2026-02-27 |
 | 4. Financial Reports | 0/4 | Not started | - |
 | 5. Resort PDF Compliance | 0/7 | Not started | - |
 | 6. Guest Communication | 0/6 | Not started | - |

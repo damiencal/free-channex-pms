@@ -17,15 +17,15 @@
 
 ### Accounting
 
-- [ ] **ACCT-01**: System maintains a double-entry bookkeeping ledger with journal entries (debits/credits)
+- [x] **ACCT-01**: System maintains a double-entry bookkeeping ledger with journal entries (debits/credits)
 - [ ] **ACCT-02**: System generates profit & loss statements per property and combined
 - [ ] **ACCT-03**: System generates balance sheets showing assets, liabilities, and equity
 - [ ] **ACCT-04**: System generates income statements with revenue and expense breakdown by period
-- [ ] **ACCT-05**: System tracks revenue from multiple sources (Airbnb, VRBO, RVshare) per property
-- [ ] **ACCT-06**: System tracks expenses across categories (rent, utilities, maintenance, supplies, etc.)
-- [ ] **ACCT-07**: System tracks loans with principal and interest components
-- [ ] **ACCT-08**: System reconciles platform payouts against bank deposits
-- [ ] **ACCT-09**: System handles multi-row Airbnb payout events (booking, payout, adjustments)
+- [x] **ACCT-05**: System tracks revenue from multiple sources (Airbnb, VRBO, RVshare) per property
+- [x] **ACCT-06**: System tracks expenses across categories (rent, utilities, maintenance, supplies, etc.)
+- [x] **ACCT-07**: System tracks loans with principal and interest components
+- [x] **ACCT-08**: System reconciles platform payouts against bank deposits
+- [x] **ACCT-09**: System handles multi-row Airbnb payout events (booking, payout, adjustments)
 
 ### Resort Compliance
 
@@ -105,12 +105,12 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 1 | Pending |
-| INFR-02 | Phase 1 | Pending |
-| INFR-03 | Phase 1 | Pending |
-| INFR-04 | Phase 1 | Pending |
-| INFR-05 | Phase 1 | Pending |
-| INFR-06 | Phase 1 | Pending |
+| INFR-01 | Phase 1 | Complete |
+| INFR-02 | Phase 1 | Complete |
+| INFR-03 | Phase 1 | Complete |
+| INFR-04 | Phase 1 | Complete |
+| INFR-05 | Phase 1 | Complete |
+| INFR-06 | Phase 1 | Complete |
 | INGS-01 | Phase 2 | Complete |
 | INGS-02 | Phase 2 | Complete |
 | INGS-03 | Phase 2 | Complete |
@@ -118,12 +118,12 @@
 | INGS-05 | Phase 2 | Complete |
 | INGS-06 | Phase 2 | Complete |
 | INGS-07 | Phase 2 | Complete |
-| ACCT-01 | Phase 3 | Pending |
-| ACCT-05 | Phase 3 | Pending |
-| ACCT-06 | Phase 3 | Pending |
-| ACCT-07 | Phase 3 | Pending |
-| ACCT-08 | Phase 3 | Pending |
-| ACCT-09 | Phase 3 | Pending |
+| ACCT-01 | Phase 3 | Complete |
+| ACCT-05 | Phase 3 | Complete |
+| ACCT-06 | Phase 3 | Complete |
+| ACCT-07 | Phase 3 | Complete |
+| ACCT-08 | Phase 3 | Complete |
+| ACCT-09 | Phase 3 | Complete |
 | ACCT-02 | Phase 4 | Pending |
 | ACCT-03 | Phase 4 | Pending |
 | ACCT-04 | Phase 4 | Pending |
@@ -157,4 +157,4 @@
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-27 after Phase 2 completion — INGS-01 through INGS-07 marked Complete*
+*Last updated: 2026-02-27 after Phase 3 completion — ACCT-01, ACCT-05 through ACCT-09 marked Complete; INFR-01 through INFR-06 corrected to Complete*

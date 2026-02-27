@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 4 — Notifications/Messaging (next)
+**Current focus:** Phase 4 — Financial Reports (next)
 
 ## Current Position
 
