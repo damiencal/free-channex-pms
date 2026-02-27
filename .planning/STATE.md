@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 2 of 8 (Data Ingestion)
-Plan: 2 of ~5 in current phase
-Status: In progress — 02-02 complete (normalizer: archive, upsert, ImportRun pipeline)
-Last activity: 2026-02-27 — Completed 02-02-PLAN.md (normalizer.py with ingest_csv, ingest_bank_csv, create_manual_booking)
+Plan: 5 of ~5 in current phase
+Status: In progress — 02-05 complete (Mercury CSV adapter)
+Last activity: 2026-02-27 — Completed 02-05-PLAN.md (Mercury adapter: validate_headers, parse, composite-key dedup)
 
-Progress: [████████░░] 32% (8/25 plans estimated)
+Progress: [█████████░] 36% (9/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 2 min
-- Total execution time: 14 min
+- Total execution time: 16 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
-| 02-data-ingestion | 2/5 | 4 min | 2 min |
+| 02-data-ingestion | 3/5 | 6 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min), 01-06 (1 min), 02-01 (2 min), 02-02 (2 min)
+- Last 7 plans: 01-04 (2 min), 01-05 (3 min), 01-06 (1 min), 02-01 (2 min), 02-02 (2 min), 02-05 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -77,6 +77,8 @@ Recent decisions affecting current work:
 - [02-02]: resolve_property_id() uses module-level dict cache — only 2 properties; avoids repeated SELECT per record in batch imports
 - [02-02]: All pg_insert on_conflict_do_update set_ dicts must explicitly include updated_at=func.now() — ORM onupdate hooks are not triggered by core INSERT statements
 - [02-02]: create_manual_booking() records archive_path="N/A" in ImportRun — no file involved; ImportRun always recorded for audit consistency
+- [02-05]: Mercury dedup uses composite key (Date+Amount+Description sha256[:16]) — generic Mercury CSV has no native transaction ID; COL_TRANSACTION_ID is commented in source for easy activation when real export is verified
+- [02-05]: Mercury REQUIRED_HEADERS is minimal subset {Date, Description, Amount} — extra columns (Running Balance, Category, etc.) ignored; validate_headers() uses subset check, not equality
 
 ### Pending Todos
 
@@ -90,6 +92,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T18:49:19Z
-Stopped at: Completed 02-02-PLAN.md — normalizer pipeline (ingest_csv, ingest_bank_csv, create_manual_booking with archive, upsert, ImportRun). Ready for 02-03 (platform CSV adapters: Airbnb, VRBO, Mercury).
+Last session: 2026-02-27T18:52:04Z
+Stopped at: Completed 02-05-PLAN.md — Mercury bank CSV adapter (validate_headers, parse, composite-key dedup). Ready for remaining Phase 2 plans (ingestion API endpoint, etc.).
 Resume file: None
