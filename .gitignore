@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+db_data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+.python-version
+
+# Config (keep examples, ignore real configs with secrets)
+# Note: config/*.yaml files are committed (no secrets — secrets in .env)
