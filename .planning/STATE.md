@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 1 of 8 (Foundation)
-Plan: 4 of 5 in current phase
-Status: In progress
-Last activity: 2026-02-27 — Completed 01-04-PLAN.md (FastAPI app with lifespan, logging, and /health endpoint)
+Plan: 5 of 5 in current phase
+Status: Phase complete
+Last activity: 2026-02-27 — Completed 01-05-PLAN.md (Jinja2 templates, PDF mapping schema, CLI setup wizard)
 
-Progress: [████░░░░░░] 16% (4/25 plans estimated)
+Progress: [█████░░░░░] 20% (5/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
+- Total plans completed: 5
 - Average duration: 2 min
-- Total execution time: 8 min
+- Total execution time: 11 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 4/5 | 8 min | 2 min |
+| 01-foundation | 5/5 | 11 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min)
+- Last 5 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -61,6 +61,11 @@ Recent decisions affecting current work:
 - [01-04]: ConsoleRenderer chosen for structlog — self-hosted tool, logs read by operator directly; JSON logging unnecessary at this scale
 - [01-04]: Ollama check in lifespan is non-fatal — Ollama is Phase 8 feature; app must start without it
 - [01-04]: /health always returns HTTP 200 — Docker HEALTHCHECK needs reliable HTTP 200; JSON status field communicates degraded state
+- [01-05]: StrictUndefined in Jinja2 — raises UndefinedError on template variable typos at render time rather than silently emitting empty string
+- [01-05]: SAMPLE_BOOKING_DATA must cover all template variables — adding a new variable to any template requires updating this dict or startup validation fails
+- [01-05]: python-slugify for CLI wizard — avoids hand-rolling slug validation; handles spaces, uppercase, special chars
+- [01-05]: Config files as source of truth (Phase 1) — CLI wizard reads slugs from YAML files for collision detection; DB sync deferred to future plan
+- [01-05]: PDF mapping schema has three source types — booking (from booking data), property (from config), static (hardcoded, e.g., N/A for guest phone per resort policy)
 
 ### Pending Todos
 
@@ -74,6 +79,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T16:32:35Z
-Stopped at: Completed 01-04-PLAN.md — FastAPI app with lifespan, logging, and /health endpoint. Ready for 01-05 (final foundation plan).
+Last session: 2026-02-27T16:34:23Z
+Stopped at: Completed 01-05-PLAN.md — Phase 1 Foundation complete. All 5 plans done. Ready to begin Phase 2 (data ingestion).
 Resume file: None
