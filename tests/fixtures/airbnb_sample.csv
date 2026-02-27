@@ -1,11 +1,11 @@
-Date,Type,Confirmation Code,Listing,Guest,Details,Reference,Currency,Amount,Paid Out,Host Fee,Cleaning Fee
-01/15/2025,Reservation,HM1234567,Jay's Beach House,Alice Johnson,Reservation,REF001,USD,'$180.00,,,'$20.00
-01/17/2025,Payout,HM1234567,Jay's Beach House,,Payout,PAY001,USD,'$160.00,'$160.00,,
-01/20/2025,Reservation,HM7654321,Jay's Beach House,Bob Martinez,Reservation,REF002,USD,'$250.00,,,'$30.00
-01/22/2025,Payout,HM7654321,Jay's Beach House,,Payout,PAY002,USD,'$220.00,'$220.00,,
-02/01/2025,Reservation,HM2468013,Minnie's Tiny House,Carol Smith,Reservation,REF003,USD,'$310.00,,,'$40.00
-02/03/2025,Host Fee,HM2468013,Minnie's Tiny House,,Host Fee,FEE001,USD,'-$15.50,,,'$0.00
-02/04/2025,Payout,HM2468013,Minnie's Tiny House,,Payout,PAY003,USD,'$254.50,'$254.50,,
-02/10/2025,Reservation,HM1357924,Minnie's Tiny House,David Lee,Reservation,REF004,USD,'$420.00,,,'$50.00
-02/12/2025,Adjustment,HM1357924,Minnie's Tiny House,,Adjustment,ADJ001,USD,'-$25.00,,,
-02/14/2025,Payout,HM1357924,Minnie's Tiny House,,Payout,PAY004,USD,'$345.00,'$345.00,,
+Date,Type,Confirmation Code,Listing,Guest,Details,Reference,Currency,Amount,Paid Out,Host Fee,Cleaning Fee,Start Date,End Date
+01/15/2025,Reservation,HM1234567,Jay's Beach House,Alice Johnson,Reservation,REF001,USD,'$180.00,,,'$20.00,01/18/2025,01/22/2025
+01/17/2025,Payout,HM1234567,Jay's Beach House,,Payout,PAY001,USD,'$160.00,'$160.00,,,
+02/05/2025,Reservation,HM7654321,Jay's Beach House,Bob Martinez,Reservation,REF002,USD,'$250.00,,,'$30.00,02/08/2025,02/12/2025
+02/07/2025,Payout,HM7654321,Jay's Beach House,,Payout,PAY002,USD,'$220.00,'$220.00,,,
+02/01/2025,Reservation,HM2468013,Minnie's Tiny House,Carol Smith,Reservation,REF003,USD,'$310.00,,,'$40.00,02/05/2025,02/10/2025
+02/03/2025,Host Fee,HM2468013,Minnie's Tiny House,,Host Fee,FEE001,USD,'-$15.50,,,'$0.00,,
+02/04/2025,Payout,HM2468013,Minnie's Tiny House,,Payout,PAY003,USD,'$254.50,'$254.50,,,
+02/10/2025,Reservation,HM1357924,Minnie's Tiny House,David Lee,Reservation,REF004,USD,'$420.00,,,'$50.00,02/14/2025,02/18/2025
+02/12/2025,Adjustment,HM1357924,Minnie's Tiny House,,Adjustment,ADJ001,USD,'-$25.00,,,,,
+02/14/2025,Payout,HM1357924,Minnie's Tiny House,,Payout,PAY004,USD,'$345.00,'$345.00,,,
