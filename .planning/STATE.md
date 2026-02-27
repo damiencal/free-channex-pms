@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 3 of 8 (Accounting Engine) — In Progress
-Plan: 3 of 6 in phase 3 (03-01, 03-03 complete; 03-02, 03-04, 03-05, 03-06 remain)
-Status: In progress — expense recording complete; ready for 03-02 (revenue), 03-04 (loans), 03-05 (reconciliation)
-Last activity: 2026-02-27 — Completed 03-03-PLAN.md (Expense ORM model, record_expense, bulk_import_expenses, 12 Schedule E categories)
+Plan: 4 of 6 in phase 3 (03-01, 03-03, 03-05 complete; 03-02, 03-04, 03-06 remain)
+Status: In progress — reconciliation engine complete; ready for 03-02 (revenue), 03-04 (loans), 03-06 (reconciliation API)
+Last activity: 2026-02-27 — Completed 03-05-PLAN.md (ReconciliationMatch ORM model, run_reconciliation, confirm_match, reject_match, get_unreconciled)
 
-Progress: [█████████████░] 52% (13/25 plans estimated)
+Progress: [██████████████░] 56% (14/25 plans estimated)
 
 ## Performance Metrics
 
@@ -29,10 +29,10 @@ Progress: [█████████████░] 52% (13/25 plans estimate
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
-| 03-accounting-engine | 2/6 | 4 min | 2 min |
+| 03-accounting-engine | 3/6 | 6 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 02-04 (4 min), 02-05 (2 min), 02-06 (2 min), 03-01 (2 min), 03-03 (2 min)
+- Last 7 plans: 02-05 (2 min), 02-06 (2 min), 03-01 (2 min), 03-03 (2 min), 03-05 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -101,6 +101,11 @@ Recent decisions affecting current work:
 - [03-03]: Category-to-account resolved by name lookup at runtime (not hardcoded IDs) — resilient to account reseeding
 - [03-03]: UUID suffix in source_id for expenses — expense:{date}:{uuid4()} prevents idempotency collisions for multiple expenses on same date
 - [03-03]: bulk_import_expenses accepts str/float amounts, converts to Decimal internally — tolerates both CSV (str) and JSON (float) callers
+- [03-05]: MATCH_WINDOW_DAYS = 7 — Airbnb typically pays out on or near check-in day; 7-day window accommodates payout timing variation
+- [03-05]: Decimal equality for reconciliation amount comparison — Booking.net_amount and BankTransaction.amount are Numeric(10,2); SQLAlchemy returns Python Decimal, no float rounding risk
+- [03-05]: Multiple-candidate deposits flagged needs_review with NO match record — operator must confirm specific booking pairing
+- [03-05]: reject_match preserves match record with status="rejected" for audit trail; both sides reset to "unmatched" to re-enter queue
+- [03-05]: confirm_match upserts — handles both confirming auto-matched records and creating new records for needs_review deposits
 
 ### Pending Todos
 
@@ -114,6 +119,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T21:47:55Z
-Stopped at: Completed 03-03-PLAN.md — Expense ORM model, record_expense() creating balanced journal entry per expense (12 Schedule E categories, owner_reimbursable as liability), bulk_import_expenses() with per-row error collection.
+Last session: 2026-02-27T21:48:27Z
+Stopped at: Completed 03-05-PLAN.md — ReconciliationMatch ORM model (booking_id/bank_transaction_id FKs both unique, status, matched_at, confirmed_by); run_reconciliation() batch algorithm with exact-Decimal-amount + 7-day-window matching; confirm_match, reject_match, get_unreconciled.
 Resume file: None
