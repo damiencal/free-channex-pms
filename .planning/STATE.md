@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 1 of 8 (Foundation)
-Plan: 3 of 5 in current phase
+Plan: 4 of 5 in current phase
 Status: In progress
-Last activity: 2026-02-27 — Completed 01-02-PLAN.md (Pydantic Settings config schema)
+Last activity: 2026-02-27 — Completed 01-04-PLAN.md (FastAPI app with lifespan, logging, and /health endpoint)
 
-Progress: [███░░░░░░░] 12% (3/25 plans estimated)
+Progress: [████░░░░░░] 16% (4/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: 2 min
-- Total execution time: 6 min
+- Total execution time: 8 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 3/5 | 6 min | 2 min |
+| 01-foundation | 4/5 | 8 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min)
+- Last 5 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -58,6 +58,9 @@ Recent decisions affecting current work:
 - [01-02]: PropertyConfig as BaseModel (not BaseSettings) — per-property YAMLs loaded manually via glob, not by pydantic-settings source system
 - [01-02]: Collect-all-errors fail-fast — load_all_properties() accumulates all ValidationErrors before SystemExit; operator sees every problem in one run
 - [01-02]: config.example.yaml excluded by name from property discovery — coexists permanently in config/ for operator reference
+- [01-04]: ConsoleRenderer chosen for structlog — self-hosted tool, logs read by operator directly; JSON logging unnecessary at this scale
+- [01-04]: Ollama check in lifespan is non-fatal — Ollama is Phase 8 feature; app must start without it
+- [01-04]: /health always returns HTTP 200 — Docker HEALTHCHECK needs reliable HTTP 200; JSON status field communicates degraded state
 
 ### Pending Todos
 
@@ -71,6 +74,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T16:29:01Z
-Stopped at: Completed 01-02-PLAN.md — Pydantic Settings config schema. Ready for 01-04 or 01-05 (remaining foundation plans).
+Last session: 2026-02-27T16:32:35Z
+Stopped at: Completed 01-04-PLAN.md — FastAPI app with lifespan, logging, and /health endpoint. Ready for 01-05 (final foundation plan).
 Resume file: None
