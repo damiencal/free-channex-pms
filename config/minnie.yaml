@@ -4,3 +4,6 @@ lock_code: "CHANGE_ME"
 site_number: "170"
 resort_contact_email: "CHANGE_ME@resort.com"
 resort_checkin_instructions: "Minnie is located at Sun Retreats Fort Myers Beach. Please check in at the Welcome Center upon arrival."
+listing_slug_map:
+  "CHANGE_ME_AIRBNB_LISTING_TITLE": "minnie"
+  "CHANGE_ME_VRBO_PROPERTY_ID": "minnie"

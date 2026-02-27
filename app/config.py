@@ -59,6 +59,14 @@ class PropertyConfig(BaseModel):
     Example: "Located at Sun Retreats Fort Myers Beach. Please check in at the Welcome Center upon arrival."
     """
 
+    listing_slug_map: dict[str, str] = {}
+    """Maps platform listing identifiers to this property slug.
+    Keys are platform-specific identifiers found in CSV exports.
+    Example: {"Jay's Beach House": "jay", "12345": "jay"}
+    The adapter looks up the listing name/ID from the CSV row in this map
+    across all properties to find the matching property_id.
+    """
+
 
 class AppConfig(BaseSettings):
     """Application-wide configuration loaded from .env + config/base.yaml.
@@ -83,6 +91,9 @@ class AppConfig(BaseSettings):
     """Ollama API base URL. Default works for Docker on macOS/Windows.
     Override in .env for Linux: OLLAMA_URL=http://172.17.0.1:11434
     """
+
+    archive_dir: str = "./archive"
+    """Directory for raw CSV archives. Mount as Docker volume for persistence."""
 
     # --- Populated by load_app_config(), not from YAML directly ---
     properties: list[PropertyConfig] = []

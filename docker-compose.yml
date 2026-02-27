@@ -28,6 +28,7 @@ services:
       - ./config:/app/config:ro
       - ./templates:/app/templates:ro
       - ./pdf_mappings:/app/pdf_mappings:ro
+      - ./archive:/app/archive
     depends_on:
       db:
         condition: service_healthy
