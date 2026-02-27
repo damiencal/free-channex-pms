@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 2 of 8 (Data Ingestion)
-Plan: 5 of ~5 in current phase
-Status: In progress — 02-05 complete (Mercury CSV adapter)
-Last activity: 2026-02-27 — Completed 02-05-PLAN.md (Mercury adapter: validate_headers, parse, composite-key dedup)
+Plan: 3 of ~5 in current phase (02-03 complete, filling in previously skipped plan)
+Status: In progress — 02-03 complete (Airbnb CSV adapter)
+Last activity: 2026-02-27 — Completed 02-03-PLAN.md (Airbnb adapter: validate_headers, parse, amount normalization, multi-row grouping)
 
 Progress: [█████████░] 36% (9/25 plans estimated)
 
@@ -79,6 +79,10 @@ Recent decisions affecting current work:
 - [02-02]: create_manual_booking() records archive_path="N/A" in ImportRun — no file involved; ImportRun always recorded for audit consistency
 - [02-05]: Mercury dedup uses composite key (Date+Amount+Description sha256[:16]) — generic Mercury CSV has no native transaction ID; COL_TRANSACTION_ID is commented in source for easy activation when real export is verified
 - [02-05]: Mercury REQUIRED_HEADERS is minimal subset {Date, Description, Amount} — extra columns (Running Balance, Category, etc.) ignored; validate_headers() uses subset check, not equality
+- [02-03]: Airbnb CSV column names are UNVERIFIED (synthetic fixture) — real export must be inspected before production; Start Date / End Date most likely to differ
+- [02-03]: REQUIRED_HEADERS is frozenset of 5 columns; Start Date / End Date not required (may be absent or renamed in real export)
+- [02-03]: Empty date cells in parse() are allowed (payout/fee rows omit dates) — adapter takes first non-None date per confirmation code group
+- [02-03]: Missing listing in listing_slug_map produces an error and aborts import — operator must add listing identifier to property YAML config
 
 ### Pending Todos
 
@@ -92,6 +96,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T18:52:04Z
-Stopped at: Completed 02-05-PLAN.md — Mercury bank CSV adapter (validate_headers, parse, composite-key dedup). Ready for remaining Phase 2 plans (ingestion API endpoint, etc.).
+Last session: 2026-02-27T18:52:14Z
+Stopped at: Completed 02-03-PLAN.md — Airbnb CSV adapter (validate_headers, parse, amount normalization, multi-row Confirmation Code grouping). Previously skipped plan now complete.
 Resume file: None
