@@ -22,6 +22,8 @@ class Booking(Base):
     """Calendar date only (no time component)."""
     net_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     """Net payout amount after platform fees."""
+    reconciliation_status: Mapped[str] = mapped_column(String(32), server_default="unmatched")
+    """Reconciliation state. One of: 'unmatched', 'matched', 'confirmed', 'disputed'."""
     raw_platform_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     """Original row from the platform CSV, stored as JSON for audit trail."""
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

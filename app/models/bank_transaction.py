@@ -17,6 +17,8 @@ class BankTransaction(Base):
     """Transaction description/memo from bank export."""
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     """Transaction amount. Positive for credits, negative for debits."""
+    reconciliation_status: Mapped[str] = mapped_column(String(32), server_default="unmatched")
+    """Reconciliation state. One of: 'unmatched', 'matched', 'confirmed', 'disputed'."""
     raw_platform_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     """Original row from the bank CSV, stored as JSON for audit trail."""
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
