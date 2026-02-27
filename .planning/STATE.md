@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 1 of 8 (Foundation)
-Plan: 1 of 5 in current phase
+Plan: 3 of 5 in current phase
 Status: In progress
-Last activity: 2026-02-27 — Completed 01-01-PLAN.md (Docker scaffold & project setup)
+Last activity: 2026-02-27 — Completed 01-03-PLAN.md (SQLAlchemy models + Alembic migrations)
 
-Progress: [█░░░░░░░░░] 4% (1/25 plans estimated)
+Progress: [██░░░░░░░░] 8% (2/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 2 min
-- Total execution time: 2 min
+- Total plans completed: 2
+- Average duration: 1.5 min
+- Total execution time: 3 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 1/5 | 2 min | 2 min |
+| 01-foundation | 2/5 | 3 min | 1.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min)
-- Trend: —
+- Last 5 plans: 01-01 (2 min), 01-03 (1 min)
+- Trend: Fast
 
 *Updated after each plan completion*
 
@@ -51,6 +51,10 @@ Recent decisions affecting current work:
 - [01-01]: uv sync --no-install-project in Dockerfile — separates dep cache layer from project install; maximizes Docker layer caching
 - [01-01]: extra_hosts: host.docker.internal:host-gateway — Linux compatibility for Ollama connectivity from inside Docker container
 - [01-01]: DATABASE_URL uses postgresql+psycopg dialect (not +psycopg3) — SQLAlchemy dialect name for psycopg3 is psycopg
+- [01-03]: alembic.ini sqlalchemy.url is empty — credentials only from DATABASE_URL env var, never committed
+- [01-03]: disable_existing_loggers=False in Alembic fileConfig() — prevents Alembic from silencing app logs after migrations run
+- [01-03]: Integer PK + slug unique business key on Property — int for fast FK joins, slug for human-readable config/URL identity
+- [01-03]: Hand-written initial migration 001 (not autogenerate) — cleaner and more explicit for foundational table
 
 ### Pending Todos
 
@@ -64,6 +68,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T16:24:37Z
-Stopped at: Completed 01-01-PLAN.md — Docker scaffold & project setup. Ready for 01-02 (database migrations).
+Last session: 2026-02-27T16:27:56Z
+Stopped at: Completed 01-03-PLAN.md — SQLAlchemy models + Alembic migrations. Ready for 01-04 (config system).
 Resume file: None
