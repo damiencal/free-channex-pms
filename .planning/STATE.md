@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 2 of 8 (Data Ingestion)
-Plan: 3 of ~5 in current phase (02-03 complete, filling in previously skipped plan)
-Status: In progress — 02-03 complete (Airbnb CSV adapter)
-Last activity: 2026-02-27 — Completed 02-03-PLAN.md (Airbnb adapter: validate_headers, parse, amount normalization, multi-row grouping)
+Plan: 4 of ~6 in current phase (02-04 complete)
+Status: In progress — 02-04 complete (VRBO CSV adapter)
+Last activity: 2026-02-27 — Completed 02-04-PLAN.md (VRBO adapter: validate_headers, parse, Reservation ID grouping, Check In/Check Out date range parsing)
 
 Progress: [█████████░] 36% (9/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 2 min
-- Total execution time: 16 min
+- Total execution time: 18 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
-| 02-data-ingestion | 3/5 | 6 min | 2 min |
+| 02-data-ingestion | 4/6 | 8 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 01-04 (2 min), 01-05 (3 min), 01-06 (1 min), 02-01 (2 min), 02-02 (2 min), 02-05 (2 min)
+- Last 7 plans: 01-05 (3 min), 01-06 (1 min), 02-01 (2 min), 02-02 (2 min), 02-03 (2 min), 02-04 (4 min), 02-05 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -77,12 +77,15 @@ Recent decisions affecting current work:
 - [02-02]: resolve_property_id() uses module-level dict cache — only 2 properties; avoids repeated SELECT per record in batch imports
 - [02-02]: All pg_insert on_conflict_do_update set_ dicts must explicitly include updated_at=func.now() — ORM onupdate hooks are not triggered by core INSERT statements
 - [02-02]: create_manual_booking() records archive_path="N/A" in ImportRun — no file involved; ImportRun always recorded for audit consistency
-- [02-05]: Mercury dedup uses composite key (Date+Amount+Description sha256[:16]) — generic Mercury CSV has no native transaction ID; COL_TRANSACTION_ID is commented in source for easy activation when real export is verified
-- [02-05]: Mercury REQUIRED_HEADERS is minimal subset {Date, Description, Amount} — extra columns (Running Balance, Category, etc.) ignored; validate_headers() uses subset check, not equality
 - [02-03]: Airbnb CSV column names are UNVERIFIED (synthetic fixture) — real export must be inspected before production; Start Date / End Date most likely to differ
 - [02-03]: REQUIRED_HEADERS is frozenset of 5 columns; Start Date / End Date not required (may be absent or renamed in real export)
 - [02-03]: Empty date cells in parse() are allowed (payout/fee rows omit dates) — adapter takes first non-None date per confirmation code group
 - [02-03]: Missing listing in listing_slug_map produces an error and aborts import — operator must add listing identifier to property YAML config
+- [02-04]: VRBO adapter uses _ReservationGroup accumulator class (not Polars group_by) — per-row error messages with row numbers; supports filling empty guest_name from later rows in same reservation
+- [02-04]: Check In/Check Out split on " - " (space-dash-space) — assumed from VRBO docs; must verify against real export before production use
+- [02-04]: VRBO REQUIRED_HEADERS is 5-column frozenset (subset of all 29 VRBO columns) — only fields needed to build BookingRecord are required; extras ignored
+- [02-05]: Mercury dedup uses composite key (Date+Amount+Description sha256[:16]) — generic Mercury CSV has no native transaction ID; COL_TRANSACTION_ID is commented in source for easy activation when real export is verified
+- [02-05]: Mercury REQUIRED_HEADERS is minimal subset {Date, Description, Amount} — extra columns (Running Balance, Category, etc.) ignored; validate_headers() uses subset check, not equality
 
 ### Pending Todos
 
@@ -96,6 +99,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T18:52:14Z
-Stopped at: Completed 02-03-PLAN.md — Airbnb CSV adapter (validate_headers, parse, amount normalization, multi-row Confirmation Code grouping). Previously skipped plan now complete.
+Last session: 2026-02-27T18:53:04Z
+Stopped at: Completed 02-04-PLAN.md — VRBO CSV adapter (validate_headers, Reservation ID grouping, Check In/Check Out date range parsing, VRBO Property ID resolution). Ready for remaining Phase 2 plans.
 Resume file: None
