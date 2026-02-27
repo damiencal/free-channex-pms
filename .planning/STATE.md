@@ -5,32 +5,32 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 1 — Foundation (complete), ready to begin Phase 2
 
 ## Current Position
 
 Phase: 1 of 8 (Foundation)
-Plan: 5 of 5 in current phase
-Status: Phase complete
-Last activity: 2026-02-27 — Completed 01-05-PLAN.md (Jinja2 templates, PDF mapping schema, CLI setup wizard)
+Plan: 6 of 6 in current phase (gap closure complete)
+Status: Phase 1 fully complete — 5/5 must-have truths satisfied
+Last activity: 2026-02-27 — Completed 01-06-PLAN.md (gap closure: README, resort_checkin_instructions, entry point fix)
 
-Progress: [█████░░░░░] 20% (5/25 plans estimated)
+Progress: [██████░░░░] 24% (6/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
+- Total plans completed: 6
 - Average duration: 2 min
-- Total execution time: 11 min
+- Total execution time: 12 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 5/5 | 11 min | 2 min |
+| 01-foundation | 6/6 | 12 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min)
+- Last 6 plans: 01-01 (2 min), 01-03 (1 min), 01-02 (3 min), 01-04 (2 min), 01-05 (3 min), 01-06 (1 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -66,6 +66,8 @@ Recent decisions affecting current work:
 - [01-05]: python-slugify for CLI wizard — avoids hand-rolling slug validation; handles spaces, uppercase, special chars
 - [01-05]: Config files as source of truth (Phase 1) — CLI wizard reads slugs from YAML files for collision detection; DB sync deferred to future plan
 - [01-05]: PDF mapping schema has three source types — booking (from booking data), property (from config), static (hardcoded, e.g., N/A for guest phone per resort policy)
+- [01-06]: resort_checkin_instructions is required (no default) — forces operator to provide property-specific text at config time, not at template-edit time
+- [01-06]: New template variable protocol — adding any variable requires updating SAMPLE_BOOKING_DATA + all property YAMLs + config.example.yaml
 
 ### Pending Todos
 
@@ -79,6 +81,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T16:34:23Z
-Stopped at: Completed 01-05-PLAN.md — Phase 1 Foundation complete. All 5 plans done. Ready to begin Phase 2 (data ingestion).
+Last session: 2026-02-27T17:02:19Z
+Stopped at: Completed 01-06-PLAN.md — Phase 1 gap closure complete. Verification score 5/5. Ready to begin Phase 2 (data ingestion).
 Resume file: None
