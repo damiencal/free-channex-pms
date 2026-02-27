@@ -1,0 +1,16 @@
+Hi {{ guest_name }},
+
+Your stay at {{ property_name }} is coming up soon! Here are your arrival details:
+
+Check-in: {{ checkin_date }}
+Check-out: {{ checkout_date }}
+
+Access Instructions:
+- Site/Unit: {{ site_number }}
+- Lock Code: {{ lock_code }}
+
+{{ property_name }} is located at Sun Retreats Fort Myers Beach. Please check in at the Welcome Center upon arrival.
+
+If you have any questions before your stay, don't hesitate to reach out.
+
+See you soon!

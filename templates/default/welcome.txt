@@ -1,0 +1,12 @@
+Hi {{ guest_name }},
+
+Thank you for booking {{ property_name }}! We're excited to host you.
+
+Your reservation details:
+- Check-in: {{ checkin_date }}
+- Check-out: {{ checkout_date }}
+- Property: {{ property_name }}
+
+We'll send you arrival details including access instructions a few days before your check-in date.
+
+Looking forward to hosting you!
