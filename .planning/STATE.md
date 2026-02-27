@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 3 of 8 (Accounting Engine) — In Progress
-Plan: 4 of 6 in phase 3 (03-01, 03-03, 03-05 complete; 03-02, 03-04, 03-06 remain)
-Status: In progress — reconciliation engine complete; ready for 03-02 (revenue), 03-04 (loans), 03-06 (reconciliation API)
-Last activity: 2026-02-27 — Completed 03-05-PLAN.md (ReconciliationMatch ORM model, run_reconciliation, confirm_match, reject_match, get_unreconciled)
+Plan: 5 of 6 in phase 3 (03-01, 03-02, 03-03, 03-05 complete; 03-04, 03-06 remain)
+Status: In progress — revenue recognition complete; ready for 03-04 (loans), 03-06 (accounting API)
+Last activity: 2026-02-27 — Completed 03-02-PLAN.md (revenue recognition: recognize_booking_revenue, create_unearned_revenue_entry, record_adjustment_entries, reverse_journal_entry; airbnb_fee_model/airbnb_host_fee_rate config)
 
-Progress: [██████████████░] 56% (14/25 plans estimated)
+Progress: [███████████████░] 60% (15/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 2 min
-- Total execution time: 20 min
+- Total execution time: 22 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [██████████████░] 56% (14/25 plans estim
 |-------|-------|-------|----------|
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
-| 03-accounting-engine | 3/6 | 6 min | 2 min |
+| 03-accounting-engine | 4/6 | 8 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 02-05 (2 min), 02-06 (2 min), 03-01 (2 min), 03-03 (2 min), 03-05 (2 min)
+- Last 7 plans: 02-06 (2 min), 03-01 (2 min), 03-03 (2 min), 03-05 (2 min), 03-02 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -101,10 +101,18 @@ Recent decisions affecting current work:
 - [03-03]: Category-to-account resolved by name lookup at runtime (not hardcoded IDs) — resilient to account reseeding
 - [03-03]: UUID suffix in source_id for expenses — expense:{date}:{uuid4()} prevents idempotency collisions for multiple expenses on same date
 - [03-03]: bulk_import_expenses accepts str/float amounts, converts to Decimal internally — tolerates both CSV (str) and JSON (float) callers
+- [03-02]: Airbnb fee model default is split_fee (0.03) — account confirmed on legacy 3% host fee; host_only (15.5%) also fully implemented; both use gross = net / (1 - fee_rate)
+- [03-02]: Switching fee models in config requires re-recognition of historical bookings — documented in AppConfig docstrings
+- [03-02]: Unearned Revenue auto-clearing on payout — recognize_booking_revenue() checks for prior booking_unearned entry and creates clearing journal entry automatically
+- [03-02]: VRBO/RVshare net = gross — no fee reconstruction without per-booking fee data in CSV exports; single-event recognition
 - [03-05]: MATCH_WINDOW_DAYS = 7 — Airbnb typically pays out on or near check-in day; 7-day window accommodates payout timing variation
 - [03-05]: Decimal equality for reconciliation amount comparison — Booking.net_amount and BankTransaction.amount are Numeric(10,2); SQLAlchemy returns Python Decimal, no float rounding risk
 - [03-05]: Multiple-candidate deposits flagged needs_review with NO match record — operator must confirm specific booking pairing
 - [03-05]: reject_match preserves match record with status="rejected" for audit trail; both sides reset to "unmatched" to re-enter queue
+- [03-04]: Caller provides P&I split from lender's amortization schedule — system does not compute amortization
+- [03-04]: property_id=None on loan payment journal entries — loans are shared liabilities, not property-specific
+- [03-04]: source_id for loan payments: loan_payment:{loan.id}:{payment_ref} — combines entity ID with caller ref for uniqueness across loans
+- [03-04]: interest_rate stored as Numeric(6,4) annual decimal (0.0650 = 6.5%) — informational field; P&I computation happens externally
 - [03-05]: confirm_match upserts — handles both confirming auto-matched records and creating new records for needs_review deposits
 
 ### Pending Todos
@@ -114,7 +122,7 @@ None.
 ### Blockers/Concerns
 
 - [Pre-Phase 5]: Resort PDF form type unverified — must confirm AcroForm vs. XFA before building PDF pipeline. XFA requires HTML-to-PDF (Playwright) instead of form filling. Verify against actual Sun Retreats form before Phase 5 planning.
-- [Pre-Phase 3]: Airbnb fee model change (October 2025, host-only fee at 15.5%) — confirm which model applies to this account before finalizing accounting engine fee attribution logic.
+- [Pre-Phase 3]: RESOLVED — Airbnb fee model confirmed: split_fee (3% host) is current; host_only (15.5%) also implemented. Config defaults set. Re-recognition required if model changes.
 - [Pre-Phase 8]: Ollama model selection unresolved — benchmark Qwen2.5-Coder 14B vs. available models against actual schema before Phase 8 planning. Hardware VRAM constraints will determine feasibility.
 
 ## Session Continuity
