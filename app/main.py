@@ -18,6 +18,7 @@ import structlog
 from fastapi import FastAPI
 from sqlalchemy import text
 
+from app.api.accounting import router as accounting_router
 from app.api.health import router as health_router
 from app.api.ingestion import router as ingestion_router
 from app.config import load_app_config
@@ -85,3 +86,4 @@ app = FastAPI(
 
 app.include_router(health_router)
 app.include_router(ingestion_router)
+app.include_router(accounting_router)
