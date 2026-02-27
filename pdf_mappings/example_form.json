@@ -1,0 +1,55 @@
+{
+  "_comment": "PDF field mapping schema. One file per form type. Used in Phase 5 for automated PDF form filling.",
+  "_usage": "Each key is a PDF form field name (as it appears in the PDF). Each value describes where the data comes from.",
+  "form_type": "example_resort_booking",
+  "form_description": "Example resort booking form — replace with actual form field names from your PDF",
+  "fields": {
+    "GuestLastName": {
+      "source": "booking",
+      "field": "guest_last_name",
+      "description": "Guest's last name from booking data"
+    },
+    "GuestFirstName": {
+      "source": "booking",
+      "field": "guest_first_name",
+      "description": "Guest's first name from booking data"
+    },
+    "GuestPhone": {
+      "source": "static",
+      "value": "N/A",
+      "description": "Guest phone — marked N/A per resort policy"
+    },
+    "GuestEmail": {
+      "source": "static",
+      "value": "N/A",
+      "description": "Guest email — marked N/A per resort policy"
+    },
+    "ArrivalDate": {
+      "source": "booking",
+      "field": "checkin_date",
+      "format": "MM/DD/YYYY",
+      "description": "Check-in date formatted for the form"
+    },
+    "DepartureDate": {
+      "source": "booking",
+      "field": "checkout_date",
+      "format": "MM/DD/YYYY",
+      "description": "Check-out date formatted for the form"
+    },
+    "SiteNumber": {
+      "source": "property",
+      "field": "site_number",
+      "description": "Resort site number from property config (e.g., 110 for Jay)"
+    },
+    "OwnerName": {
+      "source": "property",
+      "field": "owner_name",
+      "description": "Property owner name from config"
+    },
+    "OwnerPhone": {
+      "source": "property",
+      "field": "owner_phone",
+      "description": "Property owner phone from config"
+    }
+  }
+}
