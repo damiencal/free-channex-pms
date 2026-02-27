@@ -6,16 +6,12 @@ deduplication key determination.
 
 MERCURY CSV COLUMN MAPPING
 ===========================
-Source: Synthetic — UNVERIFIED, LOW confidence (no real Mercury export inspected).
-        See tests/fixtures/MERCURY_CSV_NOTES.md for verification checklist.
-Last verified: UNVERIFIED — confirm against real export before production use.
-DEDUP STRATEGY: Composite key (Date + Amount + Description hash).
-                Mercury's generic CSV does not appear to include a native transaction ID
-                column. If a real export reveals one, set COL_TRANSACTION_ID below and
-                update _generate_transaction_id() to read from that column.
+Source: VERIFIED against real Mercury bank transaction CSV export (2026-02-27).
+Last verified: 2026-02-27
+DEDUP STRATEGY: Native "Tracking ID" column — stable bank-assigned transaction ID.
+                Composite hash fallback is no longer needed.
 """
 
-import hashlib
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 
@@ -26,23 +22,24 @@ from app.ingestion.schemas import BankTransactionRecord
 # ---------------------------------------------------------------------------
 # Column name constants
 # ---------------------------------------------------------------------------
-# These must match the exact header strings in the real Mercury CSV export.
+# Confirmed against real Mercury bank transaction CSV export (2026-02-27).
 # Update here if Mercury changes their export format.
-COL_DATE = "Date"
+COL_DATE = "Date (UTC)"
 COL_DESCRIPTION = "Description"
 COL_AMOUNT = "Amount"
+COL_TRANSACTION_ID = "Tracking ID"  # Native bank-assigned transaction ID
 
-# Uncomment and set if the real Mercury CSV export includes a native transaction ID:
-# COL_TRANSACTION_ID = "Transaction ID"  # or whatever Mercury names it
-
-# Only the three fields required to produce a BankTransactionRecord are mandatory.
-# Additional columns (Running Balance, Category, Account, Bank Name) are ignored.
-REQUIRED_HEADERS: frozenset[str] = frozenset([COL_DATE, COL_DESCRIPTION, COL_AMOUNT])
+# Only the fields required to produce a BankTransactionRecord are mandatory.
+# Additional columns (Status, Source Account, Category, etc.) are ignored.
+REQUIRED_HEADERS: frozenset[str] = frozenset([
+    COL_DATE, COL_DESCRIPTION, COL_AMOUNT, COL_TRANSACTION_ID,
+])
 
 # ---------------------------------------------------------------------------
-# Date formats to try in order — most to least common in Mercury exports
+# Date formats to try in order
+# Mercury exports use MM-DD-YYYY with dashes (e.g. "01-29-2026")
 # ---------------------------------------------------------------------------
-_DATE_FORMATS = ["%m/%d/%Y", "%-m/%-d/%Y", "%Y-%m-%d"]
+_DATE_FORMATS = ["%m-%d-%Y", "%m/%d/%Y", "%Y-%m-%d"]
 
 
 def validate_headers(df: pl.DataFrame) -> None:
@@ -84,9 +81,10 @@ def parse(df: pl.DataFrame) -> tuple[list[BankTransactionRecord], list[str]]:
 
     Notes:
         - Amount may include $ symbols and commas; these are stripped.
-        - Date format is assumed MM/DD/YYYY; falls back to ISO 8601.
-        - Transaction ID is a composite SHA-256 hash (Date|Amount|Description)
-          prefixed with "mercury-" since Mercury generic CSV has no native ID.
+        - Date format is MM-DD-YYYY with dashes (e.g. "01-29-2026"); falls back
+          to MM/DD/YYYY and ISO 8601.
+        - Transaction ID comes from the native "Tracking ID" column (bank-assigned,
+          stable across re-exports of the same transaction).
     """
     records: list[BankTransactionRecord] = []
     errors: list[str] = []
@@ -126,16 +124,16 @@ def parse(df: pl.DataFrame) -> tuple[list[BankTransactionRecord], list[str]]:
             errors.extend(row_errors)
             continue
 
-        # --- Transaction ID (composite key) ---
-        # Composite key = "mercury-" + sha256(date|amount|description)[:16]
-        # Stable as long as Date, Amount, and Description don't change between exports.
+        # --- Transaction ID (native Tracking ID) ---
+        # Mercury's "Tracking ID" is a bank-assigned stable identifier.
+        # Confirmed present in real exports (2026-02-27).
         assert parsed_date is not None
         assert parsed_amount is not None
-        transaction_id = _generate_transaction_id(
-            date_str=raw_date,
-            amount_str=raw_amount,
-            description=raw_description or "",
-        )
+        transaction_id = f"mercury-{(row.get(COL_TRANSACTION_ID) or '').strip()}"
+        if transaction_id == "mercury-":
+            row_errors.append(f"Row {row_num}: {COL_TRANSACTION_ID} is missing or empty")
+            errors.extend(row_errors)
+            continue
 
         records.append(
             BankTransactionRecord(
@@ -154,24 +152,6 @@ def parse(df: pl.DataFrame) -> tuple[list[BankTransactionRecord], list[str]]:
 # Private helpers
 # ---------------------------------------------------------------------------
 
-
-def _generate_transaction_id(date_str: str, amount_str: str, description: str) -> str:
-    """Generate a stable composite transaction ID for Mercury deduplication.
-
-    Uses SHA-256 of the pipe-delimited composite "date|amount|description".
-    The "mercury-" prefix ensures no collision with IDs from other platforms.
-
-    Args:
-        date_str: Raw date string from CSV (e.g. "01/15/2025").
-        amount_str: Raw amount string from CSV (e.g. "-145.00" or "$1,234.56").
-        description: Trimmed description string from CSV.
-
-    Returns:
-        A 24-character string like "mercury-a1b2c3d4e5f6g7h8".
-    """
-    composite = f"{date_str}|{amount_str}|{description}"
-    hash_hex = hashlib.sha256(composite.encode()).hexdigest()[:16]
-    return f"mercury-{hash_hex}"
 
 
 def _parse_date(raw: str) -> date | None:

@@ -1,11 +1,7 @@
-Date,Type,Confirmation Code,Listing,Guest,Details,Reference,Currency,Amount,Paid Out,Host Fee,Cleaning Fee,Start Date,End Date
-01/15/2025,Reservation,HM1234567,Jay's Beach House,Alice Johnson,Reservation,REF001,USD,'$180.00,,,'$20.00,01/18/2025,01/22/2025
-01/17/2025,Payout,HM1234567,Jay's Beach House,,Payout,PAY001,USD,'$160.00,'$160.00,,,
-02/05/2025,Reservation,HM7654321,Jay's Beach House,Bob Martinez,Reservation,REF002,USD,'$250.00,,,'$30.00,02/08/2025,02/12/2025
-02/07/2025,Payout,HM7654321,Jay's Beach House,,Payout,PAY002,USD,'$220.00,'$220.00,,,
-02/01/2025,Reservation,HM2468013,Minnie's Tiny House,Carol Smith,Reservation,REF003,USD,'$310.00,,,'$40.00,02/05/2025,02/10/2025
-02/03/2025,Host Fee,HM2468013,Minnie's Tiny House,,Host Fee,FEE001,USD,'-$15.50,,,'$0.00,,
-02/04/2025,Payout,HM2468013,Minnie's Tiny House,,Payout,PAY003,USD,'$254.50,'$254.50,,,
-02/10/2025,Reservation,HM1357924,Minnie's Tiny House,David Lee,Reservation,REF004,USD,'$420.00,,,'$50.00,02/14/2025,02/18/2025
-02/12/2025,Adjustment,HM1357924,Minnie's Tiny House,,Adjustment,ADJ001,USD,'-$25.00,,,,,
-02/14/2025,Payout,HM1357924,Minnie's Tiny House,,Payout,PAY004,USD,'$345.00,'$345.00,,,
+Date,Arriving by date,Type,Confirmation code,Booking date,Start date,End date,Nights,Guest,Listing,Details,Reference code,Currency,Amount,Paid out,Service fee,Fast pay fee,Cleaning fee,Gross earnings,Occupancy taxes,Earnings year
+01/28/2026,02/05/2026,Payout,,,,,,,,"Transfer to Sample Account LLC, Checking 0000 (USD)",G-SAMPLE1PAYOUT,USD,,998.13,,,,,,
+01/28/2026,,Reservation,HMSAMPLE001,12/17/2025,01/27/2026,02/10/2026,14,Jane Sample,Minnie RV near Sanibel Island and Fort Myers Beach,,,USD,998.13,,30.87,,0.00,1029.00,118.34,2026
+01/21/2026,01/29/2026,Payout,,,,,,,,"Transfer to Sample Account LLC, Checking 0000 (USD)",G-SAMPLE2PAYOUT,USD,,441.35,,,,,,
+01/21/2026,,Reservation,HMSAMPLE002,01/10/2026,01/20/2026,01/27/2026,7,John Sample,Minnie RV near Sanibel Island and Fort Myers Beach,,,USD,441.35,,13.65,,0.00,455.00,52.33,2026
+01/12/2026,01/20/2026,Payout,,,,,,,,"Transfer to Sample Account LLC, Checking 0000 (USD)",G-SAMPLE3PAYOUT,USD,,628.56,,,,,,
+01/12/2026,,Reservation,HMSAMPLE003,12/29/2025,12/31/2025,01/12/2026,12,Sam Sample,Jay 2BR RV near Sanibel Island & Fort Myers Beach,,,USD,628.56,,19.44,,0.00,648.00,74.52,2026

@@ -12,10 +12,12 @@ Public API:
     parse(df)             — returns (records, errors)
 
 Column name verification status:
-    SYNTHETIC — headers UNVERIFIED against a real Airbnb export.
+    VERIFIED — confirmed against real Airbnb Transaction History and pending
+    stays CSV exports (2026-02-27). Two export formats exist:
+      - Transaction History: includes Payout rows (no Confirmation code) + Reservation rows
+      - Pending stays: Reservation rows only, fewer columns
+    Payout rows are skipped automatically (empty Confirmation code).
     If Airbnb renames columns, update the COL_* constants below.
-    See tests/fixtures/AIRBNB_CSV_NOTES.md for verification instructions.
-    Last verified: NEVER — update when verified from a real export.
 """
 
 from __future__ import annotations
@@ -35,23 +37,18 @@ from app.ingestion.schemas import BookingRecord
 # These constants define the expected column names from Airbnb Transaction
 # History CSV exports. Update these if Airbnb renames any columns.
 #
-# Source: Synthetic guess — UNVERIFIED. Must be confirmed against a real
-# Airbnb Transaction History CSV export before production use.
-# See tests/fixtures/AIRBNB_CSV_NOTES.md for verification instructions.
+# Source: VERIFIED against real Airbnb Transaction History and pending stays
+# exports (2026-02-27). Column names confirmed; update only if Airbnb changes format.
 # ---------------------------------------------------------------------------
 
 COL_DATE = "Date"
 COL_TYPE = "Type"
-COL_CONFIRMATION_CODE = "Confirmation Code"
+COL_CONFIRMATION_CODE = "Confirmation code"
 COL_LISTING = "Listing"
 COL_GUEST = "Guest"
 COL_AMOUNT = "Amount"
-COL_START_DATE = "Start Date"
-COL_END_DATE = "End Date"
-
-# Start/End Date columns are UNVERIFIED — they may be "Start Date"/"End Date",
-# "Check In"/"Check Out", or embedded within a "Details" field in real exports.
-# The fixture uses "Start Date"/"End Date". Update if the real export differs.
+COL_START_DATE = "Start date"
+COL_END_DATE = "End date"
 
 REQUIRED_HEADERS: frozenset[str] = frozenset([
     COL_DATE,

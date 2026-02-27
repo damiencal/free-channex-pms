@@ -1,8 +1,6 @@
-Date,Description,Amount,Running Balance,Category,Account,Bank Name
-01/02/2025,Airbnb Payout - Jay's Beach House,180.00,12180.00,Income,Mercury Checking,Mercury
-01/07/2025,Airbnb Payout - Minnie's Tiny House,254.50,12434.50,Income,Mercury Checking,Mercury
-01/12/2025,Fort Myers Beach Utilities,-145.00,12289.50,Utilities,Mercury Checking,Mercury
-01/20/2025,Airbnb Payout - Jay's Beach House,220.00,12509.50,Income,Mercury Checking,Mercury
-01/25/2025,Landscaping Service - Monthly,-85.00,12424.50,Maintenance,Mercury Checking,Mercury
-02/03/2025,Airbnb Payout - Minnie's Tiny House,254.50,12679.00,Income,Mercury Checking,Mercury
-02/10/2025,Airbnb Payout - Jay's Beach House,345.00,13024.00,Income,Mercury Checking,Mercury
+Date (UTC),Description,Amount,Status,Source Account,Bank Description,Reference,Note,Last Four Digits,Name On Card,Mercury Category,Category,GL Code,Timestamp,Original Currency,Check Number,Tags,Cardholder Email,Tracking ID
+01-29-2026,AIRBNB PAYMENTS,998.13,Sent,Mercury Checking xx0000,AIRBNB PAYMENTS; SAMPLE1; SAMPLE ACCOUNT,RMR*IK*G-SAMPLE1PAYOUT\,,,,,,,01-29-2026 14:03:15,,,,,111000000000001
+01-22-2026,AIRBNB PAYMENTS,441.35,Sent,Mercury Checking xx0000,AIRBNB PAYMENTS; SAMPLE2; SAMPLE ACCOUNT,RMR*IK*G-SAMPLE2PAYOUT\,,,,,,,01-22-2026 13:47:42,,,,,111000000000002
+01-13-2026,AIRBNB PAYMENTS,628.56,Sent,Mercury Checking xx0000,AIRBNB PAYMENTS; SAMPLE3; SAMPLE ACCOUNT,RMR*IK*G-SAMPLE3PAYOUT\,,,,,,,01-13-2026 13:51:57,,,,,111000000000003
+12-09-2025,Utility Payment,-145.00,Sent,Mercury Checking xx0000,,,,,,,,,12-09-2025 10:00:00,,,,,111000000000004
+12-08-2025,Sample Transfer,5.00,Sent,Mercury Checking xx0000,,,,,,,,,12-08-2025 23:00:48,,,,,111000000000005
