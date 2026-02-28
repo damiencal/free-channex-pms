@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 7 complete — All 5 plans executed. Dashboard live: App shell, Home tab (stats + charts + actions preview), Actions tab (expandable accordion with mutation buttons), Reports placeholder. Ready for Phase 8 (LLM query).
+**Current focus:** Phase 7 complete — All 5 plans executed. Dashboard live: App shell, Home tab (stats + charts + actions preview), Calendar tab (month grid + Gantt timeline), Actions tab (expandable accordion with mutation buttons), Reports placeholder. Ready for Phase 8 (LLM query).
 
 ## Current Position
 
 Phase: 7 of 8 (Dashboard) — COMPLETE
-Plan: 5/5 plans executed (01, 02, 03, 04-skipped, 05 complete)
-Status: Plan 07-05 complete — Actions tab with expandable accordion items and API mutation buttons; Reports placeholder with Phase 4 endpoint cards. Phase 7 fully complete.
-Last activity: 2026-02-28 — Completed 07-05-PLAN.md (Actions tab + Reports tab)
+Plan: 5/5 plans executed (01, 02, 03, 04, 05 all complete)
+Status: Plan 07-04 retroactively completed — Month calendar grid + Gantt timeline view. All 5 plans now fully executed.
+Last activity: 2026-02-28 — Completed 07-04-PLAN.md (Calendar tab: month grid + timeline view)
 
 Progress: [████████████████████████████░] 94% (33/35 plans estimated)
 
@@ -199,6 +199,12 @@ Recent decisions affecting current work:
 - [07-05]: queryKey ['dashboard','actions',selectedPropertyId] in invalidateQueries matches useActions and AppShell badge — badge updates automatically after any action
 - [07-05]: daysUntil() sets hours to 0 before diff — avoids partial-day rounding; calendar-date comparison correct for urgency display
 - [07-05]: unreconciled type has no action button — reconciliation done via CSV upload; explanatory note shown instead of dead button
+- [07-04]: Booking occupancy semantics: nights are [checkIn, checkOut-1]; last night is day before checkout
+- [07-04]: ISO dates parsed as new Date(y, m-1, d) not new Date(isoString) — avoids UTC midnight shift to prior local day
+- [07-04]: getPlatformColorEntry().light used for calendar bars (not .chart) — pastel for calendar blocks, chart colors for Recharts
+- [07-04]: BookingBar absolute-positioned within week row div using % math — simpler than grid items for spanning logic
+- [07-04]: TimelineView uses height:0/overflow:visible overlay — bars don't push CSS Grid row heights apart
+- [07-04]: Week-boundary split bars are flat (no rounding) on split sides, rounded only on booking chronological start/end
 
 ### Pending Todos
 
@@ -216,5 +222,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 07-05-PLAN.md — Actions tab with accordion items + mutation buttons; Reports placeholder. Phase 7 (Dashboard) fully complete. Ready for Phase 8 (LLM query).
+Stopped at: Completed 07-04-PLAN.md (retroactive) — Month calendar + Gantt timeline. Phase 7 (Dashboard) fully complete with all 5 plans. Ready for Phase 8 (LLM query).
 Resume file: None
