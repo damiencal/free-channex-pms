@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 5 — Resort PDF Compliance (complete, except 05-02 at checkpoint)
+**Current focus:** Phase 5 complete — ready for Phase 6
 
 ## Current Position
 
-Phase: 5 of 8 (Resort PDF Compliance) — Phase complete (05-02 awaiting checkpoint resolution)
-Plan: 5 of 6 plans executed (05-01, 05-03, 05-04, 05-05, 05-06 complete; 05-02 at checkpoint:human-verify)
-Status: Phase 5 plan 06 complete — compliance API router with all 5 endpoints registered in main.py. Full resort PDF compliance feature set now API-accessible.
-Last activity: 2026-02-28 — Completed 05-06-PLAN.md
+Phase: 5 of 8 (Resort PDF Compliance) — Complete ✓
+Plan: 6/6 plans executed
+Status: Phase 5 complete — all plans executed, verified (human_needed items approved), requirements COMP-01 through COMP-07 satisfied.
+Last activity: 2026-02-28 — Phase 5 verified and closed
 
-Progress: [██████████████████████░] 88% (22/25 plans estimated)
+Progress: [███████████████████████] 92% (23/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
+- Total plans completed: 23
 - Average duration: 2 min
-- Total execution time: 38 min
+- Total execution time: 40 min
 
 **By Phase:**
 
@@ -31,7 +31,7 @@ Progress: [██████████████████████░
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
 | 04-financial-reports | 4/4 | 8 min | 2 min |
-| 05-resort-pdf-compliance | 5/6 | 12 min | 2 min |
+| 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
 
 **Recent Trend:**
 - Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min)
@@ -164,7 +164,7 @@ None.
 
 ### Blockers/Concerns
 
-- [05-02 CHECKPOINT]: Resort PDF form type still unverified — detect_form_type() is built; user must run it against actual Sun Retreats PDF and confirm AcroForm. If XFA, entire Phase 5 approach changes (Playwright HTML-to-PDF instead of form filling).
+- [05-02 CHECKPOINT]: RESOLVED — Sun Retreats PDF confirmed AcroForm with 8 fillable fields (Text_1 through Text_8). Mapping JSON created. field.update() + doc.bake() verified working.
 - [Pre-Phase 3]: RESOLVED — Airbnb fee model confirmed: split_fee (3% host) is current; host_only (15.5%) also implemented. Config defaults set. Re-recognition required if model changes.
 - [04-02]: Revenue query filters source_type==booking_payout — non-booking adjustments excluded from platform breakdown
 - [04-02]: Combined P&L uses full shared expense amounts once (not sum of per-property allocations) — no double-counting
@@ -173,6 +173,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T04:29:59Z
-Stopped at: Completed 05-06-PLAN.md — compliance API router with all 5 endpoints created and registered in main.py. Phase 5 feature set complete. 05-02 still at checkpoint:human-verify awaiting PDF form type confirmation.
+Last session: 2026-02-28
+Stopped at: Phase 5 complete — all 6 plans executed, verified, requirements marked complete. Ready for Phase 6 (Guest Communication).
 Resume file: None

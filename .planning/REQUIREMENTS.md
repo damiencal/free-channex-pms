@@ -29,13 +29,13 @@
 
 ### Resort Compliance
 
-- [ ] **COMP-01**: System auto-fills a configurable PDF booking form from booking data and config
-- [ ] **COMP-02**: System maps unit names to site numbers via configuration (e.g., Jay→110, Minnie→170)
-- [ ] **COMP-03**: System attaches the platform booking confirmation to the completed form
-- [ ] **COMP-04**: System emails the completed form + confirmation to a configurable resort contact
-- [ ] **COMP-05**: System tracks submission status per booking (pending, submitted, confirmed)
-- [ ] **COMP-06**: System flags bookings approaching the 3-day pre-arrival submission deadline
-- [ ] **COMP-07**: System pre-populates host information from config (not hardcoded)
+- [x] **COMP-01**: System auto-fills a configurable PDF booking form from booking data and config
+- [x] **COMP-02**: System maps unit names to site numbers via configuration (e.g., Jay→110, Minnie→170)
+- [x] **COMP-03**: System attaches the platform booking confirmation to the completed form
+- [x] **COMP-04**: System emails the completed form + confirmation to a configurable resort contact
+- [x] **COMP-05**: System tracks submission status per booking (pending, submitted, confirmed)
+- [x] **COMP-06**: System flags bookings approaching the 3-day pre-arrival submission deadline
+- [x] **COMP-07**: System pre-populates host information from config (not hardcoded)
 
 ### Guest Communication
 
@@ -128,13 +128,13 @@
 | ACCT-03 | Phase 4 | Complete |
 | ACCT-04 | Phase 4 | Complete |
 | DASH-08 | Phase 4 | Complete |
-| COMP-01 | Phase 5 | Pending |
-| COMP-02 | Phase 5 | Pending |
-| COMP-03 | Phase 5 | Pending |
-| COMP-04 | Phase 5 | Pending |
-| COMP-05 | Phase 5 | Pending |
-| COMP-06 | Phase 5 | Pending |
-| COMP-07 | Phase 5 | Pending |
+| COMP-01 | Phase 5 | Complete |
+| COMP-02 | Phase 5 | Complete |
+| COMP-03 | Phase 5 | Complete |
+| COMP-04 | Phase 5 | Complete |
+| COMP-05 | Phase 5 | Complete |
+| COMP-06 | Phase 5 | Complete |
+| COMP-07 | Phase 5 | Complete |
 | COMM-01 | Phase 6 | Pending |
 | COMM-02 | Phase 6 | Pending |
 | COMM-03 | Phase 6 | Pending |
@@ -157,4 +157,4 @@
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-28 after Phase 4 completion — ACCT-02, ACCT-03, ACCT-04, DASH-08 marked Complete*
+*Last updated: 2026-02-28 after Phase 5 completion — COMP-01 through COMP-07 marked Complete*

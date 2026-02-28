@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Data Ingestion** - CSV import pipelines for Airbnb, VRBO, Mercury, and manual RVshare entry with unified booking schema
 - [x] **Phase 3: Accounting Engine** - Double-entry bookkeeping ledger, multi-platform transaction tracking, and bank reconciliation
 - [x] **Phase 4: Financial Reports** - P&L statements, balance sheets, income statements, and bank transaction categorization
-- [ ] **Phase 5: Resort PDF Compliance** - Automated PDF form filling, email submission, deadline tracking, and submission audit trail
+- [x] **Phase 5: Resort PDF Compliance** - Automated PDF form filling, email submission, deadline tracking, and submission audit trail
 - [ ] **Phase 6: Guest Communication** - Booking confirmation and pre-arrival messages via platform messaging with config-driven templates
 - [ ] **Phase 7: Dashboard** - Web dashboard showing financial metrics, occupancy, booking calendar, and pending actions
 - [ ] **Phase 8: LLM Natural Language Interface** - Ollama-powered text-to-SQL query interface for plain-English financial questions
@@ -114,12 +114,12 @@ Plans:
 **Plans**: 6 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Foundation: new deps (pymupdf, aiosmtplib, apscheduler, tenacity), SMTP config, host info on PropertyConfig, ResortSubmission model + migration 005, docker-compose confirmations volume
-- [ ] 05-02-PLAN.md — PDF form filling: AcroForm detection, field-mapping-driven filling with field.update() + doc.bake(), field enumeration; checkpoint to verify actual Sun Retreats form
-- [ ] 05-03-PLAN.md — Email delivery (aiosmtplib + tenacity retry) and confirmation file matching + email subject/body formatting
-- [ ] 05-04-PLAN.md — Submission orchestrator: PDF fill + email send + DB status + preview mode; wire into booking import for auto-creation
-- [ ] 05-05-PLAN.md — Urgency checker: daily APScheduler job flags pending submissions within 3 days of check-in, sends operator digest alert
-- [ ] 05-06-PLAN.md — Compliance API: submissions list, manual submit, n8n confirmation webhook, preview approval, batch pending processor
+- [x] 05-01-PLAN.md — Foundation: new deps (pymupdf, aiosmtplib, apscheduler, tenacity), SMTP config, host info on PropertyConfig, ResortSubmission model + migration 005, docker-compose confirmations volume
+- [x] 05-02-PLAN.md — PDF form filling: AcroForm detection, field-mapping-driven filling with field.update() + doc.bake(), field enumeration; checkpoint to verify actual Sun Retreats form
+- [x] 05-03-PLAN.md — Email delivery (aiosmtplib + tenacity retry) and confirmation file matching + email subject/body formatting
+- [x] 05-04-PLAN.md — Submission orchestrator: PDF fill + email send + DB status + preview mode; wire into booking import for auto-creation
+- [x] 05-05-PLAN.md — Urgency checker: daily APScheduler job flags pending submissions within 3 days of check-in, sends operator digest alert
+- [x] 05-06-PLAN.md — Compliance API: submissions list, manual submit, n8n confirmation webhook, preview approval, batch pending processor
 
 ### Phase 6: Guest Communication
 **Goal**: Guests receive a welcome message upon booking and arrival details 2-3 days before check-in, driven entirely by config-editable templates
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 2. Data Ingestion | 6/6 | Complete ✓ | 2026-02-27 |
 | 3. Accounting Engine | 6/6 | Complete ✓ | 2026-02-27 |
 | 4. Financial Reports | 4/4 | Complete ✓ | 2026-02-28 |
-| 5. Resort PDF Compliance | 0/6 | Not started | - |
+| 5. Resort PDF Compliance | 6/6 | Complete ✓ | 2026-02-28 |
 | 6. Guest Communication | 0/6 | Not started | - |
 | 7. Dashboard | 0/6 | Not started | - |
 | 8. LLM Natural Language Interface | 0/5 | Not started | - |
