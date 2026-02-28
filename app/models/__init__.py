@@ -10,3 +10,4 @@ from app.models.expense import Expense  # noqa: F401
 from app.models.loan import Loan  # noqa: F401
 from app.models.reconciliation import ReconciliationMatch  # noqa: F401
 from app.models.resort_submission import ResortSubmission  # noqa: F401
+from app.models.communication_log import CommunicationLog  # noqa: F401

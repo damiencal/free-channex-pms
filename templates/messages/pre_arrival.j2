@@ -1,0 +1,31 @@
+Hi {{ guest_name }},
+
+Your stay at {{ property_name }} is just around the corner! Here is everything you need for a smooth arrival.
+
+RESERVATION DETAILS
+  - Check-in: {{ checkin_date }} at {{ check_in_time }}
+  - Check-out: {{ checkout_date }} at {{ check_out_time }}
+
+PROPERTY ADDRESS
+{{ address }}
+
+ACCESS INSTRUCTIONS
+  - Site/Unit: {{ site_number }}
+  - Lock Code: {{ lock_code }}
+
+CHECK-IN INFORMATION
+{{ resort_checkin_instructions }}
+{% if parking_instructions %}
+PARKING
+{{ parking_instructions }}
+{% endif %}
+{% if wifi_password %}
+WIFI
+  - Password: {{ wifi_password }}
+{% endif %}
+{% if local_tips %}
+LOCAL AREA TIPS
+{{ local_tips }}
+{% endif %}
+
+If you have any questions before or during your stay, please do not hesitate to reach out. We hope you have a wonderful time!

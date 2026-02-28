@@ -29,10 +29,45 @@ SAMPLE_BOOKING_DATA = {
     "lock_code": "1234",
     "site_number": "100",
     "resort_checkin_instructions": "Located at Test Resort. Please check in at the front desk upon arrival.",
+    "wifi_password": "TestWifi123",
+    "address": "123 Test Resort Way, Fort Myers Beach, FL 33931",
+    "check_in_time": "4:00 PM",
+    "check_out_time": "11:00 AM",
+    "parking_instructions": "Park in the designated spot for your unit.",
+    "local_tips": "Nearest grocery: Publix (0.5 mi).",
+    "custom": {},
+    "platform": "airbnb",
 }
 
 # Template names that must exist in templates/default/
 REQUIRED_TEMPLATES = ["welcome.txt", "pre_arrival.txt"]
+
+# Message templates in templates/messages/ (guest communication — Phase 6)
+REQUIRED_MESSAGE_TEMPLATES = ["welcome.j2", "pre_arrival.j2"]
+
+
+def build_message_template_env(templates_dir: str = "templates") -> Environment:
+    """Build Jinja2 environment for guest message templates.
+
+    Message templates live in templates/messages/ and are shared across all
+    properties (per-property data comes from config variables, not template
+    overrides). This is separate from the per-property override resolution
+    used by compliance templates in templates/default/ and templates/{slug}/.
+
+    Templates are re-read from disk on each call (hot reload) because a new
+    Environment is created each time — edits take effect immediately.
+
+    Args:
+        templates_dir: Root templates directory. Defaults to "templates" (relative to cwd).
+
+    Returns:
+        Configured Jinja2 Environment with StrictUndefined.
+    """
+    messages_dir = Path(templates_dir) / "messages"
+    return Environment(
+        loader=FileSystemLoader(str(messages_dir)),
+        undefined=StrictUndefined,
+    )
 
 
 def build_template_env(property_slug: str, templates_dir: str = "templates") -> Environment:
@@ -107,12 +142,38 @@ def validate_all_templates(property_slugs: list[str], templates_dir: str = "temp
             except Exception as e:
                 errors.append(f"templates (property={slug}) {template_name}: {e}")
 
+    # Check message templates directory exists (guest communication — Phase 6)
+    messages_dir = templates_path / "messages"
+    if not messages_dir.exists():
+        raise SystemExit(f"Message template directory not found: {messages_dir}")
+
+    # Check all required message templates exist and render
+    msg_env = build_message_template_env(templates_dir)
+    for template_name in REQUIRED_MESSAGE_TEMPLATES:
+        if not (messages_dir / template_name).exists():
+            errors.append(f"templates/messages/{template_name}: required message template missing")
+        else:
+            try:
+                template = msg_env.get_template(template_name)
+                template.render(**SAMPLE_BOOKING_DATA)
+            except UndefinedError as e:
+                errors.append(
+                    f"templates/messages/{template_name}: undefined variable — {e}"
+                )
+            except Exception as e:
+                errors.append(f"templates/messages/{template_name}: {e}")
+
     if errors:
         raise SystemExit(
             "Template validation failed:\n" + "\n".join(f"  - {e}" for e in errors)
         )
 
-    log.info("Templates validated", properties=len(property_slugs), templates=len(REQUIRED_TEMPLATES))
+    log.info(
+        "Templates validated",
+        properties=len(property_slugs),
+        templates=len(REQUIRED_TEMPLATES),
+        message_templates=len(REQUIRED_MESSAGE_TEMPLATES),
+    )
 
 
 def render_template(
@@ -137,5 +198,36 @@ def render_template(
         TemplateNotFound: If the template doesn't exist in default or property dir.
     """
     env = build_template_env(property_slug, templates_dir)
+    template = env.get_template(template_name)
+    return template.render(**data)
+
+
+def render_message_template(
+    template_name: str,
+    data: dict,
+    templates_dir: str = "templates",
+) -> str:
+    """Render a guest message template with the given data.
+
+    Unlike render_template() which resolves per-property overrides
+    (templates/{slug}/ -> templates/default/), this function renders
+    from templates/messages/ — shared templates for guest communication.
+
+    A new Jinja2 Environment is created on each call, so template file
+    edits on disk take effect immediately (hot reload per CONTEXT decision).
+
+    Args:
+        template_name: Template filename (e.g., "welcome.j2", "pre_arrival.j2").
+        data: Template context variables.
+        templates_dir: Root templates directory. Defaults to "templates".
+
+    Returns:
+        Rendered template string.
+
+    Raises:
+        UndefinedError: If a required template variable is missing from data.
+        TemplateNotFound: If the template doesn't exist in templates/messages/.
+    """
+    env = build_message_template_env(templates_dir)
     template = env.get_template(template_name)
     return template.render(**data)
