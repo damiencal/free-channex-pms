@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import polars as pl
+import structlog
 from sqlalchemy import func, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
@@ -27,9 +28,12 @@ from app.models.bank_transaction import BankTransaction
 from app.models.booking import Booking
 from app.models.import_run import ImportRun
 from app.models.property import Property
+from app.models.resort_submission import ResortSubmission
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
+
+log = structlog.get_logger()
 
 
 # ---------------------------------------------------------------------------
@@ -107,6 +111,56 @@ def build_listing_lookup() -> dict[str, str]:
     for prop in config.properties:
         lookup.update(prop.listing_slug_map)
     return lookup
+
+
+def _create_resort_submissions(
+    inserted_booking_ids: list[str],
+    platform: str,
+    db: "Session",
+) -> None:
+    """Create pending ResortSubmission records for newly imported bookings.
+
+    Only creates for NEW bookings (inserts), not updates. Records are created
+    with status='pending'. Whether they auto-submit (email sent immediately)
+    or wait for manual approval depends on the preview mode threshold,
+    which is evaluated by the upload API endpoint after this function returns.
+
+    Args:
+        inserted_booking_ids: Platform booking IDs of newly inserted bookings.
+        platform: Platform identifier (airbnb, vrbo, rvshare).
+        db: Active SQLAlchemy session.
+    """
+    # Look up actual DB IDs for the inserted bookings
+    booking_rows = db.execute(
+        select(Booking.id, Booking.platform_booking_id).where(
+            Booking.platform == platform,
+            Booking.platform_booking_id.in_(inserted_booking_ids),
+        )
+    ).all()
+
+    created_count = 0
+    for booking_id, platform_booking_id in booking_rows:
+        # Check if submission already exists (idempotent)
+        existing = db.execute(
+            select(ResortSubmission.id).where(
+                ResortSubmission.booking_id == booking_id
+            )
+        ).scalar_one_or_none()
+
+        if existing is not None:
+            continue
+
+        submission = ResortSubmission(booking_id=booking_id)
+        db.add(submission)
+        created_count += 1
+
+    if created_count > 0:
+        db.commit()
+        log.info(
+            "Resort submissions created",
+            count=created_count,
+            platform=platform,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -217,6 +271,21 @@ def ingest_csv(
 
     db.commit()
 
+    # 6b. Create resort submission records for newly inserted bookings
+    if inserted_ids:
+        _create_resort_submissions(inserted_ids, platform, db)
+
+    # Look up actual DB IDs for inserted bookings (needed for background submission tasks)
+    inserted_db_ids: list[int] = []
+    if inserted_ids:
+        rows = db.execute(
+            select(Booking.id).where(
+                Booking.platform == platform,
+                Booking.platform_booking_id.in_(inserted_ids),
+            )
+        ).all()
+        inserted_db_ids = [row.id for row in rows]
+
     # 7. Record ImportRun
     run = ImportRun(
         platform=platform,
@@ -237,6 +306,7 @@ def ingest_csv(
         "skipped": 0,
         "inserted_ids": inserted_ids,
         "updated_ids": updated_ids,
+        "inserted_db_ids": inserted_db_ids,
     }
 
 
@@ -401,6 +471,21 @@ def create_manual_booking(entry: RVshareEntryRequest, db: "Session") -> dict:
     else:
         updated_ids.append(entry.confirmation_code)
 
+    # Trigger resort submission for new manual bookings
+    if inserted_ids:
+        _create_resort_submissions(inserted_ids, platform, db)
+
+    # Look up actual DB IDs for inserted bookings (needed for background submission tasks)
+    inserted_db_ids: list[int] = []
+    if inserted_ids:
+        rows = db.execute(
+            select(Booking.id).where(
+                Booking.platform == platform,
+                Booking.platform_booking_id.in_(inserted_ids),
+            )
+        ).all()
+        inserted_db_ids = [row.id for row in rows]
+
     # Record ImportRun — archive_path is "N/A" for manual entries (no file)
     run = ImportRun(
         platform=platform,
@@ -421,4 +506,5 @@ def create_manual_booking(entry: RVshareEntryRequest, db: "Session") -> dict:
         "skipped": 0,
         "inserted_ids": inserted_ids,
         "updated_ids": updated_ids,
+        "inserted_db_ids": inserted_db_ids,
     }

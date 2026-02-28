@@ -15,10 +15,13 @@ to the normalizer. ValueError from the normalizer is returned as HTTP 422.
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+import structlog
+from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Query, UploadFile
 from sqlalchemy import desc, select
 from sqlalchemy.orm import Session
 
+from app.compliance.submission import process_booking_submission, should_auto_submit
+from app.config import get_config
 from app.db import get_db
 from app.ingestion import normalizer
 from app.ingestion.adapters import airbnb as airbnb_adapter
@@ -34,19 +37,48 @@ router = APIRouter(prefix="/ingestion", tags=["ingestion"])
 
 
 # ---------------------------------------------------------------------------
+# Background submission helper
+# ---------------------------------------------------------------------------
+
+
+async def _fire_background_submissions(booking_db_ids: list[int], db: Session) -> None:
+    """Process resort form submissions for newly imported bookings.
+
+    Called as a FastAPI BackgroundTask after the upload response is sent.
+    Each booking gets its own process_booking_submission() call.
+    Errors are logged but never propagated (background task isolation).
+
+    Args:
+        booking_db_ids: Database IDs of newly inserted bookings.
+        db: Active SQLAlchemy session.
+    """
+    bg_log = structlog.get_logger()
+    for booking_id in booking_db_ids:
+        try:
+            await process_booking_submission(booking_id, db)
+        except Exception:
+            bg_log.exception(
+                "Background submission failed",
+                booking_id=booking_id,
+            )
+
+
+# ---------------------------------------------------------------------------
 # Upload endpoints
 # ---------------------------------------------------------------------------
 
 
 @router.post("/airbnb/upload")
 async def upload_airbnb_csv(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ) -> dict:
     """Upload an Airbnb Transaction History CSV.
 
     Parses the CSV, groups rows by Confirmation Code, upserts bookings,
-    archives the raw file, and records an ImportRun.
+    archives the raw file, and records an ImportRun. Fires background resort
+    form submission tasks for newly inserted bookings when past preview threshold.
 
     Returns:
         Dict with platform, filename, inserted, updated, skipped counts.
@@ -60,18 +92,28 @@ async def upload_airbnb_csv(
         result = normalizer.ingest_csv(raw_bytes, file.filename, "airbnb", airbnb_adapter, db)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    # Auto-submit: fire background tasks for new bookings past preview threshold
+    inserted_db_ids = result.get("inserted_db_ids", [])
+    if inserted_db_ids:
+        config = get_config()
+        if should_auto_submit(db, config.auto_submit_threshold):
+            background_tasks.add_task(_fire_background_submissions, inserted_db_ids, db)
+
     return result
 
 
 @router.post("/vrbo/upload")
 async def upload_vrbo_csv(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ) -> dict:
     """Upload a VRBO Payments Report CSV.
 
     Parses the CSV, groups rows by Reservation ID, upserts bookings,
-    archives the raw file, and records an ImportRun.
+    archives the raw file, and records an ImportRun. Fires background resort
+    form submission tasks for newly inserted bookings when past preview threshold.
 
     Returns:
         Dict with platform, filename, inserted, updated, skipped counts.
@@ -85,6 +127,14 @@ async def upload_vrbo_csv(
         result = normalizer.ingest_csv(raw_bytes, file.filename, "vrbo", vrbo_adapter, db)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    # Auto-submit: fire background tasks for new bookings past preview threshold
+    inserted_db_ids = result.get("inserted_db_ids", [])
+    if inserted_db_ids:
+        config = get_config()
+        if should_auto_submit(db, config.auto_submit_threshold):
+            background_tasks.add_task(_fire_background_submissions, inserted_db_ids, db)
+
     return result
 
 
@@ -119,14 +169,17 @@ async def upload_mercury_csv(
 
 
 @router.post("/rvshare/entry")
-def create_rvshare_booking(
+async def create_rvshare_booking(
+    background_tasks: BackgroundTasks,
     entry: RVshareEntryRequest,
     db: Session = Depends(get_db),
 ) -> dict:
     """Manually enter an RVshare booking.
 
     RVshare does not export CSVs in the same format as Airbnb/VRBO.
-    Operators submit bookings as JSON via this endpoint.
+    Operators submit bookings as JSON via this endpoint. Fires background
+    resort form submission tasks for newly inserted bookings when past
+    preview threshold.
 
     Returns:
         Dict with platform, filename, inserted, updated, skipped counts.
@@ -138,6 +191,14 @@ def create_rvshare_booking(
         result = normalizer.create_manual_booking(entry, db)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    # Auto-submit: fire background tasks for new bookings past preview threshold
+    inserted_db_ids = result.get("inserted_db_ids", [])
+    if inserted_db_ids:
+        config = get_config()
+        if should_auto_submit(db, config.auto_submit_threshold):
+            background_tasks.add_task(_fire_background_submissions, inserted_db_ids, db)
+
     return result
 
 
