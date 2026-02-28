@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 6 in progress — Plans 01 and 03 complete, Plans 02, 04, 05 remain
+**Current focus:** Phase 6 in progress — Plans 01, 02, 03, 04 complete, Plan 05 remains
 
 ## Current Position
 
 Phase: 6 of 8 (Guest Communication) — In progress
-Plan: 3/5 plans executed (01 and 03 complete; 02, 04, 05 remain)
-Status: Phase 6, Plan 03 complete — Pre-arrival scheduler module created with schedule_pre_arrival_job(), rebuild_pre_arrival_jobs(), compute_pre_arrival_send_time().
-Last activity: 2026-02-28 — Completed 06-03-PLAN.md
+Plan: 4/5 plans executed (01, 02, 03, 04 complete; 05 remains)
+Status: Phase 6, Plan 04 complete — Ingestion pipeline wired to communication system: _create_communication_logs(), APScheduler job registration, BackgroundTasks welcome dispatch for VRBO/RVshare.
+Last activity: 2026-02-28 — Completed 06-04-PLAN.md
 
-Progress: [████████████████████████] 96% (24/25 plans estimated)
+Progress: [████████████████████████] 97% (25/26 plans estimated)
 
 ## Performance Metrics
 
@@ -32,10 +32,10 @@ Progress: [███████████████████████
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
-| 06-guest-communication | 2/5 | 3 min | 1.5 min |
+| 06-guest-communication | 4/5 | 5 min | 1.25 min |
 
 **Recent Trend:**
-- Last 7 plans: 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min), 05-06 (2 min), 06-01 (2 min), 06-03 (1 min)
+- Last 7 plans: 04-04 (2 min), 04-03 (2 min), 05-01 (2 min), 05-06 (2 min), 06-01 (2 min), 06-03 (1 min), 06-04 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -174,6 +174,9 @@ Recent decisions affecting current work:
 - [06-03]: schedule_pre_arrival_job() checks run_at <= now before add_job() — APScheduler DateTrigger silently no-ops when run_date is past; guard prevents this
 - [06-03]: compute_pre_arrival_send_time() extracted as public function — Plan 04 ingestion hook needs it when setting CommunicationLog.scheduled_for
 - [06-03]: Circular imports avoided via lazy function-body imports — all cross-module imports (main.py scheduler, messenger.py) deferred to call time
+- [06-04]: _create_communication_logs() does NOT pre-create VRBO/RVshare welcome logs — deferred to prepare_welcome_message() so create+notify remain atomic and idempotency check does not block the email
+- [06-04]: welcome_async_ids return value carries DB booking IDs (not platform IDs) — API layer needs DB IDs for prepare_welcome_message(); avoids second lookup
+- [06-04]: Idempotency in _create_communication_logs() uses count of ALL rows for booking_id — if any CommunicationLog exists, skip entirely; unique constraint is DB-level backstop
 
 ### Pending Todos
 
@@ -190,6 +193,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T19:46:56Z
-Stopped at: Completed 06-02-PLAN.md — communication module (render_guest_message, send_pre_arrival_message, prepare_welcome_message, operator notification emailer)
+Last session: 2026-02-28T19:51:11Z
+Stopped at: Completed 06-04-PLAN.md — ingestion pipeline wired to communication system (_create_communication_logs, schedule_pre_arrival_job, BackgroundTasks welcome dispatch)
 Resume file: None
