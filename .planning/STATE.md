@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 5 of 8 (Resort PDF Compliance) — In progress
-Plan: 1 of 5 in phase 5 (05-01 complete)
-Status: Phase 5 plan 01 complete — dependencies installed, config extended, ResortSubmission model + migration 005 created
-Last activity: 2026-02-28 — Completed 05-01-PLAN.md
+Plan: 2 of 5 in phase 5 (05-02 at checkpoint — awaiting user verification)
+Status: Phase 5 plan 02 Task 1 complete — PDF filler module created with detect_form_type(), fill_resort_form(), list_form_fields(). Waiting at checkpoint for user to verify actual Sun Retreats PDF is AcroForm.
+Last activity: 2026-02-28 — Executing 05-02-PLAN.md, stopped at checkpoint:human-verify
 
 Progress: [█████████████████████░░] 84% (21/25 plans estimated)
 
@@ -135,6 +135,9 @@ Recent decisions affecting current work:
 - [05-01]: host_name and host_phone are required PropertyConfig fields (no default) — same pattern as resort_checkin_instructions; forces operator to provide at config time
 - [05-01]: confirmations/ volume mounted read-only in container — app reads PDFs; n8n/mail rules write them on host
 - [05-01]: ResortSubmission unique constraint on booking_id — enforces one submission per booking at DB level
+- [05-02]: field.update() + doc.bake() enforced — need_appearances() alone fails on macOS Preview and iOS Mail; bake() embeds appearance streams permanently
+- [05-02]: fill_resort_form() accepts plain dicts not ORM models — orchestrator (Plan 04) builds dicts from ORM before calling
+- [05-02]: list_form_fields() is the field discovery tool — run against actual resort PDF to get real field names for mapping JSON
 
 ### Pending Todos
 
@@ -142,7 +145,7 @@ None.
 
 ### Blockers/Concerns
 
-- [Pre-Phase 5]: Resort PDF form type unverified — must confirm AcroForm vs. XFA before building PDF pipeline. XFA requires HTML-to-PDF (Playwright) instead of form filling. Verify against actual Sun Retreats form before Phase 5 planning.
+- [05-02 CHECKPOINT]: Resort PDF form type still unverified — detect_form_type() is built; user must run it against actual Sun Retreats PDF and confirm AcroForm. If XFA, entire Phase 5 approach changes (Playwright HTML-to-PDF instead of form filling).
 - [Pre-Phase 3]: RESOLVED — Airbnb fee model confirmed: split_fee (3% host) is current; host_only (15.5%) also implemented. Config defaults set. Re-recognition required if model changes.
 - [04-02]: Revenue query filters source_type==booking_payout — non-booking adjustments excluded from platform breakdown
 - [04-02]: Combined P&L uses full shared expense amounts once (not sum of per-property allocations) — no double-counting
@@ -151,6 +154,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T02:05:36Z
-Stopped at: Completed 05-01-PLAN.md — Phase 5 foundation complete. 4 deps installed, AppConfig SMTP+compliance fields added, PropertyConfig host info fields added, ResortSubmission model + migration 005 created. Ready for Wave-2 plans (05-02 pdf-filler, 05-03 email-sender).
+Last session: 2026-02-28T02:10:13Z
+Stopped at: 05-02-PLAN.md checkpoint:human-verify — PDF filler module complete (detect_form_type, fill_resort_form, list_form_fields). Waiting for user to verify actual Sun Retreats form is AcroForm and create real field mapping JSON.
 Resume file: None
