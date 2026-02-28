@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 5 of 8 (Resort PDF Compliance) — In progress
-Plan: 2 of 5 in phase 5 (05-02 at checkpoint — awaiting user verification)
-Status: Phase 5 plan 02 Task 1 complete — PDF filler module created with detect_form_type(), fill_resort_form(), list_form_fields(). Waiting at checkpoint for user to verify actual Sun Retreats PDF is AcroForm.
-Last activity: 2026-02-28 — Executing 05-02-PLAN.md, stopped at checkpoint:human-verify
+Plan: 3 of 5 in phase 5 (05-01, 05-03 complete; 05-02 at checkpoint awaiting human-verify)
+Status: Phase 5 plan 03 complete — emailer.py (async SMTP + tenacity retry) and confirmation.py (file matcher + formatters) created. 05-02 at checkpoint:human-verify.
+Last activity: 2026-02-28 — Completed 05-03-PLAN.md (parallel with 05-02)
 
 Progress: [█████████████████████░░] 84% (21/25 plans estimated)
 
@@ -135,6 +135,10 @@ Recent decisions affecting current work:
 - [05-01]: host_name and host_phone are required PropertyConfig fields (no default) — same pattern as resort_checkin_instructions; forces operator to provide at config time
 - [05-01]: confirmations/ volume mounted read-only in container — app reads PDFs; n8n/mail rules write them on host
 - [05-01]: ResortSubmission unique constraint on booking_id — enforces one submission per booking at DB level
+- [05-03]: stdlib logging for tenacity before_sleep_log — tenacity expects stdlib Logger, not structlog BoundLogger
+- [05-03]: confirmation_bytes optional (None omits second attachment) — caller decides how to handle missing confirmation file
+- [05-03]: find_confirmation_file returns None when dir absent or no match — not raise; orchestrator handles gracefully
+- [05-03]: port 465 → use_tls=True, other ports → start_tls=True — covers both common SMTP configurations
 - [05-02]: field.update() + doc.bake() enforced — need_appearances() alone fails on macOS Preview and iOS Mail; bake() embeds appearance streams permanently
 - [05-02]: fill_resort_form() accepts plain dicts not ORM models — orchestrator (Plan 04) builds dicts from ORM before calling
 - [05-02]: list_form_fields() is the field discovery tool — run against actual resort PDF to get real field names for mapping JSON
