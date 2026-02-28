@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 6 in progress — Plan 01 complete, Plans 02-05 remain
+**Current focus:** Phase 6 in progress — Plans 01 and 03 complete, Plans 02, 04, 05 remain
 
 ## Current Position
 
 Phase: 6 of 8 (Guest Communication) — In progress
-Plan: 1/5 plans executed
-Status: Phase 6, Plan 01 complete — CommunicationLog model, migration 006, extended PropertyConfig, message templates, render_message_template() all created.
-Last activity: 2026-02-28 — Completed 06-01-PLAN.md
+Plan: 3/5 plans executed (01 and 03 complete; 02, 04, 05 remain)
+Status: Phase 6, Plan 03 complete — Pre-arrival scheduler module created with schedule_pre_arrival_job(), rebuild_pre_arrival_jobs(), compute_pre_arrival_send_time().
+Last activity: 2026-02-28 — Completed 06-03-PLAN.md
 
 Progress: [████████████████████████] 96% (24/25 plans estimated)
 
@@ -32,10 +32,10 @@ Progress: [███████████████████████
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
-| 06-guest-communication | 1/5 | 2 min | 2 min |
+| 06-guest-communication | 2/5 | 3 min | 1.5 min |
 
 **Recent Trend:**
-- Last 7 plans: 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min), 05-06 (2 min), 06-01 (2 min)
+- Last 7 plans: 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min), 05-06 (2 min), 06-01 (2 min), 06-03 (1 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -162,6 +162,10 @@ Recent decisions affecting current work:
 - [06-01]: All new PropertyConfig guest fields have defaults (not required) — Phase 6 is additive; existing configs must not break
 - [06-01]: CommunicationLog.status server_default='pending' — all new entries start pending unless explicitly set to native_configured
 - [06-01]: SAMPLE_BOOKING_DATA extended in-place — single dict covers both compliance and message template validation at startup
+- [06-03]: 14:00 UTC hardcoded as PRE_ARRIVAL_SEND_HOUR_UTC — maps to 9am EST / 10am EDT; can be configurable if properties span timezones later
+- [06-03]: schedule_pre_arrival_job() checks run_at <= now before add_job() — APScheduler DateTrigger silently no-ops when run_date is past; guard prevents this
+- [06-03]: compute_pre_arrival_send_time() extracted as public function — Plan 04 ingestion hook needs it when setting CommunicationLog.scheduled_for
+- [06-03]: Circular imports avoided via lazy function-body imports — all cross-module imports (main.py scheduler, messenger.py) deferred to call time
 
 ### Pending Todos
 
@@ -178,6 +182,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T19:42:54Z
-Stopped at: Completed 06-01-PLAN.md — CommunicationLog model, migration 006, extended PropertyConfig, message templates
+Last session: 2026-02-28T19:45:49Z
+Stopped at: Completed 06-03-PLAN.md — Pre-arrival scheduler module (schedule_pre_arrival_job, rebuild_pre_arrival_jobs, compute_pre_arrival_send_time)
 Resume file: None
