@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 4 of 8 (Financial Reports) — In progress
-Plan: 4 of 4 in phase 4 (04-01, 04-02, 04-04 complete; 04-03 remaining)
-Status: In progress — Bank transaction categorization complete; 04-03 (balance sheet) remaining
-Last activity: 2026-02-28 — Completed 04-04-PLAN.md (GET /api/accounting/bank-transactions, PATCH single and bulk categorization endpoints with auto-expense journal entry creation)
+Phase: 4 of 8 (Financial Reports) — Phase complete
+Plan: 4 of 4 in phase 4 (04-01, 04-02, 04-03, 04-04 all complete)
+Status: Phase 4 complete — All financial reports implemented (P&L, balance sheet, income statement, bank transaction categorization)
+Last activity: 2026-02-28 — Completed 04-03-PLAN.md (generate_balance_sheet, generate_income_statement, GET /api/reports/balance-sheet, GET /api/reports/income-statement)
 
-Progress: [████████████████████░] 76% (19/25 plans estimated)
+Progress: [█████████████████████░] 80% (20/25 plans estimated)
 
 ## Performance Metrics
 
@@ -30,10 +30,10 @@ Progress: [████████████████████░] 76% 
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
-| 04-financial-reports | 3/4 | 6 min | 2 min |
+| 04-financial-reports | 4/4 | 8 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min)
+- Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -126,6 +126,10 @@ Recent decisions affecting current work:
 - [04-04]: abs(txn.amount) when passing to record_expense() — bank debits stored as negative; record_expense() requires positive amounts
 - [04-04]: Bulk /bank-transactions/categorize registered before /{txn_id}/category — fixed-path routes must precede path-param routes to avoid route conflict
 - [04-04]: record_expense() ValueError in bulk = per-item error (continues); in single = HTTP 422 (aborts) — different error semantics for batch vs single ops
+- [04-03]: Loan liability balances via get_loan_balance() not journal sums — Phase 3 never created origination entries; only payment debits exist
+- [04-03]: Retained Earnings = negate(sum of all revenue+expense journal lines up to as_of_date) — simplest correct formula; revenue credits are negative, so negating the total sum yields positive RE when profitable
+- [04-03]: Balance sheet combined-only, zero-balance accounts included — all active balance-sheet accounts shown even with no activity
+- [04-03]: Income statement breakdown=totals|monthly — monthly mode groups by (year, month) tuple, collects union of revenue+expense months
 
 ### Pending Todos
 
@@ -142,6 +146,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T00:29:32Z
-Stopped at: Completed 04-04-PLAN.md — Bank transaction categorization: GET list with filters, PATCH single with auto-expense journal entry creation for expense categories, PATCH bulk with per-item error collection.
+Last session: 2026-02-28T00:34:54Z
+Stopped at: Completed 04-03-PLAN.md — Balance sheet generator (generate_balance_sheet with loan override via get_loan_balance) and income statement generator (generate_income_statement with totals/monthly breakdown). Phase 4 now fully complete.
 Resume file: None
