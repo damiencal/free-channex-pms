@@ -77,6 +77,34 @@ class PropertyConfig(BaseModel):
     across all properties to find the matching property_id.
     """
 
+    # --- Guest communication fields ---
+    wifi_password: str = ""
+    """WiFi password for guest pre-arrival message. Empty string if not applicable."""
+
+    address: str = ""
+    """Full property address for guest pre-arrival message."""
+
+    check_in_time: str = "4:00 PM"
+    """Check-in time shown in pre-arrival message. Default: 4:00 PM."""
+
+    check_out_time: str = "11:00 AM"
+    """Check-out time shown in pre-arrival message. Default: 11:00 AM."""
+
+    parking_instructions: str = ""
+    """Parking instructions for pre-arrival message. Empty string if none."""
+
+    local_tips: str = ""
+    """Local area tips (restaurants, grocery, emergency contacts) for pre-arrival message."""
+
+    custom: dict[str, str] = {}
+    """Arbitrary key-value pairs available as template variables.
+    Example in YAML:
+      custom:
+        pool_code: "5678"
+        trash_day: "Tuesday"
+    Accessed in templates as {{ custom.pool_code }}, {{ custom.trash_day }}.
+    """
+
 
 class AppConfig(BaseSettings):
     """Application-wide configuration loaded from .env + config/base.yaml.

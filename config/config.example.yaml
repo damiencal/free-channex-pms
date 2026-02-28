@@ -16,3 +16,14 @@ host_phone: "555-123-4567"     # Property owner/host phone for resort booking fo
 listing_slug_map:
   "My Listing Title on Airbnb": "my-property-slug"
   "12345": "my-property-slug"
+
+# Guest communication fields
+wifi_password: "network-password"        # WiFi password for pre-arrival message
+address: "123 Resort Way, City, ST 12345"  # Full property address
+check_in_time: "4:00 PM"                # Check-in time
+check_out_time: "11:00 AM"              # Check-out time
+parking_instructions: "Park in designated spot. One vehicle per unit."  # Parking info
+local_tips: "Nearest grocery: Publix (0.5 mi). Emergency: 911."  # Area tips
+custom:                                  # Arbitrary per-property variables for templates
+  pool_code: "5678"                      # Accessed as {{ custom.pool_code }} in templates
+  trash_day: "Tuesday"                   # Accessed as {{ custom.trash_day }} in templates

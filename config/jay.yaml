@@ -9,3 +9,12 @@ host_phone: "CHANGE_ME"
 listing_slug_map:
   "Jay 2BR RV near Sanibel Island & Fort Myers Beach": "jay"
   "CHANGE_ME_VRBO_PROPERTY_ID": "jay"
+
+# Guest communication
+wifi_password: "CHANGE_ME"
+address: "CHANGE_ME_ADDRESS, Fort Myers Beach, FL 33931"
+check_in_time: "4:00 PM"
+check_out_time: "11:00 AM"
+parking_instructions: "Park in the designated spot for Lot 110. One vehicle per lot."
+local_tips: ""
+custom: {}
