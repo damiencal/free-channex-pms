@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 3 of 8 (Accounting Engine) — COMPLETE
-Plan: 6 of 6 in phase 3 (all plans complete: 03-01 through 03-06)
-Status: Phase 3 complete — all accounting engine plans done; ready to start Phase 4
-Last activity: 2026-02-27 — Completed 03-06-PLAN.md (accounting API: 14 endpoints, operator-triggered revenue recognition, expense/loan/reconciliation endpoints, registered in app/main.py)
+Phase: 4 of 8 (Financial Reports) — In progress
+Plan: 1 of 4 in phase 4 (04-01 complete; 04-02, 04-03, 04-04 remaining)
+Status: In progress — Phase 4 Wave-1 foundation complete; Wave-2 plans ready to run in parallel
+Last activity: 2026-02-28 — Completed 04-01-PLAN.md (migration 004: category/journal_entry_id on bank_transactions, property_id on loans; resolve_period() helper; ALL_CATEGORIES constant)
 
-Progress: [████████████████░] 64% (16/25 plans estimated)
+Progress: [█████████████████░] 68% (17/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
+- Total plans completed: 17
 - Average duration: 2 min
-- Total execution time: 26 min
+- Total execution time: 28 min
 
 **By Phase:**
 
@@ -30,9 +30,10 @@ Progress: [████████████████░] 64% (16/25 plans
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
+| 04-financial-reports | 1/4 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 02-06 (2 min), 03-01 (2 min), 03-03 (2 min), 03-05 (2 min), 03-02 (2 min)
+- Last 7 plans: 03-02 (2 min), 03-04 (2 min), 03-06 (2 min), 04-01 (1 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -118,6 +119,10 @@ Recent decisions affecting current work:
 - [03-06]: recognize-all batch commit per booking with individual rollback on error — one bad booking does not abort the entire batch
 - [03-06]: POST /reconciliation/reject/{match_id} uses query param confirmed_by (not body) — simple action, match_id from path is sufficient
 - [03-06]: Accounting module commit responsibility: modules use db.flush() only; API endpoints call db.commit()
+- [04-01]: resolve_period() priority order: start/end > month > quarter > year > ytd > error — explicit ranges always take precedence
+- [04-01]: NON_EXPENSE_CATEGORIES [owner_deposit, loan_payment, transfer, personal] — bank transaction types that don't appear on P&L
+- [04-01]: property_id on loans is nullable — property-specific loans get property_id set; shared working capital loans remain NULL
+- [04-01]: EXPENSE_CATEGORIES not duplicated in reports.py — imported from expenses.py to maintain single source of truth
 
 ### Pending Todos
 
@@ -131,6 +136,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27T21:54:06Z
-Stopped at: Completed 03-06-PLAN.md — 14-endpoint accounting API (journal entries, balances, revenue recognition, expenses, loans, reconciliation); accounting router registered in app/main.py; Phase 3 complete.
+Last session: 2026-02-28T00:22:33Z
+Stopped at: Completed 04-01-PLAN.md — Phase 4 Wave-1 foundation: migration 004 (category/journal_entry_id on bank_transactions, property_id on loans), resolve_period() helper, ALL_CATEGORIES constant in reports.py.
 Resume file: None
