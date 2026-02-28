@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Header } from './Header'
+import { HomeTab } from '@/components/home/HomeTab'
 import { apiFetch } from '@/api/client'
 import { usePropertyStore } from '@/store/usePropertyStore'
 
@@ -66,8 +67,7 @@ export function AppShell() {
           </TabsList>
 
           <TabsContent value="home">
-            {/* HomeTab is populated in Task 2 — imported lazily to avoid circular deps */}
-            <HomeTabSlot />
+            <HomeTab />
           </TabsContent>
 
           <TabsContent value="calendar">
@@ -93,14 +93,3 @@ export function AppShell() {
   )
 }
 
-/**
- * Slot for the Home tab — defined here to keep AppShell self-contained.
- * Task 2 will replace this placeholder with the real HomeTab component.
- */
-function HomeTabSlot() {
-  return (
-    <div id="home-tab-slot">
-      {/* HomeTab will be rendered here after Task 2 */}
-    </div>
-  )
-}
