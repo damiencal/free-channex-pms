@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 7 in progress — Plans 01 and 02 complete. Frontend scaffold + backend API endpoints done. Ready for Plan 03 (dashboard UI).
+**Current focus:** Phase 7 in progress — Plans 01, 02, and 03 complete. App shell + Home tab live. Ready for Plans 04-05 (Calendar, Actions tabs).
 
 ## Current Position
 
 Phase: 7 of 8 (Dashboard) — In progress
-Plan: 2/5 plans executed (01, 02 complete)
-Status: Plan 07-01 complete — React 19 + Vite 7 + shadcn/ui scaffold, Docker multi-stage build, FastAPI SPA serving. Plan 07-02 complete — 5 dashboard API endpoints registered.
-Last activity: 2026-02-28 — Completed 07-01-PLAN.md (frontend scaffold and SPA integration)
+Plan: 3/5 plans executed (01, 02, 03 complete)
+Status: Plan 07-03 complete — App shell with property selector + dark mode, 4-tab navigation with URL sync, Home tab with stat cards, booking trend chart, occupancy donut chart, and actions preview.
+Last activity: 2026-02-28 — Completed 07-03-PLAN.md (dashboard UI shell and home tab)
 
-Progress: [████████████████████████░░░░░] 83% (28/34 plans estimated)
+Progress: [█████████████████████████░░░░] 85% (29/34 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 30
+- Total plans completed: 31
 - Average duration: 2 min
-- Total execution time: 53 min
+- Total execution time: 57 min
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [███████████████████████
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
 | 06-guest-communication | 5/5 | 6 min | 1.2 min |
-| 07-dashboard | 2/5 | ~4 min | 2 min |
+| 07-dashboard | 3/5 | ~8 min | ~2.7 min |
 
 **Recent Trend:**
-- Last 7 plans: 05-01 (2 min), 05-06 (2 min), 06-01 (2 min), 06-03 (1 min), 06-04 (2 min), 07-01 (~2 min), 07-02 (2 min)
-- Trend: Steady
+- Last 7 plans: 06-01 (2 min), 06-03 (1 min), 06-04 (2 min), 07-01 (~2 min), 07-02 (2 min), 07-03 (4 min)
+- Trend: Steady (07-03 slightly longer due to 15 files)
 
 *Updated after each plan completion*
 
@@ -190,6 +190,11 @@ Recent decisions affecting current work:
 - [07-02]: Actions endpoint uses internal _group/_sort_key fields stripped at return boundary — preserves heterogeneous sort semantics across resort forms/messages/unreconciled without API leakage
 - [07-02]: YoY change returns null (not "0%") when prior year data is zero — null signals missing data; allows conditional rendering in frontend
 - [07-02]: _count_pending_actions helper shared between metrics and actions endpoints — avoids duplicating query logic for badge count
+- [07-03]: selectedPropertyId in every TanStack Query key — property change triggers automatic refetch of all dashboard data without manual cache invalidation
+- [07-03]: BookingTrendChart fetches /api/dashboard/bookings with 12-month date range and aggregates client-side — avoids a new dedicated trend endpoint
+- [07-03]: AppShell Actions badge shares TanStack Query cache entry with useActions hook (same queryKey) — no extra HTTP request for badge count
+- [07-03]: OccupancyChart center text rendered as overlay div over donut hole — simpler than Recharts SVG label requiring coordinate math
+- [07-03]: Dark mode default is light; toggles .dark on document.documentElement and persists to localStorage
 
 ### Pending Todos
 
@@ -207,5 +212,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 07-01-PLAN.md — React 19 + Vite 7 + shadcn/ui scaffold, Docker multi-stage build, FastAPI SPA serving at root. Plans 01 and 02 both complete.
+Stopped at: Completed 07-03-PLAN.md — App shell with header (property selector + dark mode), 4-tab navigation with URL sync, Home tab with stat cards, booking trend chart, occupancy donut chart, and actions preview. Plans 01, 02, and 03 all complete.
 Resume file: None
