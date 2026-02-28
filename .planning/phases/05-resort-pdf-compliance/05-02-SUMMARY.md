@@ -34,12 +34,19 @@ key-files:
   created:
     - app/compliance/__init__.py
     - app/compliance/pdf_filler.py
+    - pdf_mappings/sun_retreats_booking.json
+    - pdf_mappings/sun_retreats_booking.pdf
   modified: []
 
 key-decisions:
   - "field.update() + doc.bake() pattern enforced -- not need_appearances() alone (fails macOS Preview/iOS Mail)"
   - "fill_resort_form() accepts dicts not ORM models -- orchestrator builds dicts from ORM in Plan 04"
   - "list_form_fields() is the discovery tool -- run against actual resort PDF to get real field names for mapping JSON"
+  - "Sun Retreats PDF confirmed AcroForm -- pre-Phase-5 blocker RESOLVED"
+  - "Host info pre-filled in PDF template as annotations -- only 8 per-booking fields are fillable widgets"
+  - "Guest phone/email mapped as static N/A -- platform CSVs do not export this data"
+  - "Guest count mapped as static 2 -- platform CSVs do not export guest count"
+  - "Orchestrator must split guest_name into guest_first_name/guest_last_name for the mapping"
 
 patterns-established:
   - "PDF cross-viewer compatibility: always call widget.update() per field then doc.bake() once before tobytes()"
@@ -59,8 +66,8 @@ completed: 2026-02-27
 - **Duration:** 1 min
 - **Started:** 2026-02-28T02:08:49Z
 - **Completed:** 2026-02-28T02:10:13Z
-- **Tasks:** 1 (task 2 is a checkpoint awaiting user verification)
-- **Files modified:** 2
+- **Tasks:** 1 auto + 1 checkpoint (verified)
+- **Files created:** 4
 
 ## Accomplishments
 - Created compliance package init (`app/compliance/__init__.py`)
@@ -72,13 +79,16 @@ completed: 2026-02-27
 
 Each task was committed atomically:
 
-1. **Task 1: Create compliance package and PDF filler module** - `a57be4c` (feat) — Note: files were committed as part of wave-2 execution in prior session
+1. **Task 1: Create compliance package and PDF filler module** - `a57be4c` (feat)
+2. **Checkpoint: Sun Retreats PDF verified + mapping created** - `aa7eca5` (feat)
 
-**Plan metadata:** (pending — checkpoint not yet passed)
+**Plan metadata:** see below
 
 ## Files Created/Modified
 - `app/compliance/__init__.py` - Compliance package init with module docstring
 - `app/compliance/pdf_filler.py` - Three public functions: detect_form_type, fill_resort_form, list_form_fields
+- `pdf_mappings/sun_retreats_booking.pdf` - Fillable AcroForm template with pre-filled host info
+- `pdf_mappings/sun_retreats_booking.json` - Field mapping (8 fields: site number, guest name/phone/email, dates, guest count)
 
 ## Decisions Made
 - `field.update()` + `doc.bake()` enforced — `need_appearances()` alone fails on macOS Preview and iOS Mail; `bake()` embeds appearance streams permanently into the PDF bytes
@@ -92,24 +102,15 @@ None - plan executed exactly as written.
 Note: `app/compliance/__init__.py` and `app/compliance/pdf_filler.py` were found already committed to the repository (commit `a57be4c`, feat(05-03)) from a prior wave-2 execution session. The files match the plan spec exactly. No re-commit was needed.
 
 ## Issues Encountered
-None.
+- Initial PDF was flat/scanned (no form fields) — user provided fillable AcroForm version
 
 ## User Setup Required
-
-**Checkpoint required before plan is fully complete.**
-
-The checkpoint in Task 2 requires the user to:
-1. Place the actual Sun Retreats booking form PDF at `pdf_mappings/sun_retreats_booking.pdf`
-2. Run `detect_form_type()` to confirm it is AcroForm (not XFA) -- this resolves the pre-Phase-5 blocker
-3. Run `list_form_fields()` to enumerate real field names
-4. Create `pdf_mappings/sun_retreats_booking.json` with the real field mapping
-5. Test `fill_resort_form()` with sample data and open result in macOS Preview
+None — PDF template and mapping included in repo.
 
 ## Next Phase Readiness
-- PDF filler module is complete and imports cleanly
-- All three functions verified: imports OK, PyMuPDF 1.27.1, syntax OK
-- Checkpoint pending: AcroForm verification against actual Sun Retreats form
-- Once checkpoint is approved, Plan 04 (submission orchestrator) can call `fill_resort_form()`
+- fill_resort_form() ready for submission orchestrator (Plan 04)
+- Orchestrator must split guest_name into guest_first_name/guest_last_name when building booking_data dict
+- AcroForm blocker RESOLVED — all downstream plans can proceed
 
 ---
 *Phase: 05-resort-pdf-compliance*
