@@ -32,7 +32,7 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.accounting.expenses import bulk_import_expenses, record_expense
+from app.accounting.expenses import EXPENSE_CATEGORIES, bulk_import_expenses, record_expense
 from app.accounting.loans import get_loan_balance, record_loan_payment
 from app.accounting.reconciliation import (
     confirm_match,
@@ -40,10 +40,12 @@ from app.accounting.reconciliation import (
     reject_match,
     run_reconciliation,
 )
+from app.accounting.reports import ALL_CATEGORIES, NON_EXPENSE_CATEGORIES
 from app.accounting.revenue import recognize_booking_revenue
 from app.config import get_config
 from app.db import get_db
 from app.models.account import Account
+from app.models.bank_transaction import BankTransaction
 from app.models.booking import Booking
 from app.models.expense import Expense
 from app.models.journal_entry import JournalEntry
@@ -153,6 +155,34 @@ class RevenueRecognitionResponse(BaseModel):
     entries_created: int
     entries_skipped: int  # idempotent skips
     message: str
+
+
+class BankTransactionResponse(BaseModel):
+    id: int
+    transaction_id: str
+    date: date
+    description: str | None
+    amount: Decimal
+    reconciliation_status: str
+    category: str | None
+    journal_entry_id: int | None
+
+
+class CategoryAssignment(BaseModel):
+    id: int  # bank_transaction.id
+    category: str
+    property_id: int | None = None  # required for expense categories to set property attribution
+    attribution: str | None = None  # "jay", "minnie", or "shared" -- required for expense categories
+
+
+class SingleCategoryRequest(BaseModel):
+    category: str
+    property_id: int | None = None
+    attribution: str | None = None
+
+
+class BulkCategoryRequest(BaseModel):
+    assignments: list[CategoryAssignment]
 
 
 # ---------------------------------------------------------------------------
