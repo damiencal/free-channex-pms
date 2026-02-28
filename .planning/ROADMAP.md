@@ -150,15 +150,15 @@ Plans:
   3. A calendar view shows all upcoming and past bookings across both properties in a single view, color-coded by platform
   4. Pending actions (unsubmitted resort forms approaching deadline, VRBO messages awaiting manual send) are visible on the dashboard and dismissable when actioned
   5. Kim can use the dashboard to check financial and booking status without requiring explanation of financial concepts
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 07-01: React + Vite + shadcn/ui project setup within Docker; FastAPI CORS config; API client layer
-- [ ] 07-02: Financial metrics panel — YTD revenue, expenses, profit per property; connects to Phase 4 report endpoints
-- [ ] 07-03: Occupancy and booking trend charts — per-property occupancy rate and 12-month booking volume; shadcn chart components
-- [ ] 07-04: Booking calendar — cross-property calendar view with platform color-coding; upcoming and past bookings
-- [ ] 07-05: Pending actions queue — unsubmitted forms, VRBO messages awaiting send, unreconciled transactions; dismissable with confirmation
-- [ ] 07-06: Navigation and layout — clean top-nav or sidebar; mobile-readable; no financial jargon in labels
+- [ ] 07-01-PLAN.md — Frontend scaffold: React + Vite + shadcn/ui project, Docker multi-stage build, FastAPI SPA serving with CORS
+- [ ] 07-02-PLAN.md — Dashboard backend API: 5 endpoints for properties, metrics, bookings, occupancy, and pending actions
+- [ ] 07-03-PLAN.md — App shell and Home tab: header with property selector, tabs, dark mode, stat cards, booking trend and occupancy charts
+- [ ] 07-04-PLAN.md — Calendar tab: month grid view with booking bars, timeline/Gantt view, booking detail popovers
+- [ ] 07-05-PLAN.md — Actions tab with expandable pending items and Reports tab placeholder
+- [ ] 07-06-PLAN.md — Polish: badge counts, empty/error/loading states, mobile responsiveness, dark mode audit, human verification
 
 ### Phase 8: LLM Natural Language Interface
 **Goal**: Kim (and Thomas) can ask financial questions in plain English and receive accurate answers backed by SQL queries against the live ledger — never from LLM arithmetic
