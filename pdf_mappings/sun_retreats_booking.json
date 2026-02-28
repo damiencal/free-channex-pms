@@ -1,0 +1,48 @@
+{
+  "form_type": "sun_retreats_booking",
+  "form_description": "Sun Outdoors / Sun Retreats Fort Myers Beach booking form. Host info (name, phone, email, resort) is pre-filled in the PDF template as annotations. Only per-booking fields are fillable AcroForm widgets.",
+  "fields": {
+    "Text_1": {
+      "source": "property",
+      "field": "site_number",
+      "description": "Resort site/lot number from property config (e.g., 110 for Jay, 170 for Minnie)"
+    },
+    "Text_2": {
+      "source": "booking",
+      "field": "guest_first_name",
+      "description": "Guest first name (orchestrator splits guest_name from booking record)"
+    },
+    "Text_3": {
+      "source": "booking",
+      "field": "guest_last_name",
+      "description": "Guest last name (orchestrator splits guest_name from booking record)"
+    },
+    "Text_4": {
+      "source": "static",
+      "value": "N/A",
+      "_comment": "Guest phone not available in Airbnb/VRBO CSV exports"
+    },
+    "Text_5": {
+      "source": "static",
+      "value": "N/A",
+      "_comment": "Guest email not available in Airbnb/VRBO CSV exports"
+    },
+    "Text_6": {
+      "source": "booking",
+      "field": "check_in_date",
+      "format": "MM/DD/YYYY",
+      "description": "Arrival date formatted for the form"
+    },
+    "Text_7": {
+      "source": "booking",
+      "field": "check_out_date",
+      "format": "MM/DD/YYYY",
+      "description": "Departure date formatted for the form"
+    },
+    "Text_8": {
+      "source": "static",
+      "value": "2",
+      "_comment": "Platform CSVs (Airbnb/VRBO) do not export guest count. Default 2; operator can override per-booking if needed."
+    }
+  }
+}
