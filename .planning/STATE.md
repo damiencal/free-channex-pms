@@ -11,17 +11,17 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 Phase: 6 of 8 (Guest Communication) — Complete
 Plan: 5/5 plans executed (01, 02, 03, 04, 05 complete)
-Status: Phase 6 complete — Communication API router (GET /communication/logs, POST /communication/confirm/{log_id}) registered; pre-arrival scheduler jobs rebuilt at startup.
-Last activity: 2026-02-28 — Completed 06-05-PLAN.md
+Status: Phase 6 complete — all plans executed, verified (gap fixed: Airbnb pre-arrival operator notification), requirements COMM-01 through COMM-07 satisfied.
+Last activity: 2026-02-28 — Phase 6 verified and closed
 
 Progress: [████████████████████████] 100% (26/26 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23
+- Total plans completed: 28
 - Average duration: 2 min
-- Total execution time: 40 min
+- Total execution time: 49 min
 
 **By Phase:**
 
@@ -167,7 +167,7 @@ Recent decisions affecting current work:
 - [06-03]: compute_pre_arrival_send_time() extracted as public function — Plan 04 ingestion hook needs it when setting CommunicationLog.scheduled_for
 - [06-02]: send_pre_arrival_message() creates own SessionLocal() — APScheduler runs outside FastAPI request context; same pattern as run_urgency_check() in compliance/urgency.py
 - [06-02]: prepare_welcome_message() receives db session from caller and uses flush() not commit() — caller (API endpoint) owns commit boundary; matches Phase 3 module commit responsibility pattern
-- [06-02]: Airbnb pre-arrival marks status='sent' immediately (system renders text, operator copies to Airbnb app) vs VRBO/RVshare keeps 'pending' until operator confirms via API
+- [06-02]: Airbnb pre-arrival sends operator notification email (same as VRBO/RVshare), status stays 'pending' until operator confirms via API — gap fix: was originally marking 'sent' without notification
 - [06-02]: Airbnb welcome uses native_configured status — Airbnb handles delivery natively, system never renders or sends
 - [06-02]: SMTP guard in prepare_welcome_message: skips with warning if smtp_user/smtp_from_email empty — prevents crashes on unconfigured deployments
 - [06-03]: 14:00 UTC hardcoded as PRE_ARRIVAL_SEND_HOUR_UTC — maps to 9am EST / 10am EDT; can be configurable if properties span timezones later
@@ -197,6 +197,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T19:54:30Z
-Stopped at: Completed 06-05-PLAN.md — Phase 6 complete: communication API router (GET /logs, POST /confirm/{log_id}) and startup job rebuild wired in main.py
+Last session: 2026-02-28
+Stopped at: Phase 6 complete — all 5 plans executed, verified, requirements marked complete. Ready for Phase 7 (Dashboard).
 Resume file: None

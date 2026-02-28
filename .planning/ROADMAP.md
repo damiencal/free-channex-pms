@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Accounting Engine** - Double-entry bookkeeping ledger, multi-platform transaction tracking, and bank reconciliation
 - [x] **Phase 4: Financial Reports** - P&L statements, balance sheets, income statements, and bank transaction categorization
 - [x] **Phase 5: Resort PDF Compliance** - Automated PDF form filling, email submission, deadline tracking, and submission audit trail
-- [ ] **Phase 6: Guest Communication** - Booking confirmation and pre-arrival messages via platform messaging with config-driven templates
+- [x] **Phase 6: Guest Communication** - Booking confirmation and pre-arrival messages via platform messaging with config-driven templates
 - [ ] **Phase 7: Dashboard** - Web dashboard showing financial metrics, occupancy, booking calendar, and pending actions
 - [ ] **Phase 8: LLM Natural Language Interface** - Ollama-powered text-to-SQL query interface for plain-English financial questions
 
@@ -131,15 +131,14 @@ Plans:
   3. Templates use variable substitution so guest name, check-in date, property name, and lock code appear correctly in every message
   4. For VRBO bookings, the system prepares the complete message text and notifies the operator to send manually (no VRBO messaging API available)
   5. Message templates are editable in config files without code changes or system restart
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 06-01: Message template engine — config-driven templates with variable substitution (guest name, dates, property, lock code)
-- [ ] 06-02: Airbnb native scheduled messaging integration — configure welcome and pre-arrival triggers in Airbnb platform; system tracks send status
-- [ ] 06-03: APScheduler setup with SQLAlchemy job store — scheduler service embedded in FastAPI process; dynamic job creation per booking
-- [ ] 06-04: Pre-arrival message scheduler — job created on booking ingestion, fires 2-3 days before check-in (configurable timing)
-- [ ] 06-05: VRBO semi-automated messaging — system prepares message text with substituted variables; dashboard notification prompts operator to send manually
-- [ ] 06-06: Communication log — record of all sent/prepared messages per booking with timestamps
+- [x] 06-01-PLAN.md — CommunicationLog model, PropertyConfig extensions, message templates, migration 006
+- [x] 06-02-PLAN.md — Messenger service with template rendering and platform-specific send logic
+- [x] 06-03-PLAN.md — Pre-arrival scheduler with DateTrigger and startup rebuild
+- [x] 06-04-PLAN.md — Ingestion pipeline hooks for automatic communication triggers
+- [x] 06-05-PLAN.md — Communication API router and lifespan startup wiring
 
 ### Phase 7: Dashboard
 **Goal**: Users can see the operational state of the business at a glance — financials, occupancy, upcoming bookings, and pending actions — from a clean interface that non-technical users can navigate
@@ -191,6 +190,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 3. Accounting Engine | 6/6 | Complete ✓ | 2026-02-27 |
 | 4. Financial Reports | 4/4 | Complete ✓ | 2026-02-28 |
 | 5. Resort PDF Compliance | 6/6 | Complete ✓ | 2026-02-28 |
-| 6. Guest Communication | 0/6 | Not started | - |
+| 6. Guest Communication | 5/5 | Complete ✓ | 2026-02-28 |
 | 7. Dashboard | 0/6 | Not started | - |
 | 8. LLM Natural Language Interface | 0/5 | Not started | - |

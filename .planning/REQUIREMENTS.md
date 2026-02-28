@@ -39,13 +39,13 @@
 
 ### Guest Communication
 
-- [ ] **COMM-01**: System sends a welcome message via platform messaging upon booking confirmation
-- [ ] **COMM-02**: System sends an arrival message via platform messaging 2-3 days before check-in
-- [ ] **COMM-03**: Arrival message includes property details and lock codes from config
-- [ ] **COMM-04**: System uses Airbnb's native scheduled messaging triggers where available
-- [ ] **COMM-05**: System composes VRBO messages for manual sending (no API available)
-- [ ] **COMM-06**: Message templates are user-editable and stored in configuration files
-- [ ] **COMM-07**: Templates support variable substitution (guest name, dates, property name, lock code, etc.)
+- [x] **COMM-01**: System sends a welcome message via platform messaging upon booking confirmation
+- [x] **COMM-02**: System sends an arrival message via platform messaging 2-3 days before check-in
+- [x] **COMM-03**: Arrival message includes property details and lock codes from config
+- [x] **COMM-04**: System uses Airbnb's native scheduled messaging triggers where available
+- [x] **COMM-05**: System composes VRBO messages for manual sending (no API available)
+- [x] **COMM-06**: Message templates are user-editable and stored in configuration files
+- [x] **COMM-07**: Templates support variable substitution (guest name, dates, property name, lock code, etc.)
 
 ### Dashboard & Reporting
 
@@ -135,13 +135,13 @@
 | COMP-05 | Phase 5 | Complete |
 | COMP-06 | Phase 5 | Complete |
 | COMP-07 | Phase 5 | Complete |
-| COMM-01 | Phase 6 | Pending |
-| COMM-02 | Phase 6 | Pending |
-| COMM-03 | Phase 6 | Pending |
-| COMM-04 | Phase 6 | Pending |
-| COMM-05 | Phase 6 | Pending |
-| COMM-06 | Phase 6 | Pending |
-| COMM-07 | Phase 6 | Pending |
+| COMM-01 | Phase 6 | Complete |
+| COMM-02 | Phase 6 | Complete |
+| COMM-03 | Phase 6 | Complete |
+| COMM-04 | Phase 6 | Complete |
+| COMM-05 | Phase 6 | Complete |
+| COMM-06 | Phase 6 | Complete |
+| COMM-07 | Phase 6 | Complete |
 | DASH-01 | Phase 7 | Pending |
 | DASH-02 | Phase 7 | Pending |
 | DASH-03 | Phase 7 | Pending |
@@ -157,4 +157,4 @@
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-28 after Phase 5 completion — COMP-01 through COMP-07 marked Complete*
+*Last updated: 2026-02-28 after Phase 6 completion — COMM-01 through COMM-07 marked Complete*
