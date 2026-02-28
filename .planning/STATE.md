@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 4 of 8 (Financial Reports) — In progress
-Plan: 1 of 4 in phase 4 (04-01 complete; 04-02, 04-03, 04-04 remaining)
-Status: In progress — Phase 4 Wave-1 foundation complete; Wave-2 plans ready to run in parallel
-Last activity: 2026-02-28 — Completed 04-01-PLAN.md (migration 004: category/journal_entry_id on bank_transactions, property_id on loans; resolve_period() helper; ALL_CATEGORIES constant)
+Plan: 2 of 4 in phase 4 (04-01, 04-02 complete; 04-03, 04-04 remaining)
+Status: In progress — P&L report generator and API endpoint complete; 04-03 (balance sheet) and 04-04 (bank transaction categorization) remaining
+Last activity: 2026-02-28 — Completed 04-02-PLAN.md (generate_pl() function, GET /api/reports/pl endpoint, reports router registered in app)
 
-Progress: [█████████████████░] 68% (17/25 plans estimated)
+Progress: [█████████████████░] 72% (18/25 plans estimated)
 
 ## Performance Metrics
 
@@ -30,10 +30,10 @@ Progress: [█████████████████░] 68% (17/25 pl
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
-| 04-financial-reports | 1/4 | 2 min | 2 min |
+| 04-financial-reports | 2/4 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 03-02 (2 min), 03-04 (2 min), 03-06 (2 min), 04-01 (1 min)
+- Last 7 plans: 03-02 (2 min), 03-04 (2 min), 03-06 (2 min), 04-01 (1 min), 04-02 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -132,10 +132,13 @@ None.
 
 - [Pre-Phase 5]: Resort PDF form type unverified — must confirm AcroForm vs. XFA before building PDF pipeline. XFA requires HTML-to-PDF (Playwright) instead of form filling. Verify against actual Sun Retreats form before Phase 5 planning.
 - [Pre-Phase 3]: RESOLVED — Airbnb fee model confirmed: split_fee (3% host) is current; host_only (15.5%) also implemented. Config defaults set. Re-recognition required if model changes.
+- [04-02]: Revenue query filters source_type==booking_payout — non-booking adjustments excluded from platform breakdown
+- [04-02]: Combined P&L uses full shared expense amounts once (not sum of per-property allocations) — no double-counting
+- [04-02]: generate_pl() returns plain dict not Pydantic model — nested arbitrary-key structure (platform names, display_name as keys) doesn't map cleanly to fixed schemas
 - [Pre-Phase 8]: Ollama model selection unresolved — benchmark Qwen2.5-Coder 14B vs. available models against actual schema before Phase 8 planning. Hardware VRAM constraints will determine feasibility.
 
 ## Session Continuity
 
-Last session: 2026-02-28T00:22:33Z
-Stopped at: Completed 04-01-PLAN.md — Phase 4 Wave-1 foundation: migration 004 (category/journal_entry_id on bank_transactions, property_id on loans), resolve_period() helper, ALL_CATEGORIES constant in reports.py.
+Last session: 2026-02-28T00:28:58Z
+Stopped at: Completed 04-02-PLAN.md — P&L report generator: generate_pl() with revenue-by-platform (monthly rows), expenses-by-category, combined/property breakdown, shared expense 1/N allocation; GET /api/reports/pl endpoint registered in app.
 Resume file: None
