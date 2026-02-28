@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ErrorAlert } from '@/components/shared/ErrorAlert'
 import { MonthCalendar } from './MonthCalendar'
+import { TimelineView } from './TimelineView'
 import { useBookings } from '@/hooks/useBookings'
 
 type ViewMode = 'month' | 'timeline'
@@ -128,11 +129,12 @@ export function CalendarTab() {
         />
       )}
 
-      {/* Timeline view — rendered by Task 2 */}
+      {/* Timeline view */}
       {!isLoading && !error && viewMode === 'timeline' && (
-        <div className="text-muted-foreground py-12 text-center rounded-xl border bg-card shadow-sm">
-          Timeline view — loading...
-        </div>
+        <TimelineView
+          currentMonth={currentMonth}
+          bookings={bookings ?? []}
+        />
       )}
     </div>
   )
