@@ -6,6 +6,8 @@ Startup sequence (via lifespan):
   2. Validate templates — FAIL-FAST (catches variable typos before accepting requests)
   3. Verify database connection — FAIL-FAST (can't operate without DB)
   4. Check Ollama connectivity — NON-FATAL (LLM features disabled if unavailable)
+  5. Start compliance scheduler (daily urgency check)
+  6. Rebuild pre-arrival message scheduler jobs from database
 
 Run with:
   uvicorn app.main:app --host 0.0.0.0 --port 8000
@@ -21,10 +23,12 @@ from fastapi import FastAPI
 from sqlalchemy import text
 
 from app.api.accounting import router as accounting_router
+from app.api.communication import router as communication_router
 from app.api.compliance import router as compliance_router
 from app.api.health import router as health_router
 from app.api.ingestion import router as ingestion_router
 from app.api.reports import router as reports_router
+from app.communication.scheduler import rebuild_pre_arrival_jobs
 from app.compliance.urgency import run_urgency_check
 from app.config import load_app_config
 from app.db import engine
@@ -86,6 +90,10 @@ async def lifespan(app: FastAPI):
     scheduler.start()
     log.info("Compliance scheduler started (urgency check daily at 08:00)")
 
+    # 6. Rebuild pre-arrival message scheduler jobs from database
+    rebuilt_count = await rebuild_pre_arrival_jobs()
+    log.info("Pre-arrival scheduler jobs rebuilt", rebuilt_count=rebuilt_count)
+
     log.info("Startup complete — ready to accept requests")
 
     yield  # App is running
@@ -107,3 +115,4 @@ app.include_router(ingestion_router)
 app.include_router(accounting_router)
 app.include_router(reports_router)
 app.include_router(compliance_router)
+app.include_router(communication_router)
