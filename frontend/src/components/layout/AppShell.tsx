@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Header } from './Header'
 import { HomeTab } from '@/components/home/HomeTab'
+import { CalendarTab } from '@/components/calendar/CalendarTab'
 import { ActionsTab } from '@/components/actions/ActionsTab'
 import { ReportsTab } from '@/components/reports/ReportsTab'
 import { apiFetch } from '@/api/client'
@@ -73,9 +74,7 @@ export function AppShell() {
           </TabsContent>
 
           <TabsContent value="calendar">
-            <div className="text-muted-foreground py-12 text-center">
-              Calendar view — coming soon
-            </div>
+            <CalendarTab />
           </TabsContent>
 
           <TabsContent value="reports">
