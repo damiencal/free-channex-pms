@@ -20,6 +20,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Qu
 from sqlalchemy import desc, select
 from sqlalchemy.orm import Session
 
+from app.communication.messenger import prepare_welcome_message
 from app.compliance.submission import process_booking_submission, should_auto_submit
 from app.config import get_config
 from app.db import get_db
@@ -59,6 +60,39 @@ async def _fire_background_submissions(booking_db_ids: list[int], db: Session) -
         except Exception:
             bg_log.exception(
                 "Background submission failed",
+                booking_id=booking_id,
+            )
+
+
+async def _fire_background_welcome_messages(
+    booking_db_ids: list[int],
+    platform: str,
+    db: Session,
+) -> None:
+    """Send welcome message operator notifications for VRBO/RVshare bookings.
+
+    Called as a FastAPI BackgroundTask after the upload response is sent.
+    Only called for VRBO/RVshare bookings (Airbnb welcome is native_configured
+    and handled by _create_communication_logs() in the normalizer).
+
+    prepare_welcome_message() creates the CommunicationLog entry and fires
+    the operator notification email. db.commit() is called after each success.
+    On failure, rollback prevents partial state.
+
+    Args:
+        booking_db_ids: Database IDs of newly inserted VRBO/RVshare bookings.
+        platform: Platform identifier (vrbo, rvshare).
+        db: Active SQLAlchemy session.
+    """
+    bg_log = structlog.get_logger()
+    for booking_id in booking_db_ids:
+        try:
+            await prepare_welcome_message(booking_id, platform, db)
+            db.commit()
+        except Exception:
+            db.rollback()
+            bg_log.exception(
+                "Background welcome message failed",
                 booking_id=booking_id,
             )
 
@@ -135,6 +169,13 @@ async def upload_vrbo_csv(
         if should_auto_submit(db, config.auto_submit_threshold):
             background_tasks.add_task(_fire_background_submissions, inserted_db_ids, db)
 
+    # Welcome messages: fire background tasks for VRBO bookings
+    welcome_async_ids = result.get("welcome_async_ids", [])
+    if welcome_async_ids:
+        background_tasks.add_task(
+            _fire_background_welcome_messages, welcome_async_ids, "vrbo", db
+        )
+
     return result
 
 
@@ -198,6 +239,13 @@ async def create_rvshare_booking(
         config = get_config()
         if should_auto_submit(db, config.auto_submit_threshold):
             background_tasks.add_task(_fire_background_submissions, inserted_db_ids, db)
+
+    # Welcome messages: fire background tasks for RVshare bookings
+    welcome_async_ids = result.get("welcome_async_ids", [])
+    if welcome_async_ids:
+        background_tasks.add_task(
+            _fire_background_welcome_messages, welcome_async_ids, "rvshare", db
+        )
 
     return result
 
