@@ -177,21 +177,38 @@ async def send_pre_arrival_message(booking_id: int) -> None:
         config = get_config()
 
         if booking.platform == "airbnb":
-            # Airbnb pre-arrival: system renders the message text and marks
-            # the log entry as 'sent'. The rendered text is stored so the
-            # operator can copy it into the Airbnb app's messaging interface.
-            # NOTE: Unlike Airbnb *welcome* (which is fully automated via
-            # Airbnb's native scheduled messaging), the pre-arrival message
-            # requires the operator to manually send via the Airbnb app
-            # using the rendered text prepared here.
-            comm_log.status = "sent"
-            comm_log.sent_at = datetime.now(timezone.utc)
-            db.commit()
-            log.info(
-                "Airbnb pre-arrival message rendered and marked sent",
-                booking_id=booking_id,
-                guest=booking.guest_name,
-            )
+            # Airbnb pre-arrival: system renders the message text and sends
+            # the operator a notification email with copy-pasteable text.
+            # The operator manually sends the message via the Airbnb app.
+            # Status stays 'pending' until operator confirms via API.
+            try:
+                await send_operator_notification_with_retry(
+                    smtp_host=config.smtp_host,
+                    smtp_port=config.smtp_port,
+                    smtp_user=config.smtp_user,
+                    smtp_password=config.smtp_password,
+                    from_email=config.smtp_from_email,
+                    guest_name=booking.guest_name,
+                    platform=booking.platform,
+                    platform_booking_id=booking.platform_booking_id,
+                    check_in_date=booking.check_in_date.strftime("%B %d, %Y"),
+                    message_type="pre_arrival",
+                    rendered_message=rendered,
+                )
+                comm_log.operator_notified_at = datetime.now(timezone.utc)
+                db.commit()
+                log.info(
+                    "Airbnb pre-arrival operator notification sent",
+                    booking_id=booking_id,
+                    guest=booking.guest_name,
+                )
+            except Exception as exc:
+                comm_log.error_message = f"Operator notification failed: {exc}"
+                db.commit()
+                log.exception(
+                    "Airbnb pre-arrival operator notification failed",
+                    booking_id=booking_id,
+                )
         else:
             # VRBO/RVshare: send operator notification email, keep as pending
             try:
