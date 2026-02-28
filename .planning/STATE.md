@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 6 complete — All 5 plans executed. Ready for Phase 7 (Dashboard).
+**Current focus:** Phase 7 in progress — Dashboard backend API endpoints complete (Plan 02). Frontend work in progress.
 
 ## Current Position
 
-Phase: 6 of 8 (Guest Communication) — Complete
-Plan: 5/5 plans executed (01, 02, 03, 04, 05 complete)
-Status: Phase 6 complete — all plans executed, verified (gap fixed: Airbnb pre-arrival operator notification), requirements COMM-01 through COMM-07 satisfied.
-Last activity: 2026-02-28 — Phase 6 verified and closed
+Phase: 7 of 8 (Dashboard) — In progress
+Plan: 2/5 plans executed (01, 02 complete)
+Status: Plan 07-02 complete — 5 dashboard API endpoints created and registered in FastAPI (properties, metrics, bookings, occupancy, actions).
+Last activity: 2026-02-28 — Completed 07-02-PLAN.md (dashboard backend endpoints)
 
-Progress: [████████████████████████] 100% (26/26 plans estimated)
+Progress: [████████████████████████░░░░░] 83% (28/34 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 28
+- Total plans completed: 30
 - Average duration: 2 min
-- Total execution time: 49 min
+- Total execution time: 53 min
 
 **By Phase:**
 
@@ -33,9 +33,10 @@ Progress: [███████████████████████
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
 | 06-guest-communication | 5/5 | 6 min | 1.2 min |
+| 07-dashboard | 2/5 | ~4 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 04-04 (2 min), 04-03 (2 min), 05-01 (2 min), 05-06 (2 min), 06-01 (2 min), 06-03 (1 min), 06-04 (2 min)
+- Last 7 plans: 05-01 (2 min), 05-06 (2 min), 06-01 (2 min), 06-03 (1 min), 06-04 (2 min), 07-01 (~2 min), 07-02 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -181,6 +182,10 @@ Recent decisions affecting current work:
 - [06-05]: native_configured entries return 409 (not idempotent) — Airbnb welcome tracked but never sent via API; guards against operator confusion
 - [06-05]: already-sent returns success dict (not 409) — idempotent confirm; operators clicking twice should not see an error
 - [06-05]: rebuild_pre_arrival_jobs() awaited after scheduler.start() — APScheduler must be running before DateTrigger jobs can be registered
+- [07-02]: Occupancy computed in Python (not SQL) — partial-month overlap logic (max/min boundary clamping) is cleaner than SQL date arithmetic
+- [07-02]: Actions endpoint uses internal _group/_sort_key fields stripped at return boundary — preserves heterogeneous sort semantics across resort forms/messages/unreconciled without API leakage
+- [07-02]: YoY change returns null (not "0%") when prior year data is zero — null signals missing data; allows conditional rendering in frontend
+- [07-02]: _count_pending_actions helper shared between metrics and actions endpoints — avoids duplicating query logic for badge count
 
 ### Pending Todos
 
@@ -198,5 +203,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Phase 6 complete — all 5 plans executed, verified, requirements marked complete. Ready for Phase 7 (Dashboard).
+Stopped at: Completed 07-02-PLAN.md — dashboard backend API (5 endpoints) created and registered.
 Resume file: None
