@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Project scaffolding, Docker deployment, config schema, and database with migrations
 - [ ] **Phase 2: Data Ingestion** - CSV import pipelines for Airbnb, VRBO, Mercury, and manual RVshare entry with unified booking schema
 - [x] **Phase 3: Accounting Engine** - Double-entry bookkeeping ledger, multi-platform transaction tracking, and bank reconciliation
-- [ ] **Phase 4: Financial Reports** - P&L statements, balance sheets, income statements, and bank transaction categorization
+- [x] **Phase 4: Financial Reports** - P&L statements, balance sheets, income statements, and bank transaction categorization
 - [ ] **Phase 5: Resort PDF Compliance** - Automated PDF form filling, email submission, deadline tracking, and submission audit trail
 - [ ] **Phase 6: Guest Communication** - Booking confirmation and pre-arrival messages via platform messaging with config-driven templates
 - [ ] **Phase 7: Dashboard** - Web dashboard showing financial metrics, occupancy, booking calendar, and pending actions
@@ -93,13 +93,13 @@ Plans:
   2. User can generate a balance sheet showing current assets, liabilities, and equity with correct totals
   3. User can generate an income statement showing revenue and expense breakdown for any date range
   4. User can view imported bank transactions and assign each a category (rent, utilities, maintenance, etc.) with the categorization persisting across sessions
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 04-01: P&L statement generator — per-property and combined, monthly and YTD, revenue by platform and expenses by category
-- [ ] 04-02: Balance sheet generator — assets, liabilities, equity with period-end snapshot
-- [ ] 04-03: Income statement generator — revenue and expense breakdown for configurable date range
-- [ ] 04-04: Bank transaction categorization — view uncategorized transactions, assign categories, persist assignments
+- [x] 04-01-PLAN.md — Migration 004 (category/journal_entry_id on bank_transactions, property_id on loans), ORM updates, resolve_period() helper, category constants
+- [x] 04-02-PLAN.md — P&L statement generator with platform+month revenue breakdown, per-property and combined views, shared expense allocation
+- [x] 04-03-PLAN.md — Balance sheet (loan balances via get_loan_balance, retained earnings) and income statement (totals/monthly breakdown)
+- [x] 04-04-PLAN.md — Bank transaction categorization: list/filter, single/bulk assignment, auto-expense creation for expense categories
 
 ### Phase 5: Resort PDF Compliance
 **Goal**: New bookings automatically trigger PDF form preparation and email submission to the resort, with deadline tracking ensuring no 3-day submission window is missed
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 1. Foundation | 6/6 | Complete ✓ | 2026-02-27 |
 | 2. Data Ingestion | 6/6 | Complete ✓ | 2026-02-27 |
 | 3. Accounting Engine | 6/6 | Complete ✓ | 2026-02-27 |
-| 4. Financial Reports | 0/4 | Not started | - |
+| 4. Financial Reports | 4/4 | Complete ✓ | 2026-02-28 |
 | 5. Resort PDF Compliance | 0/7 | Not started | - |
 | 6. Guest Communication | 0/6 | Not started | - |
 | 7. Dashboard | 0/6 | Not started | - |

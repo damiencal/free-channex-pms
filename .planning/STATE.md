@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 4 — Financial Reports (next)
+**Current focus:** Phase 5 — Resort PDF Compliance (next)
 
 ## Current Position
 
-Phase: 4 of 8 (Financial Reports) — Phase complete
-Plan: 4 of 4 in phase 4 (04-01, 04-02, 04-03, 04-04 all complete)
-Status: Phase 4 complete — All financial reports implemented (P&L, balance sheet, income statement, bank transaction categorization)
-Last activity: 2026-02-28 — Completed 04-03-PLAN.md (generate_balance_sheet, generate_income_statement, GET /api/reports/balance-sheet, GET /api/reports/income-statement)
+Phase: 4 of 8 (Financial Reports) — COMPLETE
+Plan: 4 of 4 in phase 4 (all plans complete: 04-01 through 04-04)
+Status: Phase 4 complete — P&L, balance sheet, income statement, bank transaction categorization all verified; ready to start Phase 5
+Last activity: 2026-02-28 — Phase 4 verified (4/4 must-haves passed)
 
-Progress: [█████████████████████░] 80% (20/25 plans estimated)
+Progress: [████████████████████░░] 80% (20/25 plans estimated)
 
 ## Performance Metrics
 
@@ -146,6 +146,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T00:34:54Z
-Stopped at: Completed 04-03-PLAN.md — Balance sheet generator (generate_balance_sheet with loan override via get_loan_balance) and income statement generator (generate_income_statement with totals/monthly breakdown). Phase 4 now fully complete.
+Last session: 2026-02-28
+Stopped at: Phase 4 complete and verified — P&L (generate_pl with platform+month revenue, per-property breakdown), balance sheet (get_loan_balance override, retained earnings), income statement (totals/monthly), bank categorization (auto-expense creation). 4/4 must-haves verified.
 Resume file: None

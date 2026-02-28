@@ -18,9 +18,9 @@
 ### Accounting
 
 - [x] **ACCT-01**: System maintains a double-entry bookkeeping ledger with journal entries (debits/credits)
-- [ ] **ACCT-02**: System generates profit & loss statements per property and combined
-- [ ] **ACCT-03**: System generates balance sheets showing assets, liabilities, and equity
-- [ ] **ACCT-04**: System generates income statements with revenue and expense breakdown by period
+- [x] **ACCT-02**: System generates profit & loss statements per property and combined
+- [x] **ACCT-03**: System generates balance sheets showing assets, liabilities, and equity
+- [x] **ACCT-04**: System generates income statements with revenue and expense breakdown by period
 - [x] **ACCT-05**: System tracks revenue from multiple sources (Airbnb, VRBO, RVshare) per property
 - [x] **ACCT-06**: System tracks expenses across categories (rent, utilities, maintenance, supplies, etc.)
 - [x] **ACCT-07**: System tracks loans with principal and interest components
@@ -56,7 +56,7 @@
 - [ ] **DASH-05**: LLM interface generates SQL queries (never performs arithmetic directly)
 - [ ] **DASH-06**: LLM interface shows generated SQL for transparency and debugging
 - [ ] **DASH-07**: Dashboard is accessible to non-technical users (simple, clean interface)
-- [ ] **DASH-08**: User can view and categorize bank transactions (rent, utilities, maintenance, etc.)
+- [x] **DASH-08**: User can view and categorize bank transactions (rent, utilities, maintenance, etc.)
 
 ### Infrastructure
 
@@ -124,10 +124,10 @@
 | ACCT-07 | Phase 3 | Complete |
 | ACCT-08 | Phase 3 | Complete |
 | ACCT-09 | Phase 3 | Complete |
-| ACCT-02 | Phase 4 | Pending |
-| ACCT-03 | Phase 4 | Pending |
-| ACCT-04 | Phase 4 | Pending |
-| DASH-08 | Phase 4 | Pending |
+| ACCT-02 | Phase 4 | Complete |
+| ACCT-03 | Phase 4 | Complete |
+| ACCT-04 | Phase 4 | Complete |
+| DASH-08 | Phase 4 | Complete |
 | COMP-01 | Phase 5 | Pending |
 | COMP-02 | Phase 5 | Pending |
 | COMP-03 | Phase 5 | Pending |
@@ -157,4 +157,4 @@
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-27 after Phase 3 completion — ACCT-01, ACCT-05 through ACCT-09 marked Complete; INFR-01 through INFR-06 corrected to Complete*
+*Last updated: 2026-02-28 after Phase 4 completion — ACCT-02, ACCT-03, ACCT-04, DASH-08 marked Complete*
