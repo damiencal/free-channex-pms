@@ -1,5 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { ErrorAlert } from '@/components/shared/ErrorAlert'
+import { EmptyState } from '@/components/shared/EmptyState'
 import { ActionsList } from './ActionsList'
 import { useActions } from '@/hooks/useActions'
 
@@ -39,11 +40,7 @@ export function ActionsTab() {
   const items = data?.actions ?? []
 
   if (items.length === 0) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <p className="text-muted-foreground text-sm">No pending actions</p>
-      </div>
-    )
+    return <EmptyState title="No pending actions" />
   }
 
   return <ActionsList items={items} />

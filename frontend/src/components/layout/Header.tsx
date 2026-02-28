@@ -49,17 +49,17 @@ export function Header() {
   })
 
   return (
-    <header className="border-b bg-background px-4 py-3 flex items-center justify-between">
-      <h1 className="text-lg font-semibold">Rental Dashboard</h1>
+    <header className="border-b bg-card px-4 py-3 flex items-center justify-between gap-2">
+      <h1 className="text-lg font-semibold shrink-0">Rental Dashboard</h1>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 min-w-0">
         <Select
           value={selectedPropertyId === null ? 'all' : String(selectedPropertyId)}
           onValueChange={(val) =>
             setSelectedPropertyId(val === 'all' ? null : Number(val))
           }
         >
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-36 sm:w-48">
             <SelectValue placeholder="All Properties" />
           </SelectTrigger>
           <SelectContent>
@@ -72,7 +72,7 @@ export function Header() {
           </SelectContent>
         </Select>
 
-        <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle dark mode">
+        <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle dark mode" className="shrink-0">
           {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
       </div>

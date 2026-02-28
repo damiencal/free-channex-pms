@@ -66,3 +66,17 @@
     color: hsl(var(--foreground));
   }
 }
+
+@layer utilities {
+  /* Ensure calendar grid cells don't shrink below a readable minimum on mobile */
+  .calendar-grid-cell {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* Touch-friendly minimum tap target for interactive elements */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

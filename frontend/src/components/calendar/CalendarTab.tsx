@@ -3,6 +3,7 @@ import { CalendarDays, GanttChart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ErrorAlert } from '@/components/shared/ErrorAlert'
+import { EmptyState } from '@/components/shared/EmptyState'
 import { MonthCalendar } from './MonthCalendar'
 import { TimelineView } from './TimelineView'
 import { useBookings } from '@/hooks/useBookings'
@@ -122,19 +123,29 @@ export function CalendarTab() {
 
       {/* Month view */}
       {!isLoading && !error && viewMode === 'month' && (
-        <MonthCalendar
-          currentMonth={currentMonth}
-          onMonthChange={handleMonthChange}
-          bookings={bookings ?? []}
-        />
+        <>
+          <MonthCalendar
+            currentMonth={currentMonth}
+            onMonthChange={handleMonthChange}
+            bookings={bookings ?? []}
+          />
+          {(bookings ?? []).length === 0 && (
+            <EmptyState title="No bookings for this month" />
+          )}
+        </>
       )}
 
       {/* Timeline view */}
       {!isLoading && !error && viewMode === 'timeline' && (
-        <TimelineView
-          currentMonth={currentMonth}
-          bookings={bookings ?? []}
-        />
+        <>
+          <TimelineView
+            currentMonth={currentMonth}
+            bookings={bookings ?? []}
+          />
+          {(bookings ?? []).length === 0 && (
+            <EmptyState title="No bookings for this month" />
+          )}
+        </>
       )}
     </div>
   )

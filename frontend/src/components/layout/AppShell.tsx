@@ -55,19 +55,22 @@ export function AppShell() {
 
       <main className="flex-1 p-4 md:p-6">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <TabsList className="mb-6">
-            <TabsTrigger value="home">Home</TabsTrigger>
-            <TabsTrigger value="calendar">Calendar</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
-            <TabsTrigger value="actions" className="gap-2">
-              Actions
-              {pendingCount > 0 && (
-                <Badge variant="destructive" className="h-5 min-w-5 text-xs">
-                  {pendingCount}
-                </Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
+          {/* Scrollable on mobile so all 4 tabs are reachable without wrapping */}
+          <div className="mb-6 overflow-x-auto">
+            <TabsList>
+              <TabsTrigger value="home">Home</TabsTrigger>
+              <TabsTrigger value="calendar">Calendar</TabsTrigger>
+              <TabsTrigger value="reports">Reports</TabsTrigger>
+              <TabsTrigger value="actions" className="gap-2">
+                Actions
+                {pendingCount > 0 && (
+                  <Badge variant="destructive" className="h-5 min-w-5 text-xs px-1.5">
+                    {pendingCount}
+                  </Badge>
+                )}
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="home">
             <HomeTab />
