@@ -760,6 +760,214 @@ def reject_reconciliation_match(
 
 
 # ---------------------------------------------------------------------------
+# Bank transaction categorization endpoints
+# ---------------------------------------------------------------------------
+
+
+@router.get("/bank-transactions")
+def list_bank_transactions(
+    categorized: str | None = Query(default=None, description="Filter: 'true', 'false', or 'all' (default)"),
+    start_date: date | None = Query(default=None),
+    end_date: date | None = Query(default=None),
+    limit: int = Query(default=100, ge=1, le=1000),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+) -> list[BankTransactionResponse]:
+    """List bank transactions with optional filters, newest first.
+
+    Args:
+        categorized: Optional filter. 'true' returns only categorized, 'false' only uncategorized,
+            None or 'all' returns all transactions.
+        start_date: Filter transactions on or after this date.
+        end_date: Filter transactions on or before this date.
+        limit: Maximum number of results (1-1000, default 100).
+        offset: Number of results to skip (default 0).
+        db: Database session.
+
+    Returns:
+        List of BankTransactionResponse ordered by date desc, id desc.
+    """
+    stmt = (
+        select(BankTransaction)
+        .order_by(BankTransaction.date.desc(), BankTransaction.id.desc())
+        .limit(limit)
+        .offset(offset)
+    )
+    if categorized == "true":
+        stmt = stmt.where(BankTransaction.category.is_not(None))
+    elif categorized == "false":
+        stmt = stmt.where(BankTransaction.category.is_(None))
+    # None or "all": no category filter
+    if start_date is not None:
+        stmt = stmt.where(BankTransaction.date >= start_date)
+    if end_date is not None:
+        stmt = stmt.where(BankTransaction.date <= end_date)
+
+    txns = db.execute(stmt).scalars().all()
+    return [
+        BankTransactionResponse(
+            id=t.id,
+            transaction_id=t.transaction_id,
+            date=t.date,
+            description=t.description,
+            amount=t.amount,
+            reconciliation_status=t.reconciliation_status,
+            category=t.category,
+            journal_entry_id=t.journal_entry_id,
+        )
+        for t in txns
+    ]
+
+
+@router.patch("/bank-transactions/categorize")
+def categorize_bulk_transactions(
+    body: BulkCategoryRequest,
+    db: Session = Depends(get_db),
+) -> dict:
+    """Bulk categorize bank transactions.
+
+    Processes all assignments and collects errors without aborting. Commits once
+    after all assignments are processed.
+
+    Args:
+        body: BulkCategoryRequest with list of CategoryAssignment items.
+        db: Database session.
+
+    Returns:
+        Dict with 'categorized' (success count) and 'errors' (list of error dicts).
+    """
+    success_count = 0
+    errors: list[dict] = []
+
+    for assignment in body.assignments:
+        txn = db.get(BankTransaction, assignment.id)
+        if txn is None:
+            errors.append({"id": assignment.id, "error": f"Bank transaction {assignment.id} not found"})
+            continue
+
+        if assignment.category not in ALL_CATEGORIES:
+            errors.append({
+                "id": assignment.id,
+                "error": f"Invalid category {assignment.category!r}. Valid categories: {ALL_CATEGORIES}",
+            })
+            continue
+
+        if txn.journal_entry_id is not None:
+            errors.append({
+                "id": assignment.id,
+                "error": "Transaction already has a journal entry. Remove the existing categorization before re-categorizing.",
+            })
+            continue
+
+        if assignment.category in EXPENSE_CATEGORIES:
+            if not assignment.attribution:
+                errors.append({
+                    "id": assignment.id,
+                    "error": "attribution is required for expense categories (jay, minnie, or shared)",
+                })
+                continue
+            try:
+                expense = record_expense(
+                    db=db,
+                    expense_date=txn.date,
+                    amount=abs(txn.amount),
+                    category=assignment.category,
+                    description=txn.description or f"Bank transaction {txn.transaction_id}",
+                    attribution=assignment.attribution,
+                    property_id=assignment.property_id,
+                )
+            except ValueError as exc:
+                errors.append({"id": assignment.id, "error": str(exc)})
+                continue
+            txn.journal_entry_id = expense.journal_entry_id
+
+        txn.category = assignment.category
+        success_count += 1
+
+    db.commit()
+    return {"categorized": success_count, "errors": errors}
+
+
+@router.patch("/bank-transactions/{txn_id}/category")
+def categorize_single_transaction(
+    txn_id: int,
+    body: SingleCategoryRequest,
+    db: Session = Depends(get_db),
+) -> BankTransactionResponse:
+    """Assign a category to a single bank transaction.
+
+    For expense categories, automatically creates the corresponding expense journal
+    entry via record_expense() so the transaction appears in P&L reports.
+    Non-expense categories (owner_deposit, loan_payment, transfer, personal) are
+    stored without creating journal entries.
+
+    Re-categorization is prevented when a journal entry already exists to avoid
+    double-posting.
+
+    Args:
+        txn_id: Primary key of the BankTransaction to categorize.
+        body: SingleCategoryRequest with category, optional attribution, optional property_id.
+        db: Database session.
+
+    Returns:
+        Updated BankTransactionResponse.
+
+    Raises:
+        HTTPException 404: If bank transaction not found.
+        HTTPException 422: If category invalid, re-categorization attempted, or attribution missing.
+    """
+    txn = db.get(BankTransaction, txn_id)
+    if txn is None:
+        raise HTTPException(status_code=404, detail=f"Bank transaction {txn_id} not found")
+
+    if body.category not in ALL_CATEGORIES:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid category {body.category!r}. Valid categories: {ALL_CATEGORIES}",
+        )
+
+    if txn.journal_entry_id is not None:
+        raise HTTPException(
+            status_code=422,
+            detail="Transaction already has a journal entry. Remove the existing categorization before re-categorizing.",
+        )
+
+    if body.category in EXPENSE_CATEGORIES:
+        if not body.attribution:
+            raise HTTPException(
+                status_code=422,
+                detail="attribution is required for expense categories (jay, minnie, or shared)",
+            )
+        try:
+            expense = record_expense(
+                db=db,
+                expense_date=txn.date,
+                amount=abs(txn.amount),
+                category=body.category,
+                description=txn.description or f"Bank transaction {txn.transaction_id}",
+                attribution=body.attribution,
+                property_id=body.property_id,
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        txn.journal_entry_id = expense.journal_entry_id
+
+    txn.category = body.category
+    db.commit()
+
+    return BankTransactionResponse(
+        id=txn.id,
+        transaction_id=txn.transaction_id,
+        date=txn.date,
+        description=txn.description,
+        amount=txn.amount,
+        reconciliation_status=txn.reconciliation_status,
+        category=txn.category,
+        journal_entry_id=txn.journal_entry_id,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Private helpers
 # ---------------------------------------------------------------------------
 
