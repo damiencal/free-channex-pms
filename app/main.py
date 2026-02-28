@@ -15,6 +15,8 @@ from contextlib import asynccontextmanager
 
 import httpx
 import structlog
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 from fastapi import FastAPI
 from sqlalchemy import text
 
@@ -22,6 +24,7 @@ from app.api.accounting import router as accounting_router
 from app.api.health import router as health_router
 from app.api.ingestion import router as ingestion_router
 from app.api.reports import router as reports_router
+from app.compliance.urgency import run_urgency_check
 from app.config import load_app_config
 from app.db import engine
 from app.logging import configure_logging
@@ -29,6 +32,8 @@ from app.templates import validate_all_templates
 
 configure_logging()
 log = structlog.get_logger()
+
+scheduler = AsyncIOScheduler()
 
 
 @asynccontextmanager
@@ -70,11 +75,22 @@ async def lifespan(app: FastAPI):
     except Exception:
         log.warning("Ollama unavailable — LLM features disabled", url=ollama_url)
 
+    # 5. Start compliance scheduler (daily urgency check)
+    scheduler.add_job(
+        run_urgency_check,
+        trigger=CronTrigger(hour=8, minute=0),
+        id="urgency_check",
+        replace_existing=True,
+    )
+    scheduler.start()
+    log.info("Compliance scheduler started (urgency check daily at 08:00)")
+
     log.info("Startup complete — ready to accept requests")
 
     yield  # App is running
 
     # --- Shutdown ---
+    scheduler.shutdown()
     log.info("Shutting down")
 
 
