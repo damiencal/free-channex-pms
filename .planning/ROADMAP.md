@@ -111,16 +111,15 @@ Plans:
   3. User can see the submission status of every booking (pending, submitted, confirmed) from a single view
   4. Bookings within 3 days of the arrival date that have not been submitted are visibly flagged as urgent
   5. Host information in the form comes from config — no property-specific data is hardcoded
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 05-01: PDF form filling with PyMuPDF — config-driven field mapping, appearance stream generation, and flattening; test in three viewers before any live submission
-- [ ] 05-02: Unit-to-site-number mapping via config (Jay → 110, Minnie → 170) and host info pre-population from config
-- [ ] 05-03: Platform booking confirmation attachment — retrieve confirmation from ingestion archive and attach to email
-- [ ] 05-04: Resort email submission with fastapi-mail — configurable recipient, subject, and body template
-- [ ] 05-05: Submission status tracking (pending/submitted/confirmed) with idempotent submission prevention
-- [ ] 05-06: Deadline flagging — scheduler job per booking; flag as urgent when arrival is within 3 days and form not submitted
-- [ ] 05-07: Compliance API endpoints (submission status list, manual trigger, confirm submission)
+- [ ] 05-01-PLAN.md — Foundation: new deps (pymupdf, aiosmtplib, apscheduler, tenacity), SMTP config, host info on PropertyConfig, ResortSubmission model + migration 005, docker-compose confirmations volume
+- [ ] 05-02-PLAN.md — PDF form filling: AcroForm detection, field-mapping-driven filling with field.update() + doc.bake(), field enumeration; checkpoint to verify actual Sun Retreats form
+- [ ] 05-03-PLAN.md — Email delivery (aiosmtplib + tenacity retry) and confirmation file matching + email subject/body formatting
+- [ ] 05-04-PLAN.md — Submission orchestrator: PDF fill + email send + DB status + preview mode; wire into booking import for auto-creation
+- [ ] 05-05-PLAN.md — Urgency checker: daily APScheduler job flags pending submissions within 3 days of check-in, sends operator digest alert
+- [ ] 05-06-PLAN.md — Compliance API: submissions list, manual submit, n8n confirmation webhook, preview approval, batch pending processor
 
 ### Phase 6: Guest Communication
 **Goal**: Guests receive a welcome message upon booking and arrival details 2-3 days before check-in, driven entirely by config-editable templates
@@ -191,7 +190,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 2. Data Ingestion | 6/6 | Complete ✓ | 2026-02-27 |
 | 3. Accounting Engine | 6/6 | Complete ✓ | 2026-02-27 |
 | 4. Financial Reports | 4/4 | Complete ✓ | 2026-02-28 |
-| 5. Resort PDF Compliance | 0/7 | Not started | - |
+| 5. Resort PDF Compliance | 0/6 | Not started | - |
 | 6. Guest Communication | 0/6 | Not started | - |
 | 7. Dashboard | 0/6 | Not started | - |
 | 8. LLM Natural Language Interface | 0/5 | Not started | - |
