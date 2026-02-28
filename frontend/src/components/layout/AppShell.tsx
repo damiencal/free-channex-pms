@@ -4,6 +4,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Header } from './Header'
 import { HomeTab } from '@/components/home/HomeTab'
+import { ActionsTab } from '@/components/actions/ActionsTab'
+import { ReportsTab } from '@/components/reports/ReportsTab'
 import { apiFetch } from '@/api/client'
 import { usePropertyStore } from '@/store/usePropertyStore'
 
@@ -77,15 +79,11 @@ export function AppShell() {
           </TabsContent>
 
           <TabsContent value="reports">
-            <div className="text-muted-foreground py-12 text-center">
-              Reports view — coming soon
-            </div>
+            <ReportsTab />
           </TabsContent>
 
           <TabsContent value="actions">
-            <div className="text-muted-foreground py-12 text-center">
-              Actions view — coming soon
-            </div>
+            <ActionsTab />
           </TabsContent>
         </Tabs>
       </main>
