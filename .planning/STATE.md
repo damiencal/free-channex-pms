@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 5 — Resort PDF Compliance (in progress)
+**Current focus:** Phase 5 — Resort PDF Compliance (complete, except 05-02 at checkpoint)
 
 ## Current Position
 
-Phase: 5 of 8 (Resort PDF Compliance) — In progress
-Plan: 4 of 5 complete in phase 5 (05-01, 05-03, 05-04, 05-05 complete; 05-02 at checkpoint; 05-06 remaining)
-Status: Phase 5 plan 04 complete — submission orchestrator (process_booking_submission + should_auto_submit) and booking import auto-submission wiring created.
-Last activity: 2026-02-28 — Completed 05-04-PLAN.md
+Phase: 5 of 8 (Resort PDF Compliance) — Phase complete (05-02 awaiting checkpoint resolution)
+Plan: 5 of 6 plans executed (05-01, 05-03, 05-04, 05-05, 05-06 complete; 05-02 at checkpoint:human-verify)
+Status: Phase 5 plan 06 complete — compliance API router with all 5 endpoints registered in main.py. Full resort PDF compliance feature set now API-accessible.
+Last activity: 2026-02-28 — Completed 05-06-PLAN.md
 
-Progress: [█████████████████████░░] 84% (21/25 plans estimated)
+Progress: [██████████████████████░] 88% (22/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
+- Total plans completed: 22
 - Average duration: 2 min
-- Total execution time: 34 min
+- Total execution time: 38 min
 
 **By Phase:**
 
@@ -31,7 +31,7 @@ Progress: [█████████████████████░░
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
 | 04-financial-reports | 4/4 | 8 min | 2 min |
-| 05-resort-pdf-compliance | 1/5 | 2 min | 2 min |
+| 05-resort-pdf-compliance | 5/6 | 12 min | 2 min |
 
 **Recent Trend:**
 - Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min)
@@ -153,6 +153,10 @@ Recent decisions affecting current work:
 - [05-04]: should_auto_submit() check in API layer before add_task — below threshold = no background tasks fired; normalizer already created pending records
 - [05-04]: Normalizer stays sync — only creates DB records; async email sending handled by API BackgroundTasks
 - [05-04]: rvshare endpoint changed from def to async def — required for BackgroundTasks with async process_booking_submission()
+- [05-06]: process-pending registered before /{param} routes — prevents FastAPI route conflict where 'process-pending' would be parsed as a booking_id integer
+- [05-06]: confirm endpoint queries by booking_id (not submission_id) — n8n knows booking context, not internal submission IDs
+- [05-06]: submit and approve are async def; confirm and list are sync — async for pipeline calls, sync for DB-only operations
+- [05-06]: process-pending returns preview_mode_active (not error) when below threshold — operator may call before preview period ends
 
 ### Pending Todos
 
@@ -169,6 +173,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T04:23:28Z
-Stopped at: Completed 05-04-PLAN.md — submission orchestrator and booking import auto-submission wiring complete. 05-02 still at checkpoint:human-verify awaiting PDF form type confirmation.
+Last session: 2026-02-28T04:29:59Z
+Stopped at: Completed 05-06-PLAN.md — compliance API router with all 5 endpoints created and registered in main.py. Phase 5 feature set complete. 05-02 still at checkpoint:human-verify awaiting PDF form type confirmation.
 Resume file: None
