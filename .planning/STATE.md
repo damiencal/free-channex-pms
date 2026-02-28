@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 5 complete — ready for Phase 6
+**Current focus:** Phase 6 in progress — Plan 01 complete, Plans 02-05 remain
 
 ## Current Position
 
-Phase: 5 of 8 (Resort PDF Compliance) — Complete ✓
-Plan: 6/6 plans executed
-Status: Phase 5 complete — all plans executed, verified (human_needed items approved), requirements COMP-01 through COMP-07 satisfied.
-Last activity: 2026-02-28 — Phase 5 verified and closed
+Phase: 6 of 8 (Guest Communication) — In progress
+Plan: 1/5 plans executed
+Status: Phase 6, Plan 01 complete — CommunicationLog model, migration 006, extended PropertyConfig, message templates, render_message_template() all created.
+Last activity: 2026-02-28 — Completed 06-01-PLAN.md
 
-Progress: [███████████████████████] 92% (23/25 plans estimated)
+Progress: [████████████████████████] 96% (24/25 plans estimated)
 
 ## Performance Metrics
 
@@ -32,9 +32,10 @@ Progress: [███████████████████████
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
+| 06-guest-communication | 1/5 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min)
+- Last 7 plans: 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min), 05-06 (2 min), 06-01 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -157,6 +158,10 @@ Recent decisions affecting current work:
 - [05-06]: confirm endpoint queries by booking_id (not submission_id) — n8n knows booking context, not internal submission IDs
 - [05-06]: submit and approve are async def; confirm and list are sync — async for pipeline calls, sync for DB-only operations
 - [05-06]: process-pending returns preview_mode_active (not error) when below threshold — operator may call before preview period ends
+- [06-01]: render_message_template() is separate from render_template() — message templates use templates/messages/ with shared (not per-property-override) resolution
+- [06-01]: All new PropertyConfig guest fields have defaults (not required) — Phase 6 is additive; existing configs must not break
+- [06-01]: CommunicationLog.status server_default='pending' — all new entries start pending unless explicitly set to native_configured
+- [06-01]: SAMPLE_BOOKING_DATA extended in-place — single dict covers both compliance and message template validation at startup
 
 ### Pending Todos
 
@@ -173,6 +178,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Phase 5 complete — all 6 plans executed, verified, requirements marked complete. Ready for Phase 6 (Guest Communication).
+Last session: 2026-02-28T19:42:54Z
+Stopped at: Completed 06-01-PLAN.md — CommunicationLog model, migration 006, extended PropertyConfig, message templates
 Resume file: None
