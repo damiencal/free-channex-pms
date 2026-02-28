@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 7 complete — All 5 plans executed. Dashboard live: App shell, Home tab (stats + charts + actions preview), Calendar tab (month grid + Gantt timeline), Actions tab (expandable accordion with mutation buttons), Reports placeholder. Ready for Phase 8 (LLM query).
+**Current focus:** Phase 7 complete — All 6 plans executed and verified. Dashboard live with Home (stat cards, charts), Calendar (month grid + Gantt), Actions (expandable items), Reports (placeholder). Ready for Phase 8 (LLM query).
 
 ## Current Position
 
-Phase: 7 of 8 (Dashboard) — COMPLETE
-Plan: 5/5 plans executed (01, 02, 03, 04, 05 all complete)
-Status: Plan 07-04 retroactively completed — Month calendar grid + Gantt timeline view. All 5 plans now fully executed.
-Last activity: 2026-02-28 — Completed 07-04-PLAN.md (Calendar tab: month grid + timeline view)
+Phase: 7 of 8 (Dashboard) — COMPLETE (verified)
+Plan: 6/6 plans executed (01-06 all complete, 06 human-verified)
+Status: Phase 7 verified — 4/5 success criteria passed, 1 gap (wrong API path) fixed by orchestrator. Requirements DASH-01, DASH-02, DASH-03, DASH-07 satisfied.
+Last activity: 2026-02-28 — Phase 7 verified and closed
 
-Progress: [████████████████████████████░] 94% (33/35 plans estimated)
+Progress: [███████████████████████████░] 97% (34/35 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 33
+- Total plans completed: 34
 - Average duration: 2 min
-- Total execution time: ~59 min
+- Total execution time: ~68 min
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [███████████████████████
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
 | 06-guest-communication | 5/5 | 6 min | 1.2 min |
-| 07-dashboard | 5/5 | ~10 min | ~2 min |
+| 07-dashboard | 6/6 | ~12 min | ~2 min |
 
 **Recent Trend:**
-- Last 7 plans: 07-01 (~2 min), 07-02 (2 min), 07-03 (4 min), 07-05 (2 min)
-- Trend: Steady at ~2 min/plan
+- Last 7 plans: 07-01 (5 min), 07-02 (2 min), 07-03 (4 min), 07-04 (5 min), 07-05 (2 min), 07-06 (3 min)
+- Trend: Steady at ~3 min/plan (UI plans slightly heavier)
 
 *Updated after each plan completion*
 
@@ -205,6 +205,9 @@ Recent decisions affecting current work:
 - [07-04]: BookingBar absolute-positioned within week row div using % math — simpler than grid items for spanning logic
 - [07-04]: TimelineView uses height:0/overflow:visible overlay — bars don't push CSS Grid row heights apart
 - [07-04]: Week-boundary split bars are flat (no rounding) on split sides, rounded only on booking chronological start/end
+- [07-06]: EmptyState component is text-only (no icons/illustrations) — matches CONTEXT.md directive for clean, no-fanfare empty states
+- [07-06]: TabsList overflow-x-auto for mobile horizontal scroll — prevents awkward wrapping of 4 tabs on small screens
+- [07-06]: Resort form submit path fixed: /compliance/submit/{booking_id} (was incorrectly /compliance/submissions/{booking_id}/submit)
 
 ### Pending Todos
 
@@ -222,5 +225,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 07-04-PLAN.md (retroactive) — Month calendar + Gantt timeline. Phase 7 (Dashboard) fully complete with all 5 plans. Ready for Phase 8 (LLM query).
+Stopped at: Phase 7 complete — all 6 plans executed, verified (1 gap fixed: resort form API path), human-verified, requirements marked complete. Ready for Phase 8 (LLM Natural Language Interface).
 Resume file: None

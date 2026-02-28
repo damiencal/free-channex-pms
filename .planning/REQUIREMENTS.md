@@ -49,13 +49,13 @@
 
 ### Dashboard & Reporting
 
-- [ ] **DASH-01**: Web dashboard shows key financial metrics (revenue, expenses, profit) at a glance
-- [ ] **DASH-02**: Dashboard shows occupancy rates and booking trends per property
-- [ ] **DASH-03**: Dashboard includes a calendar view of upcoming and past bookings across properties
+- [x] **DASH-01**: Web dashboard shows key financial metrics (revenue, expenses, profit) at a glance
+- [x] **DASH-02**: Dashboard shows occupancy rates and booking trends per property
+- [x] **DASH-03**: Dashboard includes a calendar view of upcoming and past bookings across properties
 - [ ] **DASH-04**: User can ask financial questions in plain English via Ollama-powered interface
 - [ ] **DASH-05**: LLM interface generates SQL queries (never performs arithmetic directly)
 - [ ] **DASH-06**: LLM interface shows generated SQL for transparency and debugging
-- [ ] **DASH-07**: Dashboard is accessible to non-technical users (simple, clean interface)
+- [x] **DASH-07**: Dashboard is accessible to non-technical users (simple, clean interface)
 - [x] **DASH-08**: User can view and categorize bank transactions (rent, utilities, maintenance, etc.)
 
 ### Infrastructure
