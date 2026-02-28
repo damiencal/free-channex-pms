@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 5 — Resort PDF Compliance (next)
+**Current focus:** Phase 5 — Resort PDF Compliance (in progress)
 
 ## Current Position
 
-Phase: 4 of 8 (Financial Reports) — COMPLETE
-Plan: 4 of 4 in phase 4 (all plans complete: 04-01 through 04-04)
-Status: Phase 4 complete — P&L, balance sheet, income statement, bank transaction categorization all verified; ready to start Phase 5
-Last activity: 2026-02-28 — Phase 4 verified (4/4 must-haves passed)
+Phase: 5 of 8 (Resort PDF Compliance) — In progress
+Plan: 1 of 5 in phase 5 (05-01 complete)
+Status: Phase 5 plan 01 complete — dependencies installed, config extended, ResortSubmission model + migration 005 created
+Last activity: 2026-02-28 — Completed 05-01-PLAN.md
 
-Progress: [████████████████████░░] 80% (20/25 plans estimated)
+Progress: [█████████████████████░░] 84% (21/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
+- Total plans completed: 20
 - Average duration: 2 min
-- Total execution time: 32 min
+- Total execution time: 34 min
 
 **By Phase:**
 
@@ -31,9 +31,10 @@ Progress: [████████████████████░░] 8
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
 | 04-financial-reports | 4/4 | 8 min | 2 min |
+| 05-resort-pdf-compliance | 1/5 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min)
+- Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min), 04-03 (2 min), 05-01 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -130,6 +131,10 @@ Recent decisions affecting current work:
 - [04-03]: Retained Earnings = negate(sum of all revenue+expense journal lines up to as_of_date) — simplest correct formula; revenue credits are negative, so negating the total sum yields positive RE when profitable
 - [04-03]: Balance sheet combined-only, zero-balance accounts included — all active balance-sheet accounts shown even with no activity
 - [04-03]: Income statement breakdown=totals|monthly — monthly mode groups by (year, month) tuple, collects union of revenue+expense months
+- [05-01]: SMTP credentials in .env only (secrets pattern); compliance settings in base.yaml — consistent with existing credential handling pattern
+- [05-01]: host_name and host_phone are required PropertyConfig fields (no default) — same pattern as resort_checkin_instructions; forces operator to provide at config time
+- [05-01]: confirmations/ volume mounted read-only in container — app reads PDFs; n8n/mail rules write them on host
+- [05-01]: ResortSubmission unique constraint on booking_id — enforces one submission per booking at DB level
 
 ### Pending Todos
 
@@ -146,6 +151,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Phase 4 complete and verified — P&L (generate_pl with platform+month revenue, per-property breakdown), balance sheet (get_loan_balance override, retained earnings), income statement (totals/monthly), bank categorization (auto-expense creation). 4/4 must-haves verified.
+Last session: 2026-02-28T02:05:36Z
+Stopped at: Completed 05-01-PLAN.md — Phase 5 foundation complete. 4 deps installed, AppConfig SMTP+compliance fields added, PropertyConfig host info fields added, ResortSubmission model + migration 005 created. Ready for Wave-2 plans (05-02 pdf-filler, 05-03 email-sender).
 Resume file: None
