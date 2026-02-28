@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 6 in progress — Plans 01, 02, 03, 04 complete, Plan 05 remains
+**Current focus:** Phase 6 complete — All 5 plans executed. Ready for Phase 7 (Dashboard).
 
 ## Current Position
 
-Phase: 6 of 8 (Guest Communication) — In progress
-Plan: 4/5 plans executed (01, 02, 03, 04 complete; 05 remains)
-Status: Phase 6, Plan 04 complete — Ingestion pipeline wired to communication system: _create_communication_logs(), APScheduler job registration, BackgroundTasks welcome dispatch for VRBO/RVshare.
-Last activity: 2026-02-28 — Completed 06-04-PLAN.md
+Phase: 6 of 8 (Guest Communication) — Complete
+Plan: 5/5 plans executed (01, 02, 03, 04, 05 complete)
+Status: Phase 6 complete — Communication API router (GET /communication/logs, POST /communication/confirm/{log_id}) registered; pre-arrival scheduler jobs rebuilt at startup.
+Last activity: 2026-02-28 — Completed 06-05-PLAN.md
 
-Progress: [████████████████████████] 97% (25/26 plans estimated)
+Progress: [████████████████████████] 100% (26/26 plans estimated)
 
 ## Performance Metrics
 
@@ -32,7 +32,7 @@ Progress: [███████████████████████
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
-| 06-guest-communication | 4/5 | 5 min | 1.25 min |
+| 06-guest-communication | 5/5 | 6 min | 1.2 min |
 
 **Recent Trend:**
 - Last 7 plans: 04-04 (2 min), 04-03 (2 min), 05-01 (2 min), 05-06 (2 min), 06-01 (2 min), 06-03 (1 min), 06-04 (2 min)
@@ -177,6 +177,10 @@ Recent decisions affecting current work:
 - [06-04]: _create_communication_logs() does NOT pre-create VRBO/RVshare welcome logs — deferred to prepare_welcome_message() so create+notify remain atomic and idempotency check does not block the email
 - [06-04]: welcome_async_ids return value carries DB booking IDs (not platform IDs) — API layer needs DB IDs for prepare_welcome_message(); avoids second lookup
 - [06-04]: Idempotency in _create_communication_logs() uses count of ALL rows for booking_id — if any CommunicationLog exists, skip entirely; unique constraint is DB-level backstop
+- [06-05]: confirm endpoint uses log_id (not booking_id) — a booking has multiple logs (welcome + pre_arrival); booking_id would require additional message_type parameter
+- [06-05]: native_configured entries return 409 (not idempotent) — Airbnb welcome tracked but never sent via API; guards against operator confusion
+- [06-05]: already-sent returns success dict (not 409) — idempotent confirm; operators clicking twice should not see an error
+- [06-05]: rebuild_pre_arrival_jobs() awaited after scheduler.start() — APScheduler must be running before DateTrigger jobs can be registered
 
 ### Pending Todos
 
@@ -193,6 +197,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T19:51:11Z
-Stopped at: Completed 06-04-PLAN.md — ingestion pipeline wired to communication system (_create_communication_logs, schedule_pre_arrival_job, BackgroundTasks welcome dispatch)
+Last session: 2026-02-28T19:54:30Z
+Stopped at: Completed 06-05-PLAN.md — Phase 6 complete: communication API router (GET /logs, POST /confirm/{log_id}) and startup job rebuild wired in main.py
 Resume file: None
