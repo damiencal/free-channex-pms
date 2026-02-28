@@ -22,10 +22,12 @@ import structlog
 from sqlalchemy import func, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
+from app.communication.scheduler import compute_pre_arrival_send_time, schedule_pre_arrival_job
 from app.config import get_config
 from app.ingestion.schemas import BankTransactionRecord, BookingRecord, RVshareEntryRequest
 from app.models.bank_transaction import BankTransaction
 from app.models.booking import Booking
+from app.models.communication_log import CommunicationLog
 from app.models.import_run import ImportRun
 from app.models.property import Property
 from app.models.resort_submission import ResortSubmission
@@ -163,6 +165,98 @@ def _create_resort_submissions(
         )
 
 
+def _create_communication_logs(
+    inserted_booking_ids: list[str],
+    platform: str,
+    db: "Session",
+) -> list[int]:
+    """Create CommunicationLog records for newly imported bookings.
+
+    Creates two entries per booking for Airbnb, one entry for VRBO/RVshare:
+    1. Welcome message — 'native_configured' for Airbnb only (created here).
+       VRBO/RVshare welcome is handled by prepare_welcome_message() in the
+       API layer (which also fires the operator notification email).
+    2. Pre-arrival message — 'pending' with scheduled_for computed from
+       check_in_date. Created for all platforms.
+
+    For all platforms, also registers the APScheduler pre-arrival job
+    (sync-safe: schedule_pre_arrival_job calls scheduler.add_job which is
+    thread-safe in APScheduler 3.x).
+
+    Args:
+        inserted_booking_ids: Platform booking IDs of newly inserted bookings.
+        platform: Platform identifier (airbnb, vrbo, rvshare).
+        db: Active SQLAlchemy session.
+
+    Returns:
+        List of booking DB IDs that need async welcome message handling
+        (VRBO/RVshare only — Airbnb welcome is native_configured and created
+        here; VRBO/RVshare welcome is created by prepare_welcome_message()).
+    """
+    # Look up actual DB IDs and check-in dates for inserted bookings
+    booking_rows = db.execute(
+        select(Booking.id, Booking.check_in_date, Booking.platform_booking_id).where(
+            Booking.platform == platform,
+            Booking.platform_booking_id.in_(inserted_booking_ids),
+        )
+    ).all()
+
+    welcome_needs_async: list[int] = []  # VRBO/RVshare booking IDs needing welcome notification
+    created_count = 0
+
+    for booking_id, check_in_date, platform_booking_id in booking_rows:
+        # Check if logs already exist (idempotent)
+        existing_count = db.execute(
+            select(func.count()).select_from(CommunicationLog).where(
+                CommunicationLog.booking_id == booking_id,
+            )
+        ).scalar_one()
+
+        if existing_count > 0:
+            continue
+
+        if platform == "airbnb":
+            # Airbnb welcome: system tracks it as native_configured.
+            # Airbnb's own scheduled messaging handles delivery automatically.
+            db.add(CommunicationLog(
+                booking_id=booking_id,
+                message_type="welcome",
+                platform=platform,
+                status="native_configured",
+            ))
+        else:
+            # VRBO/RVshare: welcome log created by prepare_welcome_message()
+            # in the API layer (async — also sends operator notification email).
+            # Return this booking ID for BackgroundTasks processing.
+            welcome_needs_async.append(booking_id)
+
+        # Pre-arrival message for all platforms
+        scheduled_for = compute_pre_arrival_send_time(check_in_date)
+        db.add(CommunicationLog(
+            booking_id=booking_id,
+            message_type="pre_arrival",
+            platform=platform,
+            status="pending",
+            scheduled_for=scheduled_for,
+        ))
+
+        created_count += 1
+
+        # Schedule APScheduler job for pre-arrival (all platforms)
+        schedule_pre_arrival_job(booking_id, check_in_date)
+
+    if created_count > 0:
+        db.commit()
+        log.info(
+            "Communication logs created",
+            count=created_count,
+            platform=platform,
+            welcome_async_count=len(welcome_needs_async),
+        )
+
+    return welcome_needs_async
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -275,6 +369,11 @@ def ingest_csv(
     if inserted_ids:
         _create_resort_submissions(inserted_ids, platform, db)
 
+    # 6c. Create communication log records for newly inserted bookings
+    welcome_async_ids: list[int] = []
+    if inserted_ids:
+        welcome_async_ids = _create_communication_logs(inserted_ids, platform, db)
+
     # Look up actual DB IDs for inserted bookings (needed for background submission tasks)
     inserted_db_ids: list[int] = []
     if inserted_ids:
@@ -307,6 +406,7 @@ def ingest_csv(
         "inserted_ids": inserted_ids,
         "updated_ids": updated_ids,
         "inserted_db_ids": inserted_db_ids,
+        "welcome_async_ids": welcome_async_ids,
     }
 
 
@@ -475,6 +575,11 @@ def create_manual_booking(entry: RVshareEntryRequest, db: "Session") -> dict:
     if inserted_ids:
         _create_resort_submissions(inserted_ids, platform, db)
 
+    # Create communication log records for new manual bookings
+    welcome_async_ids: list[int] = []
+    if inserted_ids:
+        welcome_async_ids = _create_communication_logs(inserted_ids, platform, db)
+
     # Look up actual DB IDs for inserted bookings (needed for background submission tasks)
     inserted_db_ids: list[int] = []
     if inserted_ids:
@@ -507,4 +612,5 @@ def create_manual_booking(entry: RVshareEntryRequest, db: "Session") -> dict:
         "inserted_ids": inserted_ids,
         "updated_ids": updated_ids,
         "inserted_db_ids": inserted_db_ids,
+        "welcome_async_ids": welcome_async_ids,
     }
