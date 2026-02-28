@@ -17,6 +17,10 @@ dependencies = [
     "python-slugify",
     "polars",
     "python-multipart",
+    "pymupdf>=1.27.1",
+    "aiosmtplib>=5.1.0",
+    "apscheduler>=3.11.2",
+    "tenacity>=9.1.4",
 ]
 
 [project.scripts]

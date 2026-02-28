@@ -29,6 +29,7 @@ services:
       - ./templates:/app/templates:ro
       - ./pdf_mappings:/app/pdf_mappings:ro
       - ./archive:/app/archive
+      - ./confirmations:/app/confirmations:ro
     depends_on:
       db:
         condition: service_healthy

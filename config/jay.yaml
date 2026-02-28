@@ -4,6 +4,8 @@ lock_code: "CHANGE_ME"
 site_number: "110"
 resort_contact_email: "CHANGE_ME@resort.com"
 resort_checkin_instructions: "Jay is located at Sun Retreats Fort Myers Beach. Please check in at the Welcome Center upon arrival."
+host_name: "CHANGE_ME"
+host_phone: "CHANGE_ME"
 listing_slug_map:
   "Jay 2BR RV near Sanibel Island & Fort Myers Beach": "jay"
   "CHANGE_ME_VRBO_PROPERTY_ID": "jay"

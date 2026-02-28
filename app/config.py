@@ -59,6 +59,16 @@ class PropertyConfig(BaseModel):
     Example: "Located at Sun Retreats Fort Myers Beach. Please check in at the Welcome Center upon arrival."
     """
 
+    host_name: str
+    """Property owner/host name for resort booking form.
+    Example: "CHANGE_ME"
+    """
+
+    host_phone: str
+    """Property owner/host phone for resort booking form.
+    Example: "555-123-4567"
+    """
+
     listing_slug_map: dict[str, str] = {}
     """Maps platform listing identifiers to this property slug.
     Keys are platform-specific identifiers found in CSV exports.
@@ -119,6 +129,38 @@ class AppConfig(BaseSettings):
     NOTE: This is stored as float in config for simplicity; accounting code converts
     to Decimal before any arithmetic to avoid floating-point contamination.
     """
+
+    # --- SMTP (from .env) ---
+    smtp_host: str = "smtp.gmail.com"
+    """SMTP server hostname. Example: smtp.gmail.com"""
+
+    smtp_port: int = 587
+    """SMTP server port. 587 for STARTTLS, 465 for TLS."""
+
+    smtp_user: str = ""
+    """SMTP username / email address."""
+
+    smtp_password: str = ""
+    """SMTP password or app password."""
+
+    smtp_from_email: str = ""
+    """The email address to send from."""
+
+    # --- Compliance (from base.yaml) ---
+    confirmations_dir: str = "./confirmations"
+    """Directory for resort confirmation PDFs. Mount as Docker volume."""
+
+    pdf_template_path: str = "pdf_mappings/sun_retreats_booking.pdf"
+    """Path to the blank resort booking form PDF template."""
+
+    pdf_mapping_path: str = "pdf_mappings/sun_retreats_booking.json"
+    """Path to the JSON field mapping for the resort PDF form."""
+
+    auto_submit_threshold: int = 3
+    """Days before check-in to trigger automatic form submission."""
+
+    resort_contact_name: str = "CHANGE_ME"
+    """Resort contact name used in email subject/body."""
 
     # --- Populated by load_app_config(), not from YAML directly ---
     properties: list[PropertyConfig] = []
