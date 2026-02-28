@@ -25,6 +25,7 @@ from sqlalchemy import text
 from app.api.accounting import router as accounting_router
 from app.api.communication import router as communication_router
 from app.api.compliance import router as compliance_router
+from app.api.dashboard import router as dashboard_router
 from app.api.health import router as health_router
 from app.api.ingestion import router as ingestion_router
 from app.api.reports import router as reports_router
@@ -116,3 +117,4 @@ app.include_router(accounting_router)
 app.include_router(reports_router)
 app.include_router(compliance_router)
 app.include_router(communication_router)
+app.include_router(dashboard_router)
