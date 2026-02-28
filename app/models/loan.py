@@ -25,6 +25,10 @@ class Loan(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+    property_id: Mapped[int | None] = mapped_column(
+        ForeignKey("properties.id"), nullable=True
+    )
+    """FK to properties.id. Set for property-specific loans; None for shared loans."""
 
     account: Mapped["Account"] = relationship(  # type: ignore[name-defined]  # noqa: F821
         "Account",

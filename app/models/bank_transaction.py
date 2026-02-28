@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
-from sqlalchemy import Date, DateTime, JSON, Numeric, String
+from sqlalchemy import Date, DateTime, ForeignKey, JSON, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 from app.db import Base
@@ -19,6 +19,12 @@ class BankTransaction(Base):
     """Transaction amount. Positive for credits, negative for debits."""
     reconciliation_status: Mapped[str] = mapped_column(String(32), server_default="unmatched")
     """Reconciliation state. One of: 'unmatched', 'matched', 'confirmed', 'disputed'."""
+    category: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    """User-assigned transaction category (e.g., 'utilities', 'rent', 'owner_deposit')."""
+    journal_entry_id: Mapped[int | None] = mapped_column(
+        ForeignKey("journal_entries.id"), nullable=True
+    )
+    """FK to journal_entries.id. Set when categorization auto-creates an expense entry."""
     raw_platform_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     """Original row from the bank CSV, stored as JSON for audit trail."""
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
