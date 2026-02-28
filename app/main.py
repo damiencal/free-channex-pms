@@ -13,6 +13,7 @@ Run with:
   uvicorn app.main:app --host 0.0.0.0 --port 8000
 """
 
+import os
 from contextlib import asynccontextmanager
 
 import httpx
@@ -20,7 +21,9 @@ import structlog
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
+from starlette.staticfiles import StaticFiles as StarletteStaticFiles
 
 from app.api.accounting import router as accounting_router
 from app.api.communication import router as communication_router
@@ -40,6 +43,16 @@ configure_logging()
 log = structlog.get_logger()
 
 scheduler = AsyncIOScheduler()
+
+
+class SPAStaticFiles(StarletteStaticFiles):
+    """Serve index.html for any non-file path (SPA client-side routing fallback)."""
+
+    async def get_response(self, path: str, scope: dict) -> object:  # type: ignore[override]
+        try:
+            return await super().get_response(path, scope)
+        except Exception:
+            return await super().get_response("index.html", scope)
 
 
 @asynccontextmanager
@@ -111,6 +124,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# CORS: allow Vite dev server to call FastAPI directly (development only)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vite dev server
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(health_router)
 app.include_router(ingestion_router)
 app.include_router(accounting_router)
@@ -118,3 +139,8 @@ app.include_router(reports_router)
 app.include_router(compliance_router)
 app.include_router(communication_router)
 app.include_router(dashboard_router)
+
+# SPA static files — MUST be last (catches all unmatched routes)
+# Guarded: app starts without frontend build present (backend-only dev)
+if os.path.isdir("frontend/dist"):
+    app.mount("/", SPAStaticFiles(directory="frontend/dist", html=True), name="spa")
