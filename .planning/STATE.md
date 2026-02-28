@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 5 of 8 (Resort PDF Compliance) — In progress
-Plan: 3 of 5 in phase 5 (05-01, 05-03 complete; 05-02 at checkpoint awaiting human-verify)
-Status: Phase 5 plan 03 complete — emailer.py (async SMTP + tenacity retry) and confirmation.py (file matcher + formatters) created. 05-02 at checkpoint:human-verify.
-Last activity: 2026-02-28 — Completed 05-03-PLAN.md (parallel with 05-02)
+Plan: 5 of 5 in phase 5 (05-01, 05-03, 05-05 complete; 05-02 at checkpoint; 05-04 parallel; 05-06 remaining)
+Status: Phase 5 plan 05 complete — urgency.py (daily check + digest email) and APScheduler lifespan integration created.
+Last activity: 2026-02-28 — Completed 05-05-PLAN.md (parallel with 05-04)
 
 Progress: [█████████████████████░░] 84% (21/25 plans estimated)
 
@@ -142,6 +142,12 @@ Recent decisions affecting current work:
 - [05-02]: field.update() + doc.bake() enforced — need_appearances() alone fails on macOS Preview and iOS Mail; bake() embeds appearance streams permanently
 - [05-02]: fill_resort_form() accepts plain dicts not ORM models — orchestrator (Plan 04) builds dicts from ORM before calling
 - [05-02]: list_form_fields() is the field discovery tool — run against actual resort PDF to get real field names for mapping JSON
+- [05-05]: AsyncIOScheduler (not BackgroundScheduler) used — FastAPI is fully async; AsyncIOScheduler runs on existing event loop without spawning threads
+- [05-05]: scheduler is module-level variable — persists for app lifetime; lifespan only calls start/shutdown
+- [05-05]: run_urgency_check() creates SessionLocal() directly — APScheduler callbacks run outside request context where Depends(get_db) is unavailable
+- [05-05]: db.commit() for urgency flagging before email send — email failure is non-fatal; DB state correct even if digest not sent
+- [05-05]: is_urgent==False filter in urgency query — prevents duplicate alerts for bookings already flagged in previous runs
+- [05-05]: replace_existing=True on scheduler.add_job — prevents duplicate job registration on Docker restart
 
 ### Pending Todos
 
@@ -158,6 +164,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T02:10:13Z
-Stopped at: 05-02-PLAN.md checkpoint:human-verify — PDF filler module complete (detect_form_type, fill_resort_form, list_form_fields). Waiting for user to verify actual Sun Retreats form is AcroForm and create real field mapping JSON.
+Last session: 2026-02-28T04:18:45Z
+Stopped at: Completed 05-05-PLAN.md — urgency checker and APScheduler lifespan integration complete. 05-02 still at checkpoint:human-verify awaiting PDF form type confirmation.
 Resume file: None
