@@ -165,6 +165,14 @@ Recent decisions affecting current work:
 - [06-03]: 14:00 UTC hardcoded as PRE_ARRIVAL_SEND_HOUR_UTC — maps to 9am EST / 10am EDT; can be configurable if properties span timezones later
 - [06-03]: schedule_pre_arrival_job() checks run_at <= now before add_job() — APScheduler DateTrigger silently no-ops when run_date is past; guard prevents this
 - [06-03]: compute_pre_arrival_send_time() extracted as public function — Plan 04 ingestion hook needs it when setting CommunicationLog.scheduled_for
+- [06-02]: send_pre_arrival_message() creates own SessionLocal() — APScheduler runs outside FastAPI request context; same pattern as run_urgency_check() in compliance/urgency.py
+- [06-02]: prepare_welcome_message() receives db session from caller and uses flush() not commit() — caller (API endpoint) owns commit boundary; matches Phase 3 module commit responsibility pattern
+- [06-02]: Airbnb pre-arrival marks status='sent' immediately (system renders text, operator copies to Airbnb app) vs VRBO/RVshare keeps 'pending' until operator confirms via API
+- [06-02]: Airbnb welcome uses native_configured status — Airbnb handles delivery natively, system never renders or sends
+- [06-02]: SMTP guard in prepare_welcome_message: skips with warning if smtp_user/smtp_from_email empty — prevents crashes on unconfigured deployments
+- [06-03]: 14:00 UTC hardcoded as PRE_ARRIVAL_SEND_HOUR_UTC — maps to 9am EST / 10am EDT; can be configurable if properties span timezones later
+- [06-03]: schedule_pre_arrival_job() checks run_at <= now before add_job() — APScheduler DateTrigger silently no-ops when run_date is past; guard prevents this
+- [06-03]: compute_pre_arrival_send_time() extracted as public function — Plan 04 ingestion hook needs it when setting CommunicationLog.scheduled_for
 - [06-03]: Circular imports avoided via lazy function-body imports — all cross-module imports (main.py scheduler, messenger.py) deferred to call time
 
 ### Pending Todos
@@ -182,6 +190,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T19:45:49Z
-Stopped at: Completed 06-03-PLAN.md — Pre-arrival scheduler module (schedule_pre_arrival_job, rebuild_pre_arrival_jobs, compute_pre_arrival_send_time)
+Last session: 2026-02-28T19:46:56Z
+Stopped at: Completed 06-02-PLAN.md — communication module (render_guest_message, send_pre_arrival_message, prepare_welcome_message, operator notification emailer)
 Resume file: None
