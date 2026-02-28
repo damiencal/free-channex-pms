@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 7 in progress — Dashboard backend API endpoints complete (Plan 02). Frontend work in progress.
+**Current focus:** Phase 7 in progress — Plans 01 and 02 complete. Frontend scaffold + backend API endpoints done. Ready for Plan 03 (dashboard UI).
 
 ## Current Position
 
 Phase: 7 of 8 (Dashboard) — In progress
 Plan: 2/5 plans executed (01, 02 complete)
-Status: Plan 07-02 complete — 5 dashboard API endpoints created and registered in FastAPI (properties, metrics, bookings, occupancy, actions).
-Last activity: 2026-02-28 — Completed 07-02-PLAN.md (dashboard backend endpoints)
+Status: Plan 07-01 complete — React 19 + Vite 7 + shadcn/ui scaffold, Docker multi-stage build, FastAPI SPA serving. Plan 07-02 complete — 5 dashboard API endpoints registered.
+Last activity: 2026-02-28 — Completed 07-01-PLAN.md (frontend scaffold and SPA integration)
 
 Progress: [████████████████████████░░░░░] 83% (28/34 plans estimated)
 
@@ -182,6 +182,10 @@ Recent decisions affecting current work:
 - [06-05]: native_configured entries return 409 (not idempotent) — Airbnb welcome tracked but never sent via API; guards against operator confusion
 - [06-05]: already-sent returns success dict (not 409) — idempotent confirm; operators clicking twice should not see an error
 - [06-05]: rebuild_pre_arrival_jobs() awaited after scheduler.start() — APScheduler must be running before DateTrigger jobs can be registered
+- [07-01]: Tailwind v4 @apply limitation — @apply border-border fails; use hsl(var(--token)) directly in @layer base CSS rules instead
+- [07-01]: SPAStaticFiles guarded with os.path.isdir("frontend/dist") — backend starts without frontend build present for backend-only dev
+- [07-01]: SPA mount registered after all include_router() calls — must be last to not shadow /api/ routes
+- [07-01]: CORSMiddleware allows localhost:5173 only (Vite dev server) — production served from same origin via FastAPI SPA mount
 - [07-02]: Occupancy computed in Python (not SQL) — partial-month overlap logic (max/min boundary clamping) is cleaner than SQL date arithmetic
 - [07-02]: Actions endpoint uses internal _group/_sort_key fields stripped at return boundary — preserves heterogeneous sort semantics across resort forms/messages/unreconciled without API leakage
 - [07-02]: YoY change returns null (not "0%") when prior year data is zero — null signals missing data; allows conditional rendering in frontend
@@ -203,5 +207,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 07-02-PLAN.md — dashboard backend API (5 endpoints) created and registered.
+Stopped at: Completed 07-01-PLAN.md — React 19 + Vite 7 + shadcn/ui scaffold, Docker multi-stage build, FastAPI SPA serving at root. Plans 01 and 02 both complete.
 Resume file: None
