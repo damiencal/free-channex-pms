@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 4 of 8 (Financial Reports) — In progress
-Plan: 2 of 4 in phase 4 (04-01, 04-02 complete; 04-03, 04-04 remaining)
-Status: In progress — P&L report generator and API endpoint complete; 04-03 (balance sheet) and 04-04 (bank transaction categorization) remaining
-Last activity: 2026-02-28 — Completed 04-02-PLAN.md (generate_pl() function, GET /api/reports/pl endpoint, reports router registered in app)
+Plan: 4 of 4 in phase 4 (04-01, 04-02, 04-04 complete; 04-03 remaining)
+Status: In progress — Bank transaction categorization complete; 04-03 (balance sheet) remaining
+Last activity: 2026-02-28 — Completed 04-04-PLAN.md (GET /api/accounting/bank-transactions, PATCH single and bulk categorization endpoints with auto-expense journal entry creation)
 
-Progress: [█████████████████░] 72% (18/25 plans estimated)
+Progress: [████████████████████░] 76% (19/25 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17
+- Total plans completed: 19
 - Average duration: 2 min
-- Total execution time: 28 min
+- Total execution time: 32 min
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [█████████████████░] 72% (18/25 pl
 | 01-foundation | 6/6 | 12 min | 2 min |
 | 02-data-ingestion | 6/6 | 12 min | 2 min |
 | 03-accounting-engine | 6/6 | 12 min | 2 min |
-| 04-financial-reports | 2/4 | 4 min | 2 min |
+| 04-financial-reports | 3/4 | 6 min | 2 min |
 
 **Recent Trend:**
-- Last 7 plans: 03-02 (2 min), 03-04 (2 min), 03-06 (2 min), 04-01 (1 min), 04-02 (2 min)
+- Last 7 plans: 03-06 (2 min), 04-01 (1 min), 04-02 (2 min), 04-04 (2 min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -123,6 +123,9 @@ Recent decisions affecting current work:
 - [04-01]: NON_EXPENSE_CATEGORIES [owner_deposit, loan_payment, transfer, personal] — bank transaction types that don't appear on P&L
 - [04-01]: property_id on loans is nullable — property-specific loans get property_id set; shared working capital loans remain NULL
 - [04-01]: EXPENSE_CATEGORIES not duplicated in reports.py — imported from expenses.py to maintain single source of truth
+- [04-04]: abs(txn.amount) when passing to record_expense() — bank debits stored as negative; record_expense() requires positive amounts
+- [04-04]: Bulk /bank-transactions/categorize registered before /{txn_id}/category — fixed-path routes must precede path-param routes to avoid route conflict
+- [04-04]: record_expense() ValueError in bulk = per-item error (continues); in single = HTTP 422 (aborts) — different error semantics for batch vs single ops
 
 ### Pending Todos
 
@@ -139,6 +142,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T00:28:58Z
-Stopped at: Completed 04-02-PLAN.md — P&L report generator: generate_pl() with revenue-by-platform (monthly rows), expenses-by-category, combined/property breakdown, shared expense 1/N allocation; GET /api/reports/pl endpoint registered in app.
+Last session: 2026-02-28T00:29:32Z
+Stopped at: Completed 04-04-PLAN.md — Bank transaction categorization: GET list with filters, PATCH single with auto-expense journal entry creation for expense categories, PATCH bulk with per-item error collection.
 Resume file: None
