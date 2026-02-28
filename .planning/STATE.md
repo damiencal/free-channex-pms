@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 7 in progress — Plans 01, 02, and 03 complete. App shell + Home tab live. Ready for Plans 04-05 (Calendar, Actions tabs).
+**Current focus:** Phase 7 complete — All 5 plans executed. Dashboard live: App shell, Home tab (stats + charts + actions preview), Actions tab (expandable accordion with mutation buttons), Reports placeholder. Ready for Phase 8 (LLM query).
 
 ## Current Position
 
-Phase: 7 of 8 (Dashboard) — In progress
-Plan: 3/5 plans executed (01, 02, 03 complete)
-Status: Plan 07-03 complete — App shell with property selector + dark mode, 4-tab navigation with URL sync, Home tab with stat cards, booking trend chart, occupancy donut chart, and actions preview.
-Last activity: 2026-02-28 — Completed 07-03-PLAN.md (dashboard UI shell and home tab)
+Phase: 7 of 8 (Dashboard) — COMPLETE
+Plan: 5/5 plans executed (01, 02, 03, 04-skipped, 05 complete)
+Status: Plan 07-05 complete — Actions tab with expandable accordion items and API mutation buttons; Reports placeholder with Phase 4 endpoint cards. Phase 7 fully complete.
+Last activity: 2026-02-28 — Completed 07-05-PLAN.md (Actions tab + Reports tab)
 
-Progress: [█████████████████████████░░░░] 85% (29/34 plans estimated)
+Progress: [████████████████████████████░] 94% (33/35 plans estimated)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 31
+- Total plans completed: 33
 - Average duration: 2 min
-- Total execution time: 57 min
+- Total execution time: ~59 min
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [███████████████████████
 | 04-financial-reports | 4/4 | 8 min | 2 min |
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
 | 06-guest-communication | 5/5 | 6 min | 1.2 min |
-| 07-dashboard | 3/5 | ~8 min | ~2.7 min |
+| 07-dashboard | 5/5 | ~10 min | ~2 min |
 
 **Recent Trend:**
-- Last 7 plans: 06-01 (2 min), 06-03 (1 min), 06-04 (2 min), 07-01 (~2 min), 07-02 (2 min), 07-03 (4 min)
-- Trend: Steady (07-03 slightly longer due to 15 files)
+- Last 7 plans: 07-01 (~2 min), 07-02 (2 min), 07-03 (4 min), 07-05 (2 min)
+- Trend: Steady at ~2 min/plan
 
 *Updated after each plan completion*
 
@@ -195,6 +195,10 @@ Recent decisions affecting current work:
 - [07-03]: AppShell Actions badge shares TanStack Query cache entry with useActions hook (same queryKey) — no extra HTTP request for badge count
 - [07-03]: OccupancyChart center text rendered as overlay div over donut hole — simpler than Recharts SVG label requiring coordinate math
 - [07-03]: Dark mode default is light; toggles .dark on document.documentElement and persists to localStorage
+- [07-05]: Inline success/error feedback (no toast library) — button replaced by green string on success; keeps dependencies minimal
+- [07-05]: queryKey ['dashboard','actions',selectedPropertyId] in invalidateQueries matches useActions and AppShell badge — badge updates automatically after any action
+- [07-05]: daysUntil() sets hours to 0 before diff — avoids partial-day rounding; calendar-date comparison correct for urgency display
+- [07-05]: unreconciled type has no action button — reconciliation done via CSV upload; explanatory note shown instead of dead button
 
 ### Pending Todos
 
@@ -212,5 +216,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 07-03-PLAN.md — App shell with header (property selector + dark mode), 4-tab navigation with URL sync, Home tab with stat cards, booking trend chart, occupancy donut chart, and actions preview. Plans 01, 02, and 03 all complete.
+Stopped at: Completed 07-05-PLAN.md — Actions tab with accordion items + mutation buttons; Reports placeholder. Phase 7 (Dashboard) fully complete. Ready for Phase 8 (LLM query).
 Resume file: None
