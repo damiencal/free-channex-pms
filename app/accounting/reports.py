@@ -14,9 +14,11 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.accounting.expenses import EXPENSE_CATEGORIES
+from app.accounting.loans import get_loan_balance
 from app.models.account import Account
 from app.models.journal_entry import JournalEntry
 from app.models.journal_line import JournalLine
+from app.models.loan import Loan
 from app.models.property import Property
 
 # Non-expense categories for bank transactions that don't appear on P&L
@@ -353,5 +355,390 @@ def generate_pl(
                     "total": str(comb_exp_total),
                 },
                 "net_income": str(comb_net),
+            },
+        }
+
+
+def generate_balance_sheet(db: Session, as_of_date: date) -> dict:
+    """Generate a balance sheet (point-in-time snapshot) as of a given date.
+
+    Queries all journal lines up to and including as_of_date to compute account
+    balances. Loan liability balances are computed via get_loan_balance() instead
+    of journal line sums (since loan origination entries were never created).
+
+    Sign conventions:
+    - Asset accounts: debit-normal (positive journal amounts = positive balance)
+    - Liability accounts: credit-normal (stored negative; negated for display)
+    - Equity accounts: credit-normal (stored negative; negated for display)
+    - Retained Earnings: computed from cumulative net income (revenue - expenses)
+
+    Args:
+        db: SQLAlchemy session.
+        as_of_date: Period-end date for the snapshot (inclusive).
+
+    Returns:
+        Dict with as_of, assets, liabilities, equity, and total_liabilities_and_equity.
+        All monetary amounts as strings.
+    """
+    # ------------------------------------------------------------------
+    # 1. Query account balances up to as_of_date (excluding loan liability accounts)
+    # ------------------------------------------------------------------
+    balance_rows = (
+        db.query(
+            Account.id.label("account_id"),
+            Account.number.label("number"),
+            Account.name.label("name"),
+            Account.account_type.label("account_type"),
+            func.coalesce(func.sum(JournalLine.amount), Decimal("0")).label("balance"),
+        )
+        .join(JournalLine, JournalLine.account_id == Account.id)
+        .join(JournalEntry, JournalEntry.id == JournalLine.entry_id)
+        .filter(Account.is_active == True)  # noqa: E712
+        .filter(JournalEntry.entry_date <= as_of_date)
+        .filter(Account.account_type.in_(["asset", "liability", "equity"]))
+        .group_by(Account.id, Account.number, Account.name, Account.account_type)
+        .order_by(Account.number)
+        .all()
+    )
+
+    # ------------------------------------------------------------------
+    # 2. Find loan liability account IDs (override with get_loan_balance)
+    # ------------------------------------------------------------------
+    loans = db.query(Loan).all()
+    loan_account_ids: set[int] = {loan.account_id for loan in loans}
+    loan_balances: dict[int, Decimal] = {
+        loan.account_id: get_loan_balance(db, loan) for loan in loans
+    }
+
+    # ------------------------------------------------------------------
+    # 3. Also include accounts with zero balance (active, no entries)
+    #    by fetching all balance sheet accounts
+    # ------------------------------------------------------------------
+    all_bs_accounts = (
+        db.query(Account)
+        .filter(Account.is_active == True)  # noqa: E712
+        .filter(Account.account_type.in_(["asset", "liability", "equity"]))
+        .order_by(Account.number)
+        .all()
+    )
+
+    # Build a mapping from account_id -> balance row for efficient lookup
+    balance_map: dict[int, object] = {row.account_id: row for row in balance_rows}
+
+    # ------------------------------------------------------------------
+    # 4. Build section lists
+    # ------------------------------------------------------------------
+    asset_accounts = []
+    asset_total = Decimal("0")
+
+    liability_accounts = []
+    liability_total = Decimal("0")
+
+    equity_accounts = []
+    equity_total = Decimal("0")
+
+    for acct in all_bs_accounts:
+        row = balance_map.get(acct.id)
+        raw_balance = row.balance if row is not None else Decimal("0")
+
+        if acct.account_type == "asset":
+            display_balance = raw_balance  # debits are positive
+            asset_accounts.append(
+                {
+                    "number": acct.number,
+                    "name": acct.name,
+                    "balance": str(display_balance),
+                }
+            )
+            asset_total += display_balance
+
+        elif acct.account_type == "liability":
+            if acct.id in loan_account_ids:
+                # Use get_loan_balance() for loan accounts (origination never journaled)
+                display_balance = loan_balances[acct.id]
+            else:
+                # Credits stored as negative; negate for display (positive = amount owed)
+                display_balance = -raw_balance
+            liability_accounts.append(
+                {
+                    "number": acct.number,
+                    "name": acct.name,
+                    "balance": str(display_balance),
+                }
+            )
+            liability_total += display_balance
+
+        elif acct.account_type == "equity":
+            # Credits stored as negative; negate for display
+            display_balance = -raw_balance
+            equity_accounts.append(
+                {
+                    "number": acct.number,
+                    "name": acct.name,
+                    "balance": str(display_balance),
+                }
+            )
+            equity_total += display_balance
+
+    # ------------------------------------------------------------------
+    # 5. Compute Retained Earnings
+    #    = cumulative net income from all journal lines up to as_of_date
+    #    Revenue lines: negative (credits). Expenses: positive (debits).
+    #    Net income = -(revenue_sum + expense_sum) where revenue_sum is negative
+    #    Simpler: sum all revenue+expense lines, negate result.
+    # ------------------------------------------------------------------
+    retained_stmt = (
+        db.query(
+            func.coalesce(func.sum(JournalLine.amount), Decimal("0"))
+        )
+        .join(JournalEntry, JournalEntry.id == JournalLine.entry_id)
+        .join(Account, Account.id == JournalLine.account_id)
+        .filter(Account.account_type.in_(["revenue", "expense"]))
+        .filter(JournalEntry.entry_date <= as_of_date)
+    )
+    retained_raw = retained_stmt.scalar()
+    retained_earnings = -retained_raw  # negate: positive = profitable
+
+    equity_accounts.append({"name": "Retained Earnings", "balance": str(retained_earnings)})
+    equity_total += retained_earnings
+
+    total_liabilities_and_equity = liability_total + equity_total
+
+    return {
+        "as_of": as_of_date.isoformat(),
+        "assets": {
+            "accounts": asset_accounts,
+            "total": str(asset_total),
+        },
+        "liabilities": {
+            "accounts": liability_accounts,
+            "total": str(liability_total),
+        },
+        "equity": {
+            "accounts": equity_accounts,
+            "total": str(equity_total),
+        },
+        "total_liabilities_and_equity": str(total_liabilities_and_equity),
+    }
+
+
+def generate_income_statement(
+    db: Session,
+    start_date: date,
+    end_date: date,
+    breakdown: str = "totals",
+) -> dict:
+    """Generate an income statement for a date range with optional monthly drill-down.
+
+    Combined-only view (no per-property breakdown) suitable for tax/accounting purposes.
+    Revenue journal lines are credits (negative amounts); negated for display.
+    Expense journal lines are debits (positive amounts); shown as-is.
+
+    Args:
+        db: SQLAlchemy session.
+        start_date: Inclusive start of the reporting period.
+        end_date: Inclusive end of the reporting period.
+        breakdown: "totals" (default) aggregates to period totals.
+                   "monthly" returns month-by-month rows plus period totals.
+
+    Returns:
+        Dict with period, breakdown, revenue, expenses, net_income (totals mode)
+        or period, breakdown, months, totals (monthly mode).
+        All monetary amounts as strings.
+    """
+    period_dict = {
+        "start_date": start_date.isoformat(),
+        "end_date": end_date.isoformat(),
+    }
+
+    if breakdown == "totals":
+        # ------------------------------------------------------------------
+        # Totals mode: aggregate for the full period
+        # ------------------------------------------------------------------
+        revenue_rows = (
+            db.query(
+                Account.name.label("account_name"),
+                func.sum(JournalLine.amount).label("amount"),
+            )
+            .join(JournalEntry, JournalEntry.id == JournalLine.entry_id)
+            .join(Account, Account.id == JournalLine.account_id)
+            .filter(Account.account_type == "revenue")
+            .filter(JournalEntry.entry_date >= start_date)
+            .filter(JournalEntry.entry_date <= end_date)
+            .group_by(Account.name)
+            .order_by(Account.name)
+            .all()
+        )
+
+        expense_rows = (
+            db.query(
+                Account.name.label("account_name"),
+                func.sum(JournalLine.amount).label("amount"),
+            )
+            .join(JournalEntry, JournalEntry.id == JournalLine.entry_id)
+            .join(Account, Account.id == JournalLine.account_id)
+            .filter(Account.account_type == "expense")
+            .filter(JournalEntry.entry_date >= start_date)
+            .filter(JournalEntry.entry_date <= end_date)
+            .group_by(Account.name)
+            .order_by(Account.name)
+            .all()
+        )
+
+        revenue_by_account: dict[str, Decimal] = {}
+        revenue_total = Decimal("0")
+        for row in revenue_rows:
+            display_amount = -(row.amount)  # credits are negative; negate for display
+            revenue_by_account[row.account_name] = str(display_amount)
+            revenue_total += display_amount
+
+        expense_by_account: dict[str, Decimal] = {}
+        expense_total = Decimal("0")
+        for row in expense_rows:
+            expense_by_account[row.account_name] = str(row.amount)
+            expense_total += row.amount
+
+        net_income = revenue_total - expense_total
+
+        return {
+            "period": period_dict,
+            "breakdown": "totals",
+            "revenue": {
+                "by_account": revenue_by_account,
+                "total": str(revenue_total),
+            },
+            "expenses": {
+                "by_account": expense_by_account,
+                "total": str(expense_total),
+            },
+            "net_income": str(net_income),
+        }
+
+    else:  # breakdown == "monthly"
+        # ------------------------------------------------------------------
+        # Monthly mode: group by year + month
+        # ------------------------------------------------------------------
+        revenue_rows = (
+            db.query(
+                Account.name.label("account_name"),
+                func.extract("year", JournalEntry.entry_date).label("year"),
+                func.extract("month", JournalEntry.entry_date).label("month"),
+                func.sum(JournalLine.amount).label("amount"),
+            )
+            .join(JournalEntry, JournalEntry.id == JournalLine.entry_id)
+            .join(Account, Account.id == JournalLine.account_id)
+            .filter(Account.account_type == "revenue")
+            .filter(JournalEntry.entry_date >= start_date)
+            .filter(JournalEntry.entry_date <= end_date)
+            .group_by(
+                Account.name,
+                func.extract("year", JournalEntry.entry_date),
+                func.extract("month", JournalEntry.entry_date),
+            )
+            .order_by(
+                func.extract("year", JournalEntry.entry_date),
+                func.extract("month", JournalEntry.entry_date),
+                Account.name,
+            )
+            .all()
+        )
+
+        expense_rows = (
+            db.query(
+                Account.name.label("account_name"),
+                func.extract("year", JournalEntry.entry_date).label("year"),
+                func.extract("month", JournalEntry.entry_date).label("month"),
+                func.sum(JournalLine.amount).label("amount"),
+            )
+            .join(JournalEntry, JournalEntry.id == JournalLine.entry_id)
+            .join(Account, Account.id == JournalLine.account_id)
+            .filter(Account.account_type == "expense")
+            .filter(JournalEntry.entry_date >= start_date)
+            .filter(JournalEntry.entry_date <= end_date)
+            .group_by(
+                Account.name,
+                func.extract("year", JournalEntry.entry_date),
+                func.extract("month", JournalEntry.entry_date),
+            )
+            .order_by(
+                func.extract("year", JournalEntry.entry_date),
+                func.extract("month", JournalEntry.entry_date),
+                Account.name,
+            )
+            .all()
+        )
+
+        # Accumulate by (year, month)
+        # monthly_revenue[(yr, mo)][account_name] = display_amount
+        monthly_revenue: dict = defaultdict(lambda: defaultdict(Decimal))
+        monthly_expense: dict = defaultdict(lambda: defaultdict(Decimal))
+
+        for row in revenue_rows:
+            ym = (int(row.year), int(row.month))
+            monthly_revenue[ym][row.account_name] += -(row.amount)
+
+        for row in expense_rows:
+            ym = (int(row.year), int(row.month))
+            monthly_expense[ym][row.account_name] += row.amount
+
+        # Collect all months that appear in either revenue or expense data
+        all_months = sorted(set(list(monthly_revenue.keys()) + list(monthly_expense.keys())))
+
+        months_list = []
+        totals_rev_by_account: dict = defaultdict(Decimal)
+        totals_exp_by_account: dict = defaultdict(Decimal)
+        totals_rev_total = Decimal("0")
+        totals_exp_total = Decimal("0")
+
+        for ym in all_months:
+            yr, mo = ym
+            month_str = f"{yr:04d}-{mo:02d}"
+
+            rev_map = dict(monthly_revenue.get(ym, {}))
+            exp_map = dict(monthly_expense.get(ym, {}))
+
+            rev_total = sum(rev_map.values(), Decimal("0"))
+            exp_total = sum(exp_map.values(), Decimal("0"))
+            month_net = rev_total - exp_total
+
+            # Accumulate period totals
+            for acct, amt in rev_map.items():
+                totals_rev_by_account[acct] += amt
+            for acct, amt in exp_map.items():
+                totals_exp_by_account[acct] += amt
+            totals_rev_total += rev_total
+            totals_exp_total += exp_total
+
+            months_list.append(
+                {
+                    "month": month_str,
+                    "revenue": {
+                        "by_account": {k: str(v) for k, v in sorted(rev_map.items())},
+                        "total": str(rev_total),
+                    },
+                    "expenses": {
+                        "by_account": {k: str(v) for k, v in sorted(exp_map.items())},
+                        "total": str(exp_total),
+                    },
+                    "net_income": str(month_net),
+                }
+            )
+
+        totals_net = totals_rev_total - totals_exp_total
+
+        return {
+            "period": period_dict,
+            "breakdown": "monthly",
+            "months": months_list,
+            "totals": {
+                "revenue": {
+                    "by_account": {k: str(v) for k, v in sorted(totals_rev_by_account.items())},
+                    "total": str(totals_rev_total),
+                },
+                "expenses": {
+                    "by_account": {k: str(v) for k, v in sorted(totals_exp_by_account.items())},
+                    "total": str(totals_exp_total),
+                },
+                "net_income": str(totals_net),
             },
         }
