@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 5 of 8 (Resort PDF Compliance) — In progress
-Plan: 5 of 5 in phase 5 (05-01, 05-03, 05-05 complete; 05-02 at checkpoint; 05-04 parallel; 05-06 remaining)
-Status: Phase 5 plan 05 complete — urgency.py (daily check + digest email) and APScheduler lifespan integration created.
-Last activity: 2026-02-28 — Completed 05-05-PLAN.md (parallel with 05-04)
+Plan: 4 of 5 complete in phase 5 (05-01, 05-03, 05-04, 05-05 complete; 05-02 at checkpoint; 05-06 remaining)
+Status: Phase 5 plan 04 complete — submission orchestrator (process_booking_submission + should_auto_submit) and booking import auto-submission wiring created.
+Last activity: 2026-02-28 — Completed 05-04-PLAN.md
 
 Progress: [█████████████████████░░] 84% (21/25 plans estimated)
 
@@ -148,6 +148,11 @@ Recent decisions affecting current work:
 - [05-05]: db.commit() for urgency flagging before email send — email failure is non-fatal; DB state correct even if digest not sent
 - [05-05]: is_urgent==False filter in urgency query — prevents duplicate alerts for bookings already flagged in previous runs
 - [05-05]: replace_existing=True on scheduler.add_job — prevents duplicate job registration on Docker restart
+- [05-04]: guest_name split on first space only (maxsplit=1) — booking.guest_name -> guest_first_name / guest_last_name for PDF Text_2/Text_3 fields
+- [05-04]: BackgroundTasks.add_task() used (not asyncio.create_task) — fires after response sent, DB session valid during execution
+- [05-04]: should_auto_submit() check in API layer before add_task — below threshold = no background tasks fired; normalizer already created pending records
+- [05-04]: Normalizer stays sync — only creates DB records; async email sending handled by API BackgroundTasks
+- [05-04]: rvshare endpoint changed from def to async def — required for BackgroundTasks with async process_booking_submission()
 
 ### Pending Todos
 
@@ -164,6 +169,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28T04:18:45Z
-Stopped at: Completed 05-05-PLAN.md — urgency checker and APScheduler lifespan integration complete. 05-02 still at checkpoint:human-verify awaiting PDF form type confirmation.
+Last session: 2026-02-28T04:23:28Z
+Stopped at: Completed 05-04-PLAN.md — submission orchestrator and booking import auto-submission wiring complete. 05-02 still at checkpoint:human-verify awaiting PDF form type confirmation.
 Resume file: None
