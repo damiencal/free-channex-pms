@@ -78,10 +78,10 @@ export function ActionItem({ item }: ActionItemProps) {
     description = unreconciledDescription(item.platform, item.net_amount)
   }
 
-  // Resort form mutation: POST /api/compliance/submissions/{booking_id}/submit
+  // Resort form mutation: POST /api/compliance/submit/{booking_id}
   const submitFormMutation = useMutation({
     mutationFn: () =>
-      apiFetch<{ status: string }>(`/compliance/submissions/${(item as { booking_id: number }).booking_id}/submit`, {
+      apiFetch<{ status: string }>(`/compliance/submit/${(item as { booking_id: number }).booking_id}`, {
         method: 'POST',
       }),
     onSuccess: () => {
