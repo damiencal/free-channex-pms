@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phases 9-12 gap closure. Phase 10 in progress.
+**Current focus:** Phases 9-12 gap closure. Phase 10 complete, Phase 11 next.
 
 ## Current Position
 
-Phase: 10 of 12 (Data Import UI) — In Progress
-Plan: 3/? plans complete
-Status: In progress — 10-01, 10-02, 10-03 complete
-Last activity: 2026-02-28 — Completed 10-03-PLAN.md (RVshareEntryForm + ImportHistoryAccordion components)
+Phase: 11 of 12 (Financial Management UI) — NOT STARTED
+Plan: 0/? plans (needs /gsd:plan-phase 11)
+Status: Phase 10 verified and complete. Phase 11 next.
+Last activity: 2026-03-01 — Phase 10 verified (4/4 must-haves passed)
 
-Progress: [██████████████████████████████] 100% (40/40 plans) — Phases 1-9
-         [████████████░░░░░░░░░░░░░░░░░░] ~30% — Phases 10-12 (3/? plans)
+Progress: [██████████████████████████████] 100% (44/44 plans) — Phases 1-10
+         [██████████████████░░░░░░░░░░░░] ~50% — Phases 11-12 (0/? plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 40
+- Total plans completed: 44
 - Average duration: 2 min
-- Total execution time: ~84 min
+- Total execution time: ~92 min
 
 **By Phase:**
 
@@ -37,10 +37,11 @@ Progress: [███████████████████████
 | 07-dashboard | 6/6 | ~12 min | ~2 min |
 | 08-llm-natural-language-interface | 4/4 | ~12 min | ~3 min |
 | 09-integration-wiring-fixes | 2/2 | ~4 min | ~2 min |
+| 10-data-import-ui | 4/4 | ~8 min | ~2 min |
 
 **Recent Trend:**
-- Last 4 plans: 08-03 (2 min), 08-04 (5 min), 09-01 (2 min), 09-02 (2 min)
-- Trend: Steady at ~2-3 min/plan
+- Last 4 plans: 10-01 (2 min), 10-02 (1 min), 10-03 (2 min), 10-04 (3 min)
+- Trend: Steady at ~2 min/plan
 
 *Updated after each plan completion*
 
@@ -266,9 +267,14 @@ None.
 - [10-03]: Property slug pre-selected by reading ['dashboard','properties'] TanStack Query cache and matching selectedPropertyId — AppShell Header populates this cache; no extra HTTP request
 - [10-03]: ImportHistoryAccordion status badge is static green Success — backend only records ImportRun on successful imports; failed imports raise HTTP errors before any record is written
 - [10-03]: ImportHistoryAccordion property column shows em-dash — ImportRun has no property FK; single CSV can span multiple properties (documented backend limitation)
+- [10-04]: DataImportSection shows CsvDropZone OR CsvUploadResult (mutually exclusive) — result/error state triggers swap; parent manages state
+- [10-04]: DataImportSection renders unconditionally in ActionsTab — always available even while actions are loading or errored
+- [10-04-fix]: Airbnb payout rows silently skipped (not logged as errors) — Payout rows legitimately have empty confirmation codes
+- [10-04-fix]: Properties synced from config YAML to database at startup — lifespan step 3b upserts all property configs into properties table
+- [10-04-fix]: literal_column("xmax") used consistently in all three upsert RETURNING clauses — text("xmax") doesn't create named SQLAlchemy result attribute
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Completed 10-03-PLAN.md — RVshareEntryForm (validate-on-blur, raw fetch, property pre-selection) + ImportHistoryAccordion (responsive table/card, Show more pagination)
+Last session: 2026-03-01
+Stopped at: Phase 10 complete and verified. Phase 11 next.
 Resume file: None

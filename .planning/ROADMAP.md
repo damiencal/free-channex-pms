@@ -211,10 +211,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 10-01-PLAN.md — UI primitives (Progress, Label, Input), Vite proxy for /ingestion, useImportHistory hook
-- [ ] 10-02-PLAN.md — CSV drop zone with drag-and-drop, platform selector, XHR upload progress, success/error result display
-- [ ] 10-03-PLAN.md — RVshare manual booking entry form with validate-on-blur, import history accordion
-- [ ] 10-04-PLAN.md — DataImportSection integration, ActionsTab wiring, human verification
+- [x] 10-01-PLAN.md — UI primitives (Progress, Label, Input), Vite proxy for /ingestion, useImportHistory hook
+- [x] 10-02-PLAN.md — CSV drop zone with drag-and-drop, platform selector, XHR upload progress, success/error result display
+- [x] 10-03-PLAN.md — RVshare manual booking entry form with validate-on-blur, import history accordion
+- [x] 10-04-PLAN.md — DataImportSection integration, ActionsTab wiring, human verification
 
 ### Phase 11: Financial Management UI
 **Goal**: Users can categorize bank transactions, record expenses, manage loan payments, and run bank reconciliation entirely from the web dashboard
@@ -254,6 +254,6 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
 | 7. Dashboard | 6/6 | Complete ✓ | 2026-02-28 |
 | 8. LLM Natural Language Interface | 4/4 | Complete ✓ | 2026-03-01 |
 | 9. Integration & Wiring Fixes | 2/2 | Complete ✓ | 2026-02-28 |
-| 10. Data Import UI | 0/? | Not Started | — |
+| 10. Data Import UI | 4/4 | Complete ✓ | 2026-03-01 |
 | 11. Financial Management UI | 0/? | Not Started | — |
 | 12. Reports UI | 0/? | Not Started | — |
