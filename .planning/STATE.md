@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 8 in progress — 08-03 complete. Chat UI components (Zustand store, SSE hook, 6 query components) ready to mount in AppShell. Plan 04 (AppShell wiring + Ollama health tab toggle) remaining.
+**Current focus:** All 8 phases complete. v1 milestone ready for audit.
 
 ## Current Position
 
-Phase: 8 of 8 (LLM Natural Language Interface) — In progress
-Plan: 3/4 plans executed (08-01, 08-02, 08-03 complete)
-Status: 08-03 complete — Zustand chat store, useChatStream SSE hook, and all 6 query components created
-Last activity: 2026-03-01 — Completed 08-03-PLAN.md
+Phase: 8 of 8 (LLM Natural Language Interface) — COMPLETE (verified)
+Plan: 4/4 plans executed (01-04 all complete, 04 human-verified)
+Status: Phase 8 verified — 4/4 success criteria passed. Requirements DASH-04, DASH-05, DASH-06 satisfied.
+Last activity: 2026-03-01 — Phase 8 verified and closed
 
-Progress: [██████████████████████████████] 99% (37/38 plans estimated)
+Progress: [██████████████████████████████] 100% (38/38 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 34
+- Total plans completed: 38
 - Average duration: 2 min
-- Total execution time: ~68 min
+- Total execution time: ~80 min
 
 **By Phase:**
 
@@ -34,11 +34,11 @@ Progress: [███████████████████████
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
 | 06-guest-communication | 5/5 | 6 min | 1.2 min |
 | 07-dashboard | 6/6 | ~12 min | ~2 min |
-| 08-llm-natural-language-interface | 1/4 | 3 min | 3 min |
+| 08-llm-natural-language-interface | 4/4 | ~12 min | ~3 min |
 
 **Recent Trend:**
-- Last 7 plans: 07-01 (5 min), 07-02 (2 min), 07-03 (4 min), 07-04 (5 min), 07-05 (2 min), 07-06 (3 min)
-- Trend: Steady at ~3 min/plan (UI plans slightly heavier)
+- Last 4 plans: 08-01 (3 min), 08-02 (2 min), 08-03 (2 min), 08-04 (5 min)
+- Trend: Steady at ~3 min/plan
 
 *Updated after each plan completion*
 
@@ -233,7 +233,7 @@ None.
 - [04-02]: Revenue query filters source_type==booking_payout — non-booking adjustments excluded from platform breakdown
 - [04-02]: Combined P&L uses full shared expense amounts once (not sum of per-property allocations) — no double-counting
 - [04-02]: generate_pl() returns plain dict not Pydantic model — nested arbitrary-key structure (platform names, display_name as keys) doesn't map cleanly to fixed schemas
-- [Pre-Phase 8]: Ollama model selection unresolved — benchmark Qwen2.5-Coder 14B vs. available models against actual schema before Phase 8 planning. Hardware VRAM constraints will determine feasibility.
+- [Pre-Phase 8]: RESOLVED — Ollama model set to llama3.2:latest (locally available); mistral not installed
 - [08-01]: Schema hardcoded in SYSTEM_PROMPT (not dynamic introspection) — schema changes require intentional prompt update; deliberate design choice for control.
 - [08-01]: extract_sql_from_response does NOT raise on missing SQL — absence signals LLM clarification/refusal; Plan 02 endpoint handles this case.
 - [08-02]: Clarification detection: raw_sql == raw_text AND not startswith SELECT — signals LLM asking for clarification; response streamed as token events without sql/results events
@@ -241,9 +241,12 @@ None.
 - [08-02]: statement_timeout = '15000' (ms) set per-connection before executing user-generated SQL — protects DB from runaway queries
 - [08-02]: Decimal/date → float/isoformat before json.dumps — SQLAlchemy Numeric returns Python Decimal which is not JSON-serializable
 - [08-02]: SSE event types fixed: sql, results, token, error, done — frontend 08-03 must consume this exact schema
+- [08-04]: SSE SQL data must be single-line — sse-starlette splits multi-line data into multiple data: lines; frontend ReadableStream parser dispatches per-line, so newlines collapsed with .replace("\n", " ")
+- [08-04]: Health polling uses plain fetch('/health') not apiFetch — health endpoint at /health not /api/health
+- [08-04]: Vite proxy added for /health — dev server on :5173 needs to forward to :8000
 
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 08-03-PLAN.md — Zustand chat store, SSE hook, 6 query UI components committed
+Stopped at: All 8 phases complete. v1 milestone ready for audit.
 Resume file: None

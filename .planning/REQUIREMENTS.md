@@ -52,9 +52,9 @@
 - [x] **DASH-01**: Web dashboard shows key financial metrics (revenue, expenses, profit) at a glance
 - [x] **DASH-02**: Dashboard shows occupancy rates and booking trends per property
 - [x] **DASH-03**: Dashboard includes a calendar view of upcoming and past bookings across properties
-- [ ] **DASH-04**: User can ask financial questions in plain English via Ollama-powered interface
-- [ ] **DASH-05**: LLM interface generates SQL queries (never performs arithmetic directly)
-- [ ] **DASH-06**: LLM interface shows generated SQL for transparency and debugging
+- [x] **DASH-04**: User can ask financial questions in plain English via Ollama-powered interface
+- [x] **DASH-05**: LLM interface generates SQL queries (never performs arithmetic directly)
+- [x] **DASH-06**: LLM interface shows generated SQL for transparency and debugging
 - [x] **DASH-07**: Dashboard is accessible to non-technical users (simple, clean interface)
 - [x] **DASH-08**: User can view and categorize bank transactions (rent, utilities, maintenance, etc.)
 
@@ -142,13 +142,13 @@
 | COMM-05 | Phase 6 | Complete |
 | COMM-06 | Phase 6 | Complete |
 | COMM-07 | Phase 6 | Complete |
-| DASH-01 | Phase 7 | Pending |
-| DASH-02 | Phase 7 | Pending |
-| DASH-03 | Phase 7 | Pending |
-| DASH-07 | Phase 7 | Pending |
-| DASH-04 | Phase 8 | Pending |
-| DASH-05 | Phase 8 | Pending |
-| DASH-06 | Phase 8 | Pending |
+| DASH-01 | Phase 7 | Complete |
+| DASH-02 | Phase 7 | Complete |
+| DASH-03 | Phase 7 | Complete |
+| DASH-07 | Phase 7 | Complete |
+| DASH-04 | Phase 8 | Complete |
+| DASH-05 | Phase 8 | Complete |
+| DASH-06 | Phase 8 | Complete |
 
 **Coverage:**
 - v1 requirements: 44 total
@@ -157,4 +157,4 @@
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-28 after Phase 6 completion — COMM-01 through COMM-07 marked Complete*
+*Last updated: 2026-03-01 after Phase 8 completion — all v1 requirements Complete*

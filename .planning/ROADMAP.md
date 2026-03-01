@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Resort PDF Compliance** - Automated PDF form filling, email submission, deadline tracking, and submission audit trail
 - [x] **Phase 6: Guest Communication** - Booking confirmation and pre-arrival messages via platform messaging with config-driven templates
 - [x] **Phase 7: Dashboard** - Web dashboard showing financial metrics, occupancy, booking calendar, and pending actions
-- [ ] **Phase 8: LLM Natural Language Interface** - Ollama-powered text-to-SQL query interface for plain-English financial questions
+- [x] **Phase 8: LLM Natural Language Interface** - Ollama-powered text-to-SQL query interface for plain-English financial questions
 
 ## Phase Details
 
@@ -172,10 +172,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Backend query modules: schema-aware prompt, sqlglot SQL validator, Ollama AsyncClient, new deps (ollama, sse-starlette, sqlglot)
-- [ ] 08-02-PLAN.md — SSE streaming API endpoint: POST /api/query/ask with two-phase LLM pipeline (SQL gen + narrative streaming)
-- [ ] 08-03-PLAN.md — Frontend chat UI: Zustand ephemeral store, SSE streaming hook, chat components (starter prompts, message bubbles, Show SQL, result tables)
-- [ ] 08-04-PLAN.md — Dashboard integration: Query tab in AppShell, Ollama health gate, end-to-end human verification
+- [x] 08-01-PLAN.md — Backend query modules: schema-aware prompt, sqlglot SQL validator, Ollama AsyncClient, new deps (ollama, sse-starlette, sqlglot)
+- [x] 08-02-PLAN.md — SSE streaming API endpoint: POST /api/query/ask with two-phase LLM pipeline (SQL gen + narrative streaming)
+- [x] 08-03-PLAN.md — Frontend chat UI: Zustand ephemeral store, SSE streaming hook, chat components (starter prompts, message bubbles, Show SQL, result tables)
+- [x] 08-04-PLAN.md — Dashboard integration: Query tab in AppShell, Ollama health gate, end-to-end human verification
 
 ## Progress
 
@@ -191,4 +191,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 5. Resort PDF Compliance | 6/6 | Complete ✓ | 2026-02-28 |
 | 6. Guest Communication | 5/5 | Complete ✓ | 2026-02-28 |
 | 7. Dashboard | 6/6 | Complete ✓ | 2026-02-28 |
-| 8. LLM Natural Language Interface | 0/4 | Not started | - |
+| 8. LLM Natural Language Interface | 4/4 | Complete ✓ | 2026-03-01 |
