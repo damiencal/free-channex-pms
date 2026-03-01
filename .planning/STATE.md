@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 8 of 8 (LLM Natural Language Interface) — In progress
-Plan: 1/4 plans executed (08-01 complete)
-Status: 08-01 complete — app/query package created (prompt.py, sql_validator.py, ollama_client.py), dependencies installed
-Last activity: 2026-03-01 — Completed 08-01-PLAN.md
+Plan: 2/4 plans executed (08-01 and 08-02 complete)
+Status: 08-02 complete — POST /api/query/ask SSE endpoint live, two-phase LLM pipeline, query_router registered in main.py
+Last activity: 2026-02-28 — Completed 08-02-PLAN.md
 
-Progress: [████████████████████████████] 98% (35/36 plans estimated)
+Progress: [█████████████████████████████] 99% (36/37 plans estimated)
 
 ## Performance Metrics
 
@@ -230,9 +230,14 @@ None.
 - [Pre-Phase 8]: Ollama model selection unresolved — benchmark Qwen2.5-Coder 14B vs. available models against actual schema before Phase 8 planning. Hardware VRAM constraints will determine feasibility.
 - [08-01]: Schema hardcoded in SYSTEM_PROMPT (not dynamic introspection) — schema changes require intentional prompt update; deliberate design choice for control.
 - [08-01]: extract_sql_from_response does NOT raise on missing SQL — absence signals LLM clarification/refusal; Plan 02 endpoint handles this case.
+- [08-02]: Clarification detection: raw_sql == raw_text AND not startswith SELECT — signals LLM asking for clarification; response streamed as token events without sql/results events
+- [08-02]: Phase A non-streaming (stream=False, temp 0.1) for reliable SQL extraction; Phase B streaming (stream=True, temp 0.3) for narrative tokens
+- [08-02]: statement_timeout = '15000' (ms) set per-connection before executing user-generated SQL — protects DB from runaway queries
+- [08-02]: Decimal/date → float/isoformat before json.dumps — SQLAlchemy Numeric returns Python Decimal which is not JSON-serializable
+- [08-02]: SSE event types fixed: sql, results, token, error, done — frontend 08-03 must consume this exact schema
 
 ## Session Continuity
 
-Last session: 2026-03-01
-Stopped at: Completed 08-01-PLAN.md — app/query package created, dependencies installed, all 3 tasks committed
+Last session: 2026-02-28
+Stopped at: Completed 08-02-PLAN.md — POST /api/query/ask SSE endpoint created, query_router registered in main.py, both tasks committed
 Resume file: None
