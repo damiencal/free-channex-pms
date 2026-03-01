@@ -559,7 +559,7 @@ def create_manual_booking(entry: RVshareEntryRequest, db: "Session") -> dict:
             "raw_platform_data": stmt.excluded.raw_platform_data,
             "updated_at": func.now(),
         },
-    ).returning(text("xmax"))
+    ).returning(literal_column("xmax"))
 
     row = db.execute(stmt).fetchone()
     db.commit()
