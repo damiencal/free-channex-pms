@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 10 of 12 (Data Import UI) — In Progress
-Plan: 1/? plans complete
-Status: In progress — 10-01 complete
-Last activity: 2026-02-28 — Completed 10-01-PLAN.md (UI primitives + Vite proxy + import history hook)
+Plan: 2/? plans complete
+Status: In progress — 10-02 complete
+Last activity: 2026-03-01 — Completed 10-02-PLAN.md (CsvDropZone + CsvUploadResult components)
 
 Progress: [██████████████████████████████] 100% (40/40 plans) — Phases 1-9
-         [████░░░░░░░░░░░░░░░░░░░░░░░░░░] ~10% — Phases 10-12 (1/? plans)
+         [████████░░░░░░░░░░░░░░░░░░░░░░] ~20% — Phases 10-12 (2/? plans)
 
 ## Performance Metrics
 
@@ -258,9 +258,13 @@ None.
 - [10-01]: useImportHistory uses raw fetch not apiFetch — ingestion router is at /ingestion (not /api/ingestion); apiFetch would produce broken URL
 - [10-01]: Vite /ingestion proxy added between /api and /health in vite.config.ts — dev server forwards /ingestion/* to FastAPI at localhost:8000
 - [10-01]: input.tsx omits "use client" — no Radix dependency; progress.tsx and label.tsx include it (Radix requires client context)
+- [10-02]: CsvDropZone uses XHR not fetch — fetch has no upload progress event; xhr.upload.onprogress enables real-time upload progress tracking
+- [10-02]: Upload URL is /ingestion/${platform}/upload (not /api/ingestion/) — honoring [09-01] ingestion router prefix; consistent with useImportHistory raw fetch approach
+- [10-02]: ImportResult exported from CsvDropZone, imported by CsvUploadResult — sibling import is appropriate for tightly coupled component pair; no shared types file needed
+- [10-02]: CsvDropZone delegates success/error display to parent via onResult callback — parent (ImportTab) owns result display; CsvDropZone renders null after success/error transition
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Completed 10-01-PLAN.md — Progress/Label/Input components, Vite /ingestion proxy, useImportHistory hook
+Last session: 2026-03-01
+Stopped at: Completed 10-02-PLAN.md — CsvDropZone (XHR upload, state machine, platform selector) + CsvUploadResult (success/error display with dismiss/retry)
 Resume file: None
