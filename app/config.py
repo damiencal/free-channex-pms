@@ -130,6 +130,12 @@ class AppConfig(BaseSettings):
     Override in .env for Linux: OLLAMA_URL=http://172.17.0.1:11434
     """
 
+    ollama_model: str = "mistral"
+    """Ollama model name for text-to-SQL queries. Default: mistral (Mistral 7B).
+    Check available models with: ollama list
+    Override in config/base.yaml or .env: OLLAMA_MODEL=mistral:7b-instruct
+    """
+
     archive_dir: str = "./archive"
     """Directory for raw CSV archives. Mount as Docker volume for persistence."""
 

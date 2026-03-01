@@ -21,6 +21,9 @@ dependencies = [
     "aiosmtplib>=5.1.0",
     "apscheduler>=3.11.2",
     "tenacity>=9.1.4",
+    "ollama",
+    "sse-starlette",
+    "sqlglot",
 ]
 
 [project.scripts]
