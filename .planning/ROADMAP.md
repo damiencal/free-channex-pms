@@ -208,6 +208,13 @@ Plans:
   2. User can fill out an RVshare booking form in the browser and see the new booking appear in the bookings list
   3. User can view import history showing past uploads with timestamps, file names, and record counts
   4. After a successful CSV import, new bookings and bank transactions appear on the dashboard without any additional manual steps
+**Plans:** 4 plans
+
+Plans:
+- [ ] 10-01-PLAN.md — UI primitives (Progress, Label, Input), Vite proxy for /ingestion, useImportHistory hook
+- [ ] 10-02-PLAN.md — CSV drop zone with drag-and-drop, platform selector, XHR upload progress, success/error result display
+- [ ] 10-03-PLAN.md — RVshare manual booking entry form with validate-on-blur, import history accordion
+- [ ] 10-04-PLAN.md — DataImportSection integration, ActionsTab wiring, human verification
 
 ### Phase 11: Financial Management UI
 **Goal**: Users can categorize bank transactions, record expenses, manage loan payments, and run bank reconciliation entirely from the web dashboard
