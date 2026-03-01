@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phase 7 complete — All 6 plans executed and verified. Dashboard live with Home (stat cards, charts), Calendar (month grid + Gantt), Actions (expandable items), Reports (placeholder). Ready for Phase 8 (LLM query).
+**Current focus:** Phase 8 in progress — 08-03 complete. Chat UI components (Zustand store, SSE hook, 6 query components) ready to mount in AppShell. Plan 04 (AppShell wiring + Ollama health tab toggle) remaining.
 
 ## Current Position
 
 Phase: 8 of 8 (LLM Natural Language Interface) — In progress
-Plan: 2/4 plans executed (08-01 and 08-02 complete)
-Status: 08-02 complete — POST /api/query/ask SSE endpoint live, two-phase LLM pipeline, query_router registered in main.py
-Last activity: 2026-02-28 — Completed 08-02-PLAN.md
+Plan: 3/4 plans executed (08-01, 08-02, 08-03 complete)
+Status: 08-03 complete — Zustand chat store, useChatStream SSE hook, and all 6 query components created
+Last activity: 2026-03-01 — Completed 08-03-PLAN.md
 
-Progress: [█████████████████████████████] 99% (36/37 plans estimated)
+Progress: [██████████████████████████████] 99% (37/38 plans estimated)
 
 ## Performance Metrics
 
@@ -215,6 +215,12 @@ Recent decisions affecting current work:
 - [08-01]: extract_sql_from_response does NOT raise on missing SQL — absence signals LLM clarification; caller handles
 - [08-01]: 10-message history cap in build_sql_messages — bounded context prevents token overflow
 - [08-01]: ollama_model defaults to 'mistral' — consistent with Phase 1 Ollama connectivity check; overridable via OLLAMA_MODEL env var
+- [08-03]: useChatStore has NO persist middleware — chat is ephemeral by design, clears on reload to avoid stale conversation context
+- [08-03]: assistantId captured before reader.read() loop — prevents stale closure token misrouting during concurrent messages
+- [08-03]: Plain fetch (not apiFetch) for SSE — apiFetch calls response.json() which consumes body before stream can be read
+- [08-03]: Buffer-based SSE parsing keeps last partial line between chunks — handles TCP packet boundaries correctly
+- [08-03]: Intl.NumberFormat currency formatting only for money columns — pattern match on column name keywords (amount/revenue/expense/etc.)
+- [08-03]: QueryTab disabled prop — Plan 04 passes Ollama health status; renders unavailability message and disables ChatInput
 
 ### Pending Todos
 
@@ -238,6 +244,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Completed 08-02-PLAN.md — POST /api/query/ask SSE endpoint created, query_router registered in main.py, both tasks committed
+Last session: 2026-03-01
+Stopped at: Completed 08-03-PLAN.md — Zustand chat store, SSE hook, 6 query UI components committed
 Resume file: None
