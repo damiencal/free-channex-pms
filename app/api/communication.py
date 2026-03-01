@@ -1,8 +1,8 @@
 """Communication API endpoints.
 
 Exposes guest messaging management:
-  - GET  /communication/logs             — List all communication log entries with booking details
-  - POST /communication/confirm/{log_id} — Mark a VRBO/RVshare message as sent (operator confirmation)
+  - GET  /api/communication/logs             — List all communication log entries with booking details
+  - POST /api/communication/confirm/{log_id} — Mark a VRBO/RVshare message as sent (operator confirmation)
 """
 
 from datetime import datetime, timezone
@@ -17,7 +17,7 @@ from app.models.booking import Booking
 from app.models.communication_log import CommunicationLog
 from app.models.property import Property
 
-router = APIRouter(prefix="/communication", tags=["communication"])
+router = APIRouter(prefix="/api/communication", tags=["communication"])
 
 
 # ---------------------------------------------------------------------------

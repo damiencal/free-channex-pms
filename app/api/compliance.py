@@ -1,11 +1,11 @@
 """Compliance API endpoints.
 
 Exposes resort booking form submission management:
-  - GET  /compliance/submissions           — List all submissions with status + urgency
-  - POST /compliance/submit/{booking_id}   — Manually trigger submission for a booking
-  - POST /compliance/confirm/{booking_id}  — Mark as confirmed (n8n webhook)
-  - POST /compliance/approve/{submission_id} — Approve preview-mode submission and send
-  - POST /compliance/process-pending       — Batch-process all pending auto-submit submissions
+  - GET  /api/compliance/submissions           — List all submissions with status + urgency
+  - POST /api/compliance/submit/{booking_id}   — Manually trigger submission for a booking
+  - POST /api/compliance/confirm/{booking_id}  — Mark as confirmed (n8n webhook)
+  - POST /api/compliance/approve/{submission_id} — Approve preview-mode submission and send
+  - POST /api/compliance/process-pending       — Batch-process all pending auto-submit submissions
 """
 
 from datetime import datetime, timezone
@@ -22,7 +22,7 @@ from app.models.booking import Booking
 from app.models.property import Property
 from app.models.resort_submission import ResortSubmission
 
-router = APIRouter(prefix="/compliance", tags=["compliance"])
+router = APIRouter(prefix="/api/compliance", tags=["compliance"])
 
 
 # ---------------------------------------------------------------------------
