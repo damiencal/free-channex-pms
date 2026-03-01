@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 10 of 12 (Data Import UI) — In Progress
-Plan: 2/? plans complete
-Status: In progress — 10-02 complete
-Last activity: 2026-03-01 — Completed 10-02-PLAN.md (CsvDropZone + CsvUploadResult components)
+Plan: 3/? plans complete
+Status: In progress — 10-01, 10-02, 10-03 complete
+Last activity: 2026-02-28 — Completed 10-03-PLAN.md (RVshareEntryForm + ImportHistoryAccordion components)
 
 Progress: [██████████████████████████████] 100% (40/40 plans) — Phases 1-9
-         [████████░░░░░░░░░░░░░░░░░░░░░░] ~20% — Phases 10-12 (2/? plans)
+         [████████████░░░░░░░░░░░░░░░░░░] ~30% — Phases 10-12 (3/? plans)
 
 ## Performance Metrics
 
@@ -262,9 +262,13 @@ None.
 - [10-02]: Upload URL is /ingestion/${platform}/upload (not /api/ingestion/) — honoring [09-01] ingestion router prefix; consistent with useImportHistory raw fetch approach
 - [10-02]: ImportResult exported from CsvDropZone, imported by CsvUploadResult — sibling import is appropriate for tightly coupled component pair; no shared types file needed
 - [10-02]: CsvDropZone delegates success/error display to parent via onResult callback — parent (ImportTab) owns result display; CsvDropZone renders null after success/error transition
+- [10-03]: RVshareEntryForm uses raw fetch('/ingestion/rvshare/entry') not apiFetch — ingestion router is at /ingestion (not /api/ingestion); consistent with useImportHistory and CsvDropZone
+- [10-03]: Property slug pre-selected by reading ['dashboard','properties'] TanStack Query cache and matching selectedPropertyId — AppShell Header populates this cache; no extra HTTP request
+- [10-03]: ImportHistoryAccordion status badge is static green Success — backend only records ImportRun on successful imports; failed imports raise HTTP errors before any record is written
+- [10-03]: ImportHistoryAccordion property column shows em-dash — ImportRun has no property FK; single CSV can span multiple properties (documented backend limitation)
 
 ## Session Continuity
 
-Last session: 2026-03-01
-Stopped at: Completed 10-02-PLAN.md — CsvDropZone (XHR upload, state machine, platform selector) + CsvUploadResult (success/error display with dismiss/retry)
+Last session: 2026-02-28
+Stopped at: Completed 10-03-PLAN.md — RVshareEntryForm (validate-on-blur, raw fetch, property pre-selection) + ImportHistoryAccordion (responsive table/card, Show more pagination)
 Resume file: None
