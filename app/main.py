@@ -5,6 +5,7 @@ Startup sequence (via lifespan):
   1. Load and validate config — FAIL-FAST (SystemExit on any invalid config)
   2. Validate templates — FAIL-FAST (catches variable typos before accepting requests)
   3. Verify database connection — FAIL-FAST (can't operate without DB)
+  3b. Sync properties from config YAML → database (upsert)
   4. Check Ollama connectivity — NON-FATAL (LLM features disabled if unavailable)
   5. Start compliance scheduler (daily urgency check)
   6. Rebuild pre-arrival message scheduler jobs from database
@@ -36,8 +37,9 @@ from app.api.reports import router as reports_router
 from app.communication.scheduler import rebuild_pre_arrival_jobs
 from app.compliance.urgency import run_urgency_check
 from app.config import load_app_config
-from app.db import engine
+from app.db import SessionLocal, engine
 from app.logging import configure_logging
+from app.models.property import Property
 from app.templates import validate_all_templates
 
 configure_logging()
@@ -78,6 +80,21 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         log.error("Database connection failed", error=str(e))
         raise  # Fatal — can't operate without DB
+
+    # 3b. Sync properties from config YAML → database
+    with SessionLocal() as db:
+        existing = {p.slug for p in db.query(Property).all()}
+        for prop_cfg in config.properties:
+            if prop_cfg.slug not in existing:
+                db.add(Property(slug=prop_cfg.slug, display_name=prop_cfg.display_name))
+                log.info("Property seeded", slug=prop_cfg.slug)
+            else:
+                # Update display_name if config changed
+                db.query(Property).filter(Property.slug == prop_cfg.slug).update(
+                    {"display_name": prop_cfg.display_name}
+                )
+        db.commit()
+    log.info("Properties synced", count=len(config.properties))
 
     # 4. Check Ollama connectivity (NON-FATAL — system works without it)
     ollama_url = config.ollama_url
