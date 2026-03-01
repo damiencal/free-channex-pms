@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING
 
 import polars as pl
 import structlog
-from sqlalchemy import func, select, text
+from sqlalchemy import func, literal_column, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from app.communication.scheduler import compute_pre_arrival_send_time, schedule_pre_arrival_job
@@ -355,7 +355,7 @@ def ingest_csv(
                 "raw_platform_data": stmt.excluded.raw_platform_data,
                 "updated_at": func.now(),  # ORM onupdate is not triggered by upserts
             },
-        ).returning(text("xmax"))
+        ).returning(literal_column("xmax"))
 
         row = db.execute(stmt).fetchone()
         if row is not None and row.xmax == 0:
@@ -483,7 +483,7 @@ def ingest_bank_csv(
                 "raw_platform_data": stmt.excluded.raw_platform_data,
                 "updated_at": func.now(),  # ORM onupdate is not triggered by upserts
             },
-        ).returning(text("xmax"))
+        ).returning(literal_column("xmax"))
 
         row = db.execute(stmt).fetchone()
         if row is not None and row.xmax == 0:
