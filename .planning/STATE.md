@@ -9,13 +9,13 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 9 of 12 (Integration & Wiring Fixes) — NOT STARTED
-Plan: 0/? plans (needs /gsd:plan-phase 9)
-Status: Gap closure phases 9-12 created from v1 milestone audit
-Last activity: 2026-02-28 — Gap closure phases added to roadmap
+Phase: 9 of 12 (Integration & Wiring Fixes) — IN PROGRESS
+Plan: 1/2 plans complete (09-01 done)
+Status: Router prefix fixes and LLM prompt correction complete; Plan 02 next
+Last activity: 2026-02-28 — Completed 09-01-PLAN.md
 
 Progress: [██████████████████████████████] 100% (38/38 plans) — Phases 1-8
-         [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% — Phases 9-12 (gap closure)
+         [███░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~12% — Phases 9-12 (1/8 plans done)
 
 ## Performance Metrics
 
@@ -245,9 +245,14 @@ None.
 - [08-04]: SSE SQL data must be single-line — sse-starlette splits multi-line data into multiple data: lines; frontend ReadableStream parser dispatches per-line, so newlines collapsed with .replace("\n", " ")
 - [08-04]: Health polling uses plain fetch('/health') not apiFetch — health endpoint at /health not /api/health
 - [08-04]: Vite proxy added for /health — dev server on :5173 needs to forward to :8000
+- [09-01]: compliance router prefix /compliance -> /api/compliance — matches apiFetch('/compliance/...') in ActionItem.tsx
+- [09-01]: communication router prefix /communication -> /api/communication — matches apiFetch('/communication/...') in ActionItem.tsx
+- [09-01]: ingestion router prefix intentionally kept as /ingestion — uses FormData fetch, not apiFetch; changing would break file uploads
+- [09-01]: attribution values corrected to 'jay', 'minnie', 'shared' in SYSTEM_PROMPT — matches _VALID_ATTRIBUTIONS frozenset in expenses.py
+- [09-01]: Gap 2 (Airbnb pre-arrival) confirmed already fixed in Phase 6 — operator email sent, status stays pending until confirmed via API
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Gap closure phases 9-12 added. Phase 9 needs planning.
+Stopped at: Completed 09-01-PLAN.md. Plan 09-02 is next.
 Resume file: None
