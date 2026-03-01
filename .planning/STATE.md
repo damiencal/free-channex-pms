@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 11 of 12 (Financial Management UI) — In progress
-Plan: 2/? plans complete
-Status: Plan 11-02 complete. Plans 03-05 (sub-tab components) next.
-Last activity: 2026-03-01 — Completed 11-02-PLAN.md (Finance tab foundation)
+Plan: 2/? plans complete (11-01 + 11-02 done)
+Status: Plans 11-01 and 11-02 complete. Plans 03-05 (sub-tab components) next.
+Last activity: 2026-03-01 — Completed 11-01-PLAN.md (backend API gaps + UI primitives)
 
 Progress: [██████████████████████████████] 100% (44/44 plans) — Phases 1-10
          [██████████████████░░░░░░░░░░░░] ~50% — Phases 11-12 (0/? plans)
@@ -272,6 +272,9 @@ None.
 - [10-04-fix]: Airbnb payout rows silently skipped (not logged as errors) — Payout rows legitimately have empty confirmation codes
 - [10-04-fix]: Properties synced from config YAML to database at startup — lifespan step 3b upserts all property configs into properties table
 - [10-04-fix]: literal_column("xmax") used consistently in all three upsert RETURNING clauses — text("xmax") doesn't create named SQLAlchemy result attribute
+- [11-01]: BankTransaction has no property_id column — bank transactions are cross-property by nature (Mercury statements span all properties); property_id param accepted on GET /bank-transactions for API symmetry but not applied; known limitation documented
+- [11-01]: finance-summary counts needs_review without property filter — needs_review bank transactions are cross-property; only booking-linked counts (unmatched payouts, pending confirmation) respect property_id
+- [11-01]: pending_confirmation serialized in API layer from (ReconciliationMatch, Booking, BankTransaction) tuples — keeps reconciliation module pure Python; matches existing serialization pattern
 - [11-02]: Finance tab placed between Actions and Query — Finance is primary operational tab; Query is secondary utility
 - [11-02]: selectedPropertyId in all finance query keys even for non-filtered endpoints (e.g. loans) — cache consistency + future-proofing for property-scoped filtering
 - [11-02]: All finance mutations invalidate ['finance'] broadly — badge and lists refresh on any finance action
@@ -280,5 +283,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 11-02-PLAN.md (Finance tab foundation — API wrappers, hooks, FinanceTab shell, AppShell badge)
+Stopped at: Completed 11-01-PLAN.md (backend API gaps + UI primitives for Finance tab)
 Resume file: None
