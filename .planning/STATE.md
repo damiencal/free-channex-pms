@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 11 of 12 (Financial Management UI) — In progress
-Plan: 2/? plans complete (11-01 + 11-02 done)
-Status: Plans 11-01 and 11-02 complete. Plans 03-05 (sub-tab components) next.
-Last activity: 2026-03-01 — Completed 11-01-PLAN.md (backend API gaps + UI primitives)
+Plan: 4/? plans complete (11-01, 11-02, 11-04, 11-05 done)
+Status: Plans 11-01, 11-02, 11-04, 11-05 complete. Plan 11-03 (Transactions sub-tab) next.
+Last activity: 2026-03-01 — Completed 11-04-PLAN.md (Expenses & Loans form)
 
 Progress: [██████████████████████████████] 100% (44/44 plans) — Phases 1-10
          [██████████████████░░░░░░░░░░░░] ~50% — Phases 11-12 (0/? plans)
@@ -279,9 +279,12 @@ None.
 - [11-02]: selectedPropertyId in all finance query keys even for non-filtered endpoints (e.g. loans) — cache consistency + future-proofing for property-scoped filtering
 - [11-02]: All finance mutations invalidate ['finance'] broadly — badge and lists refresh on any finance action
 - [11-02]: Placeholder sub-tab components (TransactionsTab, ExpensesLoansTab, ReconciliationTab) created as minimal stubs for Plans 03-05 to overwrite
+- [11-04]: Individual useState per field (not object) for expense/loan form — simplest reset pattern after success; clearFeedback() called from all onChange handlers
+- [11-04]: Attribution drives property_id resolution — jay/minnie reads slug from ['dashboard','properties'] cache; shared sets null; same pattern as RVshareEntryForm (10-03)
+- [11-04]: Duplicate loan payment (status=skipped) shows amber warning not error — backend returns 200 with status field; idempotent skip is not a failure
 
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 11-01-PLAN.md (backend API gaps + UI primitives for Finance tab)
+Stopped at: Completed 11-04-PLAN.md (Expenses & Loans form — ExpenseLoanForm + ExpensesLoansTab)
 Resume file: None
