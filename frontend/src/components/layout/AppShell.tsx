@@ -7,6 +7,7 @@ import { HomeTab } from '@/components/home/HomeTab'
 import { CalendarTab } from '@/components/calendar/CalendarTab'
 import { ActionsTab } from '@/components/actions/ActionsTab'
 import { ReportsTab } from '@/components/reports/ReportsTab'
+import { QueryTab } from '@/components/query/QueryTab'
 import { apiFetch } from '@/api/client'
 import { usePropertyStore } from '@/store/usePropertyStore'
 
@@ -15,8 +16,13 @@ interface ActionsResponse {
   total: number
 }
 
-type TabValue = 'home' | 'calendar' | 'reports' | 'actions'
-const VALID_TABS: TabValue[] = ['home', 'calendar', 'reports', 'actions']
+interface HealthResponse {
+  status: string
+  ollama: string  // 'available' | 'unavailable'
+}
+
+type TabValue = 'home' | 'calendar' | 'reports' | 'actions' | 'query'
+const VALID_TABS: TabValue[] = ['home', 'calendar', 'reports', 'actions', 'query']
 
 function isValidTab(value: string | null): value is TabValue {
   return VALID_TABS.includes(value as TabValue)
@@ -32,6 +38,18 @@ export function AppShell() {
   const activeTab: TabValue = isValidTab(rawTab) ? rawTab : 'home'
 
   const { selectedPropertyId } = usePropertyStore()
+
+  // Poll /health every 30 seconds to gate the Query tab on Ollama availability
+  const { data: healthData } = useQuery<HealthResponse>({
+    queryKey: ['health'],
+    queryFn: async () => {
+      const res = await fetch('/health')
+      if (!res.ok) return { status: 'degraded', ollama: 'unavailable' }
+      return res.json() as Promise<HealthResponse>
+    },
+    refetchInterval: 30_000,
+  })
+  const ollamaAvailable = healthData?.ollama === 'available'
 
   // Fetch actions total count for the badge on the Actions tab
   const { data: actionsData } = useQuery<ActionsResponse>({
@@ -69,6 +87,13 @@ export function AppShell() {
                   </Badge>
                 )}
               </TabsTrigger>
+              <TabsTrigger
+                value="query"
+                disabled={!ollamaAvailable}
+                className={!ollamaAvailable ? 'opacity-50' : ''}
+              >
+                Query
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -86,6 +111,10 @@ export function AppShell() {
 
           <TabsContent value="actions">
             <ActionsTab />
+          </TabsContent>
+
+          <TabsContent value="query">
+            <QueryTab disabled={!ollamaAvailable} />
           </TabsContent>
         </Tabs>
       </main>

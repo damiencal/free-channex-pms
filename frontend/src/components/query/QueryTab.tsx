@@ -21,8 +21,8 @@ export function QueryTab({ disabled = false }: QueryTabProps) {
     <div className="flex h-full flex-col">
       {disabled ? (
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-sm text-muted-foreground">
-            Query is unavailable -- Ollama is not running
+          <p className="text-sm text-muted-foreground text-center max-w-sm">
+            Query is unavailable -- Ollama is not running. The Query tab will re-enable automatically when Ollama is available.
           </p>
         </div>
       ) : messages.length === 0 ? (
