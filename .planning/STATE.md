@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 11 of 12 (Financial Management UI) — NOT STARTED
-Plan: 0/? plans (needs /gsd:plan-phase 11)
-Status: Phase 10 verified and complete. Phase 11 next.
-Last activity: 2026-03-01 — Phase 10 verified (4/4 must-haves passed)
+Phase: 11 of 12 (Financial Management UI) — In progress
+Plan: 2/? plans complete
+Status: Plan 11-02 complete. Plans 03-05 (sub-tab components) next.
+Last activity: 2026-03-01 — Completed 11-02-PLAN.md (Finance tab foundation)
 
 Progress: [██████████████████████████████] 100% (44/44 plans) — Phases 1-10
          [██████████████████░░░░░░░░░░░░] ~50% — Phases 11-12 (0/? plans)
@@ -272,9 +272,13 @@ None.
 - [10-04-fix]: Airbnb payout rows silently skipped (not logged as errors) — Payout rows legitimately have empty confirmation codes
 - [10-04-fix]: Properties synced from config YAML to database at startup — lifespan step 3b upserts all property configs into properties table
 - [10-04-fix]: literal_column("xmax") used consistently in all three upsert RETURNING clauses — text("xmax") doesn't create named SQLAlchemy result attribute
+- [11-02]: Finance tab placed between Actions and Query — Finance is primary operational tab; Query is secondary utility
+- [11-02]: selectedPropertyId in all finance query keys even for non-filtered endpoints (e.g. loans) — cache consistency + future-proofing for property-scoped filtering
+- [11-02]: All finance mutations invalidate ['finance'] broadly — badge and lists refresh on any finance action
+- [11-02]: Placeholder sub-tab components (TransactionsTab, ExpensesLoansTab, ReconciliationTab) created as minimal stubs for Plans 03-05 to overwrite
 
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Phase 10 complete and verified. Phase 11 next.
+Stopped at: Completed 11-02-PLAN.md (Finance tab foundation — API wrappers, hooks, FinanceTab shell, AppShell badge)
 Resume file: None
