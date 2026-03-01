@@ -226,6 +226,15 @@ Plans:
   2. User can record a new expense with amount, category, date, and description — the expense appears in the P&L
   3. User can record a loan payment with principal/interest split — the loan balance updates
   4. User can view unreconciled items and confirm or reject suggested matches between platform payouts and bank deposits
+**Plans:** 6 plans
+
+Plans:
+- [ ] 11-01-PLAN.md — Backend API fixes (pending_confirmation, finance-summary endpoint, property_id + amount filters) + Checkbox and ScrollArea UI primitives
+- [ ] 11-02-PLAN.md — Finance API wrappers, TanStack Query hooks, FinanceTab shell with sub-tabs, AppShell integration with badge
+- [ ] 11-03-PLAN.md — Transactions sub-tab: dense table, category auto-save with attribution, multi-select bulk toolbar, filters, Load More pagination
+- [ ] 11-04-PLAN.md — Expenses & Loans sub-tab: togglable expense/loan form with validation, property attribution, inline success feedback
+- [ ] 11-05-PLAN.md — Reconciliation sub-tab: split-panel layout, pending confirmation matches, needs-review candidates, confirm/reject workflow
+- [ ] 11-06-PLAN.md — Frontend build verification and human verification checkpoint
 
 ### Phase 12: Reports UI
 **Goal**: Users can generate and view financial reports (P&L, balance sheet, income statement) interactively from the dashboard with property and date filters
@@ -255,5 +264,5 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
 | 8. LLM Natural Language Interface | 4/4 | Complete ✓ | 2026-03-01 |
 | 9. Integration & Wiring Fixes | 2/2 | Complete ✓ | 2026-02-28 |
 | 10. Data Import UI | 4/4 | Complete ✓ | 2026-03-01 |
-| 11. Financial Management UI | 0/? | Not Started | — |
+| 11. Financial Management UI | 0/6 | Not Started | — |
 | 12. Reports UI | 0/? | Not Started | — |
