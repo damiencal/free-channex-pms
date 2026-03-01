@@ -78,7 +78,7 @@ Table: expenses
   category     VARCHAR(64)             -- e.g., 'cleaning', 'maintenance', 'utilities'
   description  VARCHAR(512)
   vendor       VARCHAR(255)
-  attribution  VARCHAR(32)             -- 'property', 'shared', 'personal'
+  attribution  VARCHAR(32)             -- 'jay', 'minnie', 'shared'
   property_id  INTEGER REFERENCES properties(id)
 
 SIGN CONVENTION:

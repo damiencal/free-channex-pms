@@ -115,9 +115,9 @@ async def send_pre_arrival_message(booking_id: int) -> None:
 
     For Airbnb:
       - Renders the template and stores rendered_message
-      - Updates status to 'sent' and sets sent_at
-      - The rendered text serves as the message the operator sends
-        via the Airbnb app (or it matches what Airbnb native messaging sends)
+      - Sends operator notification email with copy-pasteable text
+      - Updates operator_notified_at but keeps status as 'pending'
+      - Status transitions to 'sent' only when operator confirms via API
 
     For VRBO/RVshare:
       - Renders the template and stores rendered_message
