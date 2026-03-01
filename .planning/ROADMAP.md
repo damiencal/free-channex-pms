@@ -169,14 +169,13 @@ Plans:
   2. The system never performs arithmetic in the LLM — every number in the response comes from a SQL query result
   3. Thomas can see the SQL query that produced each answer for debugging and verification
   4. When the LLM cannot generate a valid query (ambiguous question, schema gap), it says so clearly rather than returning a hallucinated number
-**Plans**: TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 08-01: Schema-aware prompt construction — inject schema definition at startup, cache, include table/column descriptions and example queries
-- [ ] 08-02: Text-to-SQL pipeline — Ollama client, relative date resolution to absolute ranges before querying, read-only SQL validation
-- [ ] 08-03: Query execution and response — run validated SQL, format results, generate natural language description of pre-computed results (LLM never computes)
-- [ ] 08-04: Dashboard query interface — text input, response display with source data rows, show-SQL toggle for Thomas, graceful failure messages
-- [ ] 08-05: LLM model benchmarking and selection — test Qwen2.5-Coder 14B vs. available models against real schema before committing
+- [ ] 08-01-PLAN.md — Backend query modules: schema-aware prompt, sqlglot SQL validator, Ollama AsyncClient, new deps (ollama, sse-starlette, sqlglot)
+- [ ] 08-02-PLAN.md — SSE streaming API endpoint: POST /api/query/ask with two-phase LLM pipeline (SQL gen + narrative streaming)
+- [ ] 08-03-PLAN.md — Frontend chat UI: Zustand ephemeral store, SSE streaming hook, chat components (starter prompts, message bubbles, Show SQL, result tables)
+- [ ] 08-04-PLAN.md — Dashboard integration: Query tab in AppShell, Ollama health gate, end-to-end human verification
 
 ## Progress
 
@@ -192,4 +191,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 5. Resort PDF Compliance | 6/6 | Complete ✓ | 2026-02-28 |
 | 6. Guest Communication | 5/5 | Complete ✓ | 2026-02-28 |
 | 7. Dashboard | 6/6 | Complete ✓ | 2026-02-28 |
-| 8. LLM Natural Language Interface | 0/5 | Not started | - |
+| 8. LLM Natural Language Interface | 0/4 | Not started | - |
