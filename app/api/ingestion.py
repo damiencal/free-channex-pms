@@ -97,6 +97,53 @@ async def _fire_background_welcome_messages(
             )
 
 
+
+async def _fire_background_revenue_recognition(
+    booking_db_ids: list[int], db: Session
+) -> None:
+    """Recognize revenue for newly imported bookings.
+
+    Called as a FastAPI BackgroundTask after the upload response is sent.
+    Mirrors the pattern of _fire_background_submissions(). Each booking
+    gets its own recognize_booking_revenue() call. Errors are logged
+    but never propagated (background task isolation).
+
+    Revenue recognition is idempotent — create_journal_entry() checks
+    source_id uniqueness and returns None if already exists. Safe to call
+    even if operator later triggers manual recognize-all.
+
+    Args:
+        booking_db_ids: Database IDs of newly inserted bookings.
+        db: Active SQLAlchemy session.
+    """
+    from app.accounting.revenue import recognize_booking_revenue
+
+    bg_log = structlog.get_logger()
+    config = get_config()
+    for booking_id in booking_db_ids:
+        try:
+            booking = db.get(Booking, booking_id)
+            if booking is None:
+                bg_log.warning(
+                    "Revenue recognition: booking not found",
+                    booking_id=booking_id,
+                )
+                continue
+            results = recognize_booking_revenue(db, booking, config)
+            db.commit()
+            bg_log.info(
+                "Revenue recognized",
+                booking_id=booking_id,
+                entries_created=sum(1 for r in results if r is not None),
+            )
+        except Exception:
+            db.rollback()
+            bg_log.exception(
+                "Background revenue recognition failed",
+                booking_id=booking_id,
+            )
+
+
 # ---------------------------------------------------------------------------
 # Upload endpoints
 # ---------------------------------------------------------------------------
