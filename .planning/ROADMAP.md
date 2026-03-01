@@ -2,7 +2,7 @@
 
 ## Overview
 
-Build a self-hosted vacation rental management platform in eight phases, following the dependency order that research validated: foundation before data, data before accounting, accounting before reports and compliance, compliance and communication before the dashboard that displays their status, and the LLM query interface last when the schema is stable and live data exists to make it useful. Each phase delivers a coherent, independently verifiable capability — the system is never partially functional for an extended period.
+Build a self-hosted vacation rental management platform in twelve phases. Phases 1-8 deliver the core backend and read-only dashboard. Phases 9-12 close gaps identified by the v1 milestone audit: integration bug fixes, data import UI, financial management UI, and interactive reports. Each phase delivers a coherent, independently verifiable capability.
 
 ## Phases
 
@@ -20,6 +20,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Guest Communication** - Booking confirmation and pre-arrival messages via platform messaging with config-driven templates
 - [x] **Phase 7: Dashboard** - Web dashboard showing financial metrics, occupancy, booking calendar, and pending actions
 - [x] **Phase 8: LLM Natural Language Interface** - Ollama-powered text-to-SQL query interface for plain-English financial questions
+- [ ] **Phase 9: Integration & Wiring Fixes** - Router prefix fixes, Airbnb pre-arrival notification, LLM schema correction, revenue recognition automation
+- [ ] **Phase 10: Data Import UI** - Frontend CSV upload, RVshare manual entry form, import history view
+- [ ] **Phase 11: Financial Management UI** - Bank transaction categorization, expense management, loan payments, reconciliation dashboard
+- [ ] **Phase 12: Reports UI** - Interactive P&L, balance sheet, and income statement viewers
 
 ## Phase Details
 
@@ -177,10 +181,55 @@ Plans:
 - [x] 08-03-PLAN.md — Frontend chat UI: Zustand ephemeral store, SSE streaming hook, chat components (starter prompts, message bubbles, Show SQL, result tables)
 - [x] 08-04-PLAN.md — Dashboard integration: Query tab in AppShell, Ollama health gate, end-to-end human verification
 
+### Phase 9: Integration & Wiring Fixes
+**Goal**: All existing features work correctly end-to-end — action buttons dismiss, operator notifications fire, LLM queries return accurate results, and revenue recognition triggers automatically after import
+**Depends on**: Phase 8
+**Requirements**: DASH-07, COMM-02, COMM-04
+**Gap Closure**: Closes 3 critical/high gaps and 2 integration issues from v1 audit
+**Success Criteria** (what must be TRUE):
+  1. Clicking "Submit" on a pending resort form in the Actions tab succeeds (no 404) and the submission status updates
+  2. Clicking "Mark as Sent" on a pending VRBO message in the Actions tab succeeds (no 404) and the action disappears
+  3. When the Airbnb pre-arrival scheduler fires, the operator receives an email with the rendered message text — the status does NOT flip to 'sent' until the operator confirms
+  4. LLM queries about property-specific expenses generate correct WHERE clauses using actual attribution values ('jay', 'minnie', 'shared')
+  5. After CSV import, revenue recognition runs automatically — dashboard financial metrics reflect imported booking revenue without a separate manual API call
+
+### Phase 10: Data Import UI
+**Goal**: Non-technical users can upload CSV files and enter bookings through the web dashboard — no API calls or command-line knowledge required
+**Depends on**: Phase 9
+**Requirements**: (Satisfies DASH-07 non-technical usability for data operations)
+**Gap Closure**: Closes the critical "no frontend data entry" gap from v1 audit
+**Success Criteria** (what must be TRUE):
+  1. User can drag-and-drop or file-pick an Airbnb CSV, VRBO CSV, or Mercury CSV and see a success/error result with import details
+  2. User can fill out an RVshare booking form in the browser and see the new booking appear in the bookings list
+  3. User can view import history showing past uploads with timestamps, file names, and record counts
+  4. After a successful CSV import, new bookings and bank transactions appear on the dashboard without any additional manual steps
+
+### Phase 11: Financial Management UI
+**Goal**: Users can categorize bank transactions, record expenses, manage loan payments, and run bank reconciliation entirely from the web dashboard
+**Depends on**: Phase 10
+**Requirements**: (Satisfies DASH-07 non-technical usability for financial operations)
+**Gap Closure**: Closes the "no data management UI" gap from v1 audit
+**Success Criteria** (what must be TRUE):
+  1. User can view bank transactions and assign categories (rent, utilities, maintenance, etc.) with bulk or individual assignment
+  2. User can record a new expense with amount, category, date, and description — the expense appears in the P&L
+  3. User can record a loan payment with principal/interest split — the loan balance updates
+  4. User can view unreconciled items and confirm or reject suggested matches between platform payouts and bank deposits
+
+### Phase 12: Reports UI
+**Goal**: Users can generate and view financial reports (P&L, balance sheet, income statement) interactively from the dashboard with property and date filters
+**Depends on**: Phase 11
+**Requirements**: (Completes DASH-07 by replacing Reports tab placeholder with real report viewers)
+**Gap Closure**: Closes the "Reports tab is placeholder" tech debt from v1 audit
+**Success Criteria** (what must be TRUE):
+  1. User can view a P&L statement filtered by property (individual or combined) and date range (month, quarter, YTD, custom)
+  2. User can view a balance sheet showing assets, liabilities, equity, and loan balances as of a selected date
+  3. User can view an income statement with revenue and expense breakdown, with optional monthly detail view
+  4. Reports display cleanly on both desktop and mobile with proper number formatting and section grouping
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
+Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -192,3 +241,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 6. Guest Communication | 5/5 | Complete ✓ | 2026-02-28 |
 | 7. Dashboard | 6/6 | Complete ✓ | 2026-02-28 |
 | 8. LLM Natural Language Interface | 4/4 | Complete ✓ | 2026-03-01 |
+| 9. Integration & Wiring Fixes | 0/? | Not Started | — |
+| 10. Data Import UI | 0/? | Not Started | — |
+| 11. Financial Management UI | 0/? | Not Started | — |
+| 12. Reports UI | 0/? | Not Started | — |
