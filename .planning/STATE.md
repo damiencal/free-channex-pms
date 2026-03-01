@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 9 of 12 (Integration & Wiring Fixes) — IN PROGRESS
-Plan: 1/2 plans complete (09-01 done)
-Status: Router prefix fixes and LLM prompt correction complete; Plan 02 next
-Last activity: 2026-02-28 — Completed 09-01-PLAN.md
+Plan: 2/2 plans complete (09-01, 09-02 done)
+Status: Revenue recognition wired into all three booking upload endpoints; phase complete
+Last activity: 2026-02-28 — Completed 09-02-PLAN.md
 
 Progress: [██████████████████████████████] 100% (38/38 plans) — Phases 1-8
-         [███░░░░░░░░░░░░░░░░░░░░░░░░░░░] ~12% — Phases 9-12 (1/8 plans done)
+         [██████░░░░░░░░░░░░░░░░░░░░░░░░] ~25% — Phases 9-12 (2/8 plans done)
 
 ## Performance Metrics
 
@@ -250,9 +250,13 @@ None.
 - [09-01]: ingestion router prefix intentionally kept as /ingestion — uses FormData fetch, not apiFetch; changing would break file uploads
 - [09-01]: attribution values corrected to 'jay', 'minnie', 'shared' in SYSTEM_PROMPT — matches _VALID_ATTRIBUTIONS frozenset in expenses.py
 - [09-01]: Gap 2 (Airbnb pre-arrival) confirmed already fixed in Phase 6 — operator email sent, status stays pending until confirmed via API
+- [09-02]: _fire_background_revenue_recognition uses lazy import inside function body — avoids circular import (revenue.py and ingestion.py share model imports)
+- [09-02]: Revenue recognition is NOT gated by should_auto_submit — unconditional for all inserted bookings; no preview threshold for accounting entries
+- [09-02]: Mercury upload excluded from revenue recognition — bank transaction import has no bookings
+- [09-02]: Revenue recognition is idempotent via source_id uniqueness in create_journal_entry() — manual recognize-all calls remain safe after auto-recognition
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 09-01-PLAN.md. Plan 09-02 is next.
+Stopped at: Completed 09-02-PLAN.md. Phase 09 complete (2/2 plans).
 Resume file: None
