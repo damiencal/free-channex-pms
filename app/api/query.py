@@ -142,7 +142,7 @@ async def ask_query(request: QueryRequest, db: Session = Depends(get_db)):
 
             # Validate SQL (SELECT-only check)
             validated_sql = validate_sql(raw_sql)
-            yield {"event": "sql", "data": validated_sql}
+            yield {"event": "sql", "data": validated_sql.replace("\n", " ").strip()}
 
             # Execute SQL
             try:
