@@ -137,7 +137,7 @@ def parse(
     for row_num, row in enumerate(df.iter_rows(named=True), start=2):
         confirmation_code = (row.get(COL_CONFIRMATION_CODE) or "").strip()
         if not confirmation_code:
-            errors.append(f"Row {row_num}: {COL_CONFIRMATION_CODE} is missing or empty")
+            # Payout rows legitimately have no confirmation code — skip silently
             continue
 
         amount_raw = row.get(COL_AMOUNT)
