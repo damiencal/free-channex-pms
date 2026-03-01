@@ -31,6 +31,7 @@ from app.api.compliance import router as compliance_router
 from app.api.dashboard import router as dashboard_router
 from app.api.health import router as health_router
 from app.api.ingestion import router as ingestion_router
+from app.api.query import router as query_router
 from app.api.reports import router as reports_router
 from app.communication.scheduler import rebuild_pre_arrival_jobs
 from app.compliance.urgency import run_urgency_check
@@ -139,6 +140,7 @@ app.include_router(reports_router)
 app.include_router(compliance_router)
 app.include_router(communication_router)
 app.include_router(dashboard_router)
+app.include_router(query_router)
 
 # SPA static files — MUST be last (catches all unmatched routes)
 # Guarded: app starts without frontend build present (backend-only dev)
