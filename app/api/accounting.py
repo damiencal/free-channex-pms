@@ -11,10 +11,12 @@ Exposes all Phase 3 accounting functionality via HTTP:
   - GET  /api/accounting/expenses                — list expenses with filters
   - POST /api/accounting/loans/payments          — record loan payment (P&I split)
   - GET  /api/accounting/loans                   — list loans with current balances
+  - GET  /api/accounting/finance-summary         — badge counts (uncategorized + unreconciled)
   - POST /api/accounting/reconciliation/run      — trigger reconciliation
-  - GET  /api/accounting/reconciliation/unreconciled — unreconciled queue
+  - GET  /api/accounting/reconciliation/unreconciled — unreconciled queue (with pending_confirmation)
   - POST /api/accounting/reconciliation/confirm  — confirm a match
   - POST /api/accounting/reconciliation/reject/{match_id} — reject a match
+  - GET  /api/accounting/bank-transactions       — list with filters (min/max amount, dates)
 
 Revenue recognition is OPERATOR-TRIGGERED via POST endpoints. It is never called
 automatically during booking import (Phase 2). The operator imports bookings, reviews
@@ -138,6 +140,7 @@ class UnreconciledResponse(BaseModel):
     unmatched_payouts: list[dict]  # simplified booking dicts
     unmatched_deposits: list[dict]  # simplified bank transaction dicts
     needs_review: list[dict]  # simplified bank transaction dicts
+    pending_confirmation: list[dict]  # auto-matched pairs awaiting operator approval
 
 
 class MatchConfirmRequest(BaseModel):
@@ -654,15 +657,16 @@ def trigger_reconciliation(
 
 @router.get("/reconciliation/unreconciled")
 def get_unreconciled_queue(
+    property_id: int | None = Query(default=None, description="Filter by property ID (affects booking-linked queues)"),
     db: Session = Depends(get_db),
 ) -> UnreconciledResponse:
     """Get the full unreconciled queue for operator review.
 
     Returns:
         UnreconciledResponse with simplified dicts for payouts, deposits,
-        and needs_review items.
+        needs_review items, and pending_confirmation auto-matched pairs.
     """
-    queue = get_unreconciled(db)
+    queue = get_unreconciled(db, property_id=property_id)
 
     unmatched_payouts = [
         {
@@ -695,10 +699,31 @@ def get_unreconciled_queue(
         for t in queue["needs_review"]
     ]
 
+    pending_confirmation = [
+        {
+            "match_id": match.id,
+            "booking": {
+                "id": booking.id,
+                "platform": booking.platform,
+                "guest_name": booking.guest_name,
+                "check_in_date": booking.check_in_date.isoformat() if booking.check_in_date else None,
+                "net_amount": str(booking.net_amount),
+            },
+            "deposit": {
+                "id": txn.id,
+                "date": txn.date.isoformat() if txn.date else None,
+                "amount": str(txn.amount),
+                "description": txn.description,
+            },
+        }
+        for match, booking, txn in queue["pending_confirmation"]
+    ]
+
     return UnreconciledResponse(
         unmatched_payouts=unmatched_payouts,
         unmatched_deposits=unmatched_deposits,
         needs_review=needs_review,
+        pending_confirmation=pending_confirmation,
     )
 
 
@@ -760,6 +785,81 @@ def reject_reconciliation_match(
 
 
 # ---------------------------------------------------------------------------
+# Finance summary endpoint (badge counts for Finance tab)
+# ---------------------------------------------------------------------------
+
+
+@router.get("/finance-summary")
+def get_finance_summary(
+    property_id: int | None = Query(default=None, description="Filter by property ID where applicable"),
+    db: Session = Depends(get_db),
+) -> dict:
+    """Return badge counts for the Finance tab header.
+
+    Returns uncategorized bank transaction count and total unreconciled item count.
+    Registered before path-param routes to avoid route conflicts.
+
+    Args:
+        property_id: Optional property filter. Applied to booking-linked counts
+            (unmatched payouts, pending confirmation). Bank transaction counts
+            are cross-property.
+        db: Database session.
+
+    Returns:
+        Dict with uncategorized_count and unreconciled_count.
+    """
+    # Uncategorized bank transactions (cross-property — no filter applied)
+    uncategorized_stmt = select(func.count()).select_from(BankTransaction).where(
+        BankTransaction.category.is_(None)
+    )
+    uncategorized_count = db.execute(uncategorized_stmt).scalar() or 0
+
+    # needs_review is also cross-property
+    needs_review_count = (
+        db.query(func.count(BankTransaction.id))
+        .filter(BankTransaction.reconciliation_status == "needs_review")
+        .scalar() or 0
+    )
+
+    if property_id is not None:
+        unmatched_payouts_count = (
+            db.query(func.count(Booking.id))
+            .filter(
+                Booking.reconciliation_status == "unmatched",
+                Booking.property_id == property_id,
+            )
+            .scalar() or 0
+        )
+        pending_count = (
+            db.query(func.count(ReconciliationMatch.id))
+            .join(Booking, Booking.id == ReconciliationMatch.booking_id)
+            .filter(
+                ReconciliationMatch.status == "matched",
+                Booking.property_id == property_id,
+            )
+            .scalar() or 0
+        )
+    else:
+        unmatched_payouts_count = (
+            db.query(func.count(Booking.id))
+            .filter(Booking.reconciliation_status == "unmatched")
+            .scalar() or 0
+        )
+        pending_count = (
+            db.query(func.count(ReconciliationMatch.id))
+            .filter(ReconciliationMatch.status == "matched")
+            .scalar() or 0
+        )
+
+    unreconciled_count = unmatched_payouts_count + needs_review_count + pending_count
+
+    return {
+        "uncategorized_count": uncategorized_count,
+        "unreconciled_count": unreconciled_count,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Bank transaction categorization endpoints
 # ---------------------------------------------------------------------------
 
@@ -769,6 +869,9 @@ def list_bank_transactions(
     categorized: str | None = Query(default=None, description="Filter: 'true', 'false', or 'all' (default)"),
     start_date: date | None = Query(default=None),
     end_date: date | None = Query(default=None),
+    property_id: int | None = Query(default=None, description="NOTE: BankTransaction has no property_id column; param accepted but not applied (bank statements are cross-property)."),
+    min_amount: Decimal | None = Query(default=None, description="Filter transactions with amount >= min_amount"),
+    max_amount: Decimal | None = Query(default=None, description="Filter transactions with amount <= max_amount"),
     limit: int = Query(default=100, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
@@ -780,6 +883,10 @@ def list_bank_transactions(
             None or 'all' returns all transactions.
         start_date: Filter transactions on or after this date.
         end_date: Filter transactions on or before this date.
+        property_id: Accepted for API symmetry but not applied — BankTransaction has no
+            property_id column; Mercury statements are cross-property by nature.
+        min_amount: Filter transactions with amount >= min_amount.
+        max_amount: Filter transactions with amount <= max_amount.
         limit: Maximum number of results (1-1000, default 100).
         offset: Number of results to skip (default 0).
         db: Database session.
@@ -802,6 +909,11 @@ def list_bank_transactions(
         stmt = stmt.where(BankTransaction.date >= start_date)
     if end_date is not None:
         stmt = stmt.where(BankTransaction.date <= end_date)
+    if min_amount is not None:
+        stmt = stmt.where(BankTransaction.amount >= min_amount)
+    if max_amount is not None:
+        stmt = stmt.where(BankTransaction.amount <= max_amount)
+    # property_id intentionally not applied — BankTransaction has no property_id column
 
     txns = db.execute(stmt).scalars().all()
     return [

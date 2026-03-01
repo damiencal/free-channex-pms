@@ -195,22 +195,33 @@ def reject_match(db: Session, match_id: int, confirmed_by: str) -> None:
     db.flush()
 
 
-def get_unreconciled(db: Session) -> dict:
+def get_unreconciled(db: Session, property_id: int | None = None) -> dict:
     """Return the full unreconciled queue for operator review.
+
+    Args:
+        db: Database session.
+        property_id: Optional property filter. When provided, filters booking-linked
+            queues by property. Bank transaction queues (unmatched_deposits,
+            needs_review) are cross-property by nature and are not filtered.
 
     Returns:
       {
-        "unmatched_payouts":  [Booking objects with status=="unmatched"],
-        "unmatched_deposits": [BankTransaction objects with status=="unmatched" and amount>0],
-        "needs_review":       [BankTransaction objects with status=="needs_review"],
+        "unmatched_payouts":    [Booking objects with status=="unmatched"],
+        "unmatched_deposits":   [BankTransaction objects with status=="unmatched" and amount>0],
+        "needs_review":         [BankTransaction objects with status=="needs_review"],
+        "pending_confirmation": [(ReconciliationMatch, Booking, BankTransaction) tuples],
       }
     """
-    unmatched_payouts = (
-        db.query(Booking)
-        .filter(Booking.reconciliation_status == "unmatched")
-        .all()
+    unmatched_payouts_q = db.query(Booking).filter(
+        Booking.reconciliation_status == "unmatched"
     )
+    if property_id is not None:
+        unmatched_payouts_q = unmatched_payouts_q.filter(
+            Booking.property_id == property_id
+        )
+    unmatched_payouts = unmatched_payouts_q.all()
 
+    # Bank transactions have no property_id — cross-property by nature; skip filter
     unmatched_deposits = (
         db.query(BankTransaction)
         .filter(
@@ -226,8 +237,22 @@ def get_unreconciled(db: Session) -> dict:
         .all()
     )
 
+    # Auto-matched pairs awaiting operator confirmation
+    pending_matches_q = (
+        db.query(ReconciliationMatch, Booking, BankTransaction)
+        .join(Booking, Booking.id == ReconciliationMatch.booking_id)
+        .join(BankTransaction, BankTransaction.id == ReconciliationMatch.bank_transaction_id)
+        .filter(ReconciliationMatch.status == "matched")
+    )
+    if property_id is not None:
+        pending_matches_q = pending_matches_q.filter(
+            Booking.property_id == property_id
+        )
+    pending_confirmation = pending_matches_q.all()
+
     return {
         "unmatched_payouts": unmatched_payouts,
         "unmatched_deposits": unmatched_deposits,
         "needs_review": needs_review,
+        "pending_confirmation": pending_confirmation,
     }
