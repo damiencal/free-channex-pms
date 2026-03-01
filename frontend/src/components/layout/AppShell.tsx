@@ -8,8 +8,10 @@ import { CalendarTab } from '@/components/calendar/CalendarTab'
 import { ActionsTab } from '@/components/actions/ActionsTab'
 import { ReportsTab } from '@/components/reports/ReportsTab'
 import { QueryTab } from '@/components/query/QueryTab'
+import { FinanceTab } from '@/components/finance/FinanceTab'
 import { apiFetch } from '@/api/client'
 import { usePropertyStore } from '@/store/usePropertyStore'
+import { useFinanceSummary } from '@/hooks/useFinanceSummary'
 
 interface ActionsResponse {
   actions: unknown[]
@@ -21,8 +23,8 @@ interface HealthResponse {
   ollama: string  // 'available' | 'unavailable'
 }
 
-type TabValue = 'home' | 'calendar' | 'reports' | 'actions' | 'query'
-const VALID_TABS: TabValue[] = ['home', 'calendar', 'reports', 'actions', 'query']
+type TabValue = 'home' | 'calendar' | 'reports' | 'actions' | 'finance' | 'query'
+const VALID_TABS: TabValue[] = ['home', 'calendar', 'reports', 'actions', 'finance', 'query']
 
 function isValidTab(value: string | null): value is TabValue {
   return VALID_TABS.includes(value as TabValue)
@@ -63,6 +65,11 @@ export function AppShell() {
 
   const pendingCount = actionsData?.total ?? 0
 
+  // Finance badge: sum of uncategorized transactions + unreconciled bookings
+  const { data: financeSummary } = useFinanceSummary()
+  const financeBadgeCount = (financeSummary?.uncategorized_count ?? 0)
+    + (financeSummary?.unreconciled_count ?? 0)
+
   function handleTabChange(value: string) {
     setSearchParams(value === 'home' ? {} : { tab: value })
   }
@@ -84,6 +91,14 @@ export function AppShell() {
                 {pendingCount > 0 && (
                   <Badge variant="destructive" className="h-5 min-w-5 text-xs px-1.5">
                     {pendingCount}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="finance" className="gap-2">
+                Finance
+                {financeBadgeCount > 0 && (
+                  <Badge variant="destructive" className="h-5 min-w-5 text-xs px-1.5">
+                    {financeBadgeCount}
                   </Badge>
                 )}
               </TabsTrigger>
@@ -111,6 +126,10 @@ export function AppShell() {
 
           <TabsContent value="actions">
             <ActionsTab />
+          </TabsContent>
+
+          <TabsContent value="finance">
+            <FinanceTab />
           </TabsContent>
 
           <TabsContent value="query">
