@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** Phases 9-12 gap closure. Phase 9 complete, Phase 10 next.
+**Current focus:** Phases 9-12 gap closure. Phase 10 in progress.
 
 ## Current Position
 
-Phase: 10 of 12 (Data Import UI) — NOT STARTED
-Plan: 0/? plans (needs /gsd:plan-phase 10)
-Status: Phase 9 verified and complete. Phase 10 next.
-Last activity: 2026-02-28 — Phase 9 verified (5/5 must-haves passed)
+Phase: 10 of 12 (Data Import UI) — In Progress
+Plan: 1/? plans complete
+Status: In progress — 10-01 complete
+Last activity: 2026-02-28 — Completed 10-01-PLAN.md (UI primitives + Vite proxy + import history hook)
 
 Progress: [██████████████████████████████] 100% (40/40 plans) — Phases 1-9
-         [██████████░░░░░░░░░░░░░░░░░░░░] ~25% — Phases 10-12 (0/? plans)
+         [████░░░░░░░░░░░░░░░░░░░░░░░░░░] ~10% — Phases 10-12 (1/? plans)
 
 ## Performance Metrics
 
@@ -255,9 +255,12 @@ None.
 - [09-02]: Revenue recognition is NOT gated by should_auto_submit — unconditional for all inserted bookings; no preview threshold for accounting entries
 - [09-02]: Mercury upload excluded from revenue recognition — bank transaction import has no bookings
 - [09-02]: Revenue recognition is idempotent via source_id uniqueness in create_journal_entry() — manual recognize-all calls remain safe after auto-recognition
+- [10-01]: useImportHistory uses raw fetch not apiFetch — ingestion router is at /ingestion (not /api/ingestion); apiFetch would produce broken URL
+- [10-01]: Vite /ingestion proxy added between /api and /health in vite.config.ts — dev server forwards /ingestion/* to FastAPI at localhost:8000
+- [10-01]: input.tsx omits "use client" — no Radix dependency; progress.tsx and label.tsx include it (Radix requires client context)
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Phase 9 complete and verified. Phase 10 next.
+Stopped at: Completed 10-01-PLAN.md — Progress/Label/Input components, Vite /ingestion proxy, useImportHistory hook
 Resume file: None
