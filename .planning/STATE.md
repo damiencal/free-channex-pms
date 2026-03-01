@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 11 of 12 (Financial Management UI) — In progress
-Plan: 4/? plans complete (11-01, 11-02, 11-04, 11-05 done)
-Status: Plans 11-01, 11-02, 11-04, 11-05 complete. Plan 11-03 (Transactions sub-tab) next.
-Last activity: 2026-03-01 — Completed 11-04-PLAN.md (Expenses & Loans form)
+Plan: 5/? plans complete (11-01, 11-02, 11-03, 11-04, 11-05 done)
+Status: Plans 11-01 through 11-05 complete. ReconciliationTab fully implemented.
+Last activity: 2026-03-01 — Completed 11-05-PLAN.md (ReconciliationTab split-panel UI)
 
 Progress: [██████████████████████████████] 100% (44/44 plans) — Phases 1-10
          [██████████████████░░░░░░░░░░░░] ~50% — Phases 11-12 (0/? plans)
@@ -283,8 +283,12 @@ None.
 - [11-04]: Attribution drives property_id resolution — jay/minnie reads slug from ['dashboard','properties'] cache; shared sets null; same pattern as RVshareEntryForm (10-03)
 - [11-04]: Duplicate loan payment (status=skipped) shows amber warning not error — backend returns 200 with status field; idempotent skip is not a failure
 
+- [11-05]: Client-side candidate derivation in MatchCandidateList reproduces server's MATCH_WINDOW_DAYS=7 algorithm — zero new API endpoints needed for needs-review candidate display
+- [11-05]: Hover cross-highlight uses hoveredMatchId in ReconciliationTab passed to both panels — single source of truth for cross-panel highlight without context or store
+- [11-05]: Confirm only on deposit side (right panel) — avoids double-confirm UX confusion; payout side shows amber highlight only
+
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 11-04-PLAN.md (Expenses & Loans form — ExpenseLoanForm + ExpensesLoansTab)
+Stopped at: Completed 11-05-PLAN.md (ReconciliationTab split-panel UI)
 Resume file: None
