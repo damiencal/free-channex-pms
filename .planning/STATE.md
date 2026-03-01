@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 7 of 8 (Dashboard) — COMPLETE (verified)
-Plan: 6/6 plans executed (01-06 all complete, 06 human-verified)
-Status: Phase 7 verified — 4/5 success criteria passed, 1 gap (wrong API path) fixed by orchestrator. Requirements DASH-01, DASH-02, DASH-03, DASH-07 satisfied.
-Last activity: 2026-02-28 — Phase 7 verified and closed
+Phase: 8 of 8 (LLM Natural Language Interface) — In progress
+Plan: 1/4 plans executed (08-01 complete)
+Status: 08-01 complete — app/query package created (prompt.py, sql_validator.py, ollama_client.py), dependencies installed
+Last activity: 2026-03-01 — Completed 08-01-PLAN.md
 
-Progress: [███████████████████████████░] 97% (34/35 plans estimated)
+Progress: [████████████████████████████] 98% (35/36 plans estimated)
 
 ## Performance Metrics
 
@@ -34,6 +34,7 @@ Progress: [███████████████████████
 | 05-resort-pdf-compliance | 6/6 | 14 min | 2 min |
 | 06-guest-communication | 5/5 | 6 min | 1.2 min |
 | 07-dashboard | 6/6 | ~12 min | ~2 min |
+| 08-llm-natural-language-interface | 1/4 | 3 min | 3 min |
 
 **Recent Trend:**
 - Last 7 plans: 07-01 (5 min), 07-02 (2 min), 07-03 (4 min), 07-04 (5 min), 07-05 (2 min), 07-06 (3 min)
@@ -208,6 +209,12 @@ Recent decisions affecting current work:
 - [07-06]: EmptyState component is text-only (no icons/illustrations) — matches CONTEXT.md directive for clean, no-fanfare empty states
 - [07-06]: TabsList overflow-x-auto for mobile horizontal scroll — prevents awkward wrapping of 4 tabs on small screens
 - [07-06]: Resort form submit path fixed: /compliance/submit/{booking_id} (was incorrectly /compliance/submissions/{booking_id}/submit)
+- [08-01]: Schema hardcoded in SYSTEM_PROMPT string (not from app.models) — controlled and minimal; schema drift requires intentional prompt update
+- [08-01]: sqlglot isinstance(exp.Select) check for SELECT enforcement — AST-level is more reliable than string/regex matching
+- [08-01]: get_config() deferred to inside get_ollama_client() body — allows module import before load_app_config() runs at lifespan
+- [08-01]: extract_sql_from_response does NOT raise on missing SQL — absence signals LLM clarification; caller handles
+- [08-01]: 10-message history cap in build_sql_messages — bounded context prevents token overflow
+- [08-01]: ollama_model defaults to 'mistral' — consistent with Phase 1 Ollama connectivity check; overridable via OLLAMA_MODEL env var
 
 ### Pending Todos
 
@@ -221,9 +228,11 @@ None.
 - [04-02]: Combined P&L uses full shared expense amounts once (not sum of per-property allocations) — no double-counting
 - [04-02]: generate_pl() returns plain dict not Pydantic model — nested arbitrary-key structure (platform names, display_name as keys) doesn't map cleanly to fixed schemas
 - [Pre-Phase 8]: Ollama model selection unresolved — benchmark Qwen2.5-Coder 14B vs. available models against actual schema before Phase 8 planning. Hardware VRAM constraints will determine feasibility.
+- [08-01]: Schema hardcoded in SYSTEM_PROMPT (not dynamic introspection) — schema changes require intentional prompt update; deliberate design choice for control.
+- [08-01]: extract_sql_from_response does NOT raise on missing SQL — absence signals LLM clarification/refusal; Plan 02 endpoint handles this case.
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Phase 7 complete — all 6 plans executed, verified (1 gap fixed: resort form API path), human-verified, requirements marked complete. Ready for Phase 8 (LLM Natural Language Interface).
+Last session: 2026-03-01
+Stopped at: Completed 08-01-PLAN.md — app/query package created, dependencies installed, all 3 tasks committed
 Resume file: None
