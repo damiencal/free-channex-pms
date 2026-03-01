@@ -192,6 +192,11 @@ Plans:
   3. When the Airbnb pre-arrival scheduler fires, the operator receives an email with the rendered message text — the status does NOT flip to 'sent' until the operator confirms
   4. LLM queries about property-specific expenses generate correct WHERE clauses using actual attribution values ('jay', 'minnie', 'shared')
   5. After CSV import, revenue recognition runs automatically — dashboard financial metrics reflect imported booking revenue without a separate manual API call
+**Plans:** 2 plans
+
+Plans:
+- [x] 09-01-PLAN.md — Router prefix fixes for compliance/communication, LLM attribution correction, Airbnb pre-arrival verification
+- [x] 09-02-PLAN.md — Automatic revenue recognition after CSV import via BackgroundTask
 
 ### Phase 10: Data Import UI
 **Goal**: Non-technical users can upload CSV files and enter bookings through the web dashboard — no API calls or command-line knowledge required
@@ -241,7 +246,7 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
 | 6. Guest Communication | 5/5 | Complete ✓ | 2026-02-28 |
 | 7. Dashboard | 6/6 | Complete ✓ | 2026-02-28 |
 | 8. LLM Natural Language Interface | 4/4 | Complete ✓ | 2026-03-01 |
-| 9. Integration & Wiring Fixes | 0/? | Not Started | — |
+| 9. Integration & Wiring Fixes | 2/2 | Complete ✓ | 2026-02-28 |
 | 10. Data Import UI | 0/? | Not Started | — |
 | 11. Financial Management UI | 0/? | Not Started | — |
 | 12. Reports UI | 0/? | Not Started | — |
