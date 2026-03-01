@@ -181,6 +181,10 @@ async def upload_airbnb_csv(
         if should_auto_submit(db, config.auto_submit_threshold):
             background_tasks.add_task(_fire_background_submissions, inserted_db_ids, db)
 
+    # Revenue recognition: fire unconditionally for all inserted bookings
+    if inserted_db_ids:
+        background_tasks.add_task(_fire_background_revenue_recognition, inserted_db_ids, db)
+
     return result
 
 
@@ -222,6 +226,10 @@ async def upload_vrbo_csv(
         background_tasks.add_task(
             _fire_background_welcome_messages, welcome_async_ids, "vrbo", db
         )
+
+    # Revenue recognition: fire unconditionally for all inserted bookings
+    if inserted_db_ids:
+        background_tasks.add_task(_fire_background_revenue_recognition, inserted_db_ids, db)
 
     return result
 
@@ -293,6 +301,10 @@ async def create_rvshare_booking(
         background_tasks.add_task(
             _fire_background_welcome_messages, welcome_async_ids, "rvshare", db
         )
+
+    # Revenue recognition: fire unconditionally for all inserted bookings
+    if inserted_db_ids:
+        background_tasks.add_task(_fire_background_revenue_recognition, inserted_db_ids, db)
 
     return result
 
