@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 12 of 12 (Reports UI) — In progress
-Plan: 2/5 plans
-Status: Phase 12 in progress. Plans 01-02 complete.
-Last activity: 2026-03-02 — Completed 12-02-PLAN.md (BalanceSheetTab full viewer)
+Plan: 3/5 plans
+Status: Phase 12 in progress. Plans 01-03 complete.
+Last activity: 2026-03-02 — Completed 12-03-PLAN.md (MonthlyTable component, PLTab with Totals/Monthly sub-views)
 
 Progress: [██████████████████████████████] 100% (50/50 plans) — Phases 1-11
-         [██░░░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (2/5 plans)
+         [███░░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (3/5 plans)
 
 ## Performance Metrics
 
@@ -298,9 +298,13 @@ None.
 - [11-05]: Client-side candidate derivation in MatchCandidateList reproduces server's MATCH_WINDOW_DAYS=7 algorithm — zero new API endpoints needed for needs-review candidate display
 - [11-05]: Hover cross-highlight uses hoveredMatchId in ReconciliationTab passed to both panels — single source of truth for cross-panel highlight without context or store
 - [11-05]: Confirm only on deposit side (right panel) — avoids double-confirm UX confusion; payout side shows amber highlight only
+- [12-03]: PLTab expenses in Monthly sub-view shown as period totals — P&L API returns expenses.by_category as flat dict (no monthly breakdown); correct tradeoff for Phase 12 scope
+- [12-03]: MonthlyTable grand-total-per-month computed client-side from per-platform month arrays — no extra API endpoint needed
+- [12-03]: breakdown='combined' always hardcoded in PLTab — no per-property breakdown in Phase 12 (per [12-01] decision)
 
 ## Session Continuity
 
-Last session: 2026-03-02T21:20:55Z
-Stopped at: Completed 12-02-PLAN.md — BalanceSheetTab full viewer with five-state render, formatAmount, AccountTable
+Last session: 2026-03-02T21:21:38Z
+Stopped at: Completed 12-03-PLAN.md — MonthlyTable reusable component, PLTab with Totals/Monthly sub-views, per-platform revenue breakdown
+Resume file: None
 Resume file: None
