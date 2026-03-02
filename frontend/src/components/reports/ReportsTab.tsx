@@ -1,57 +1,52 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/card'
+import { useSearchParams } from 'react-router-dom'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { PLTab } from './PLTab'
+import { BalanceSheetTab } from './BalanceSheetTab'
+import { IncomeStatementTab } from './IncomeStatementTab'
 
-const REPORTS = [
-  {
-    title: 'Profit & Loss',
-    description: 'Revenue by platform, expenses by category',
-    endpoint: '/api/reports/pl',
-  },
-  {
-    title: 'Balance Sheet',
-    description: 'Assets, liabilities, and equity snapshot',
-    endpoint: '/api/reports/balance-sheet',
-  },
-  {
-    title: 'Income Statement',
-    description: 'Revenue and expense breakdown',
-    endpoint: '/api/reports/income-statement',
-  },
-]
+type ReportsSubTab = 'pl' | 'balance-sheet' | 'income-statement'
+const VALID_SUBTABS: ReportsSubTab[] = ['pl', 'balance-sheet', 'income-statement']
 
-/**
- * Reports tab placeholder. Shows the three available report types with their
- * API endpoints. Full UI views are deferred to a future development phase.
- */
+function isValidSubTab(value: string | null): value is ReportsSubTab {
+  return VALID_SUBTABS.includes(value as ReportsSubTab)
+}
+
 export function ReportsTab() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const rawSubTab = searchParams.get('rtab')
+  const activeSubTab: ReportsSubTab = isValidSubTab(rawSubTab) ? rawSubTab : 'pl'
+
+  function handleSubTabChange(value: string) {
+    const newParams = new URLSearchParams(searchParams)
+    if (value === 'pl') {
+      newParams.delete('rtab')
+    } else {
+      newParams.set('rtab', value)
+    }
+    setSearchParams(newParams)
+  }
+
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Reports</h2>
+      <Tabs value={activeSubTab} onValueChange={handleSubTabChange}>
+        <div className="overflow-x-auto">
+          <TabsList>
+            <TabsTrigger value="pl">P&amp;L</TabsTrigger>
+            <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
+            <TabsTrigger value="income-statement">Income Statement</TabsTrigger>
+          </TabsList>
+        </div>
 
-      <div className="space-y-3">
-        {REPORTS.map((report) => (
-          <Card key={report.title}>
-            <CardHeader>
-              <CardTitle className="text-base">{report.title}</CardTitle>
-              <CardDescription>{report.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground font-mono">
-                Available via API at {report.endpoint}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <p className="text-sm text-muted-foreground text-center pt-2">
-        Full report views coming soon
-      </p>
+        <TabsContent value="pl">
+          <PLTab />
+        </TabsContent>
+        <TabsContent value="balance-sheet">
+          <BalanceSheetTab />
+        </TabsContent>
+        <TabsContent value="income-statement">
+          <IncomeStatementTab />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
