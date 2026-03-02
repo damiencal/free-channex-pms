@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 12 of 12 (Reports UI) — COMPLETE
-Plan: 5/5 plans
-Status: ALL PHASES COMPLETE. Project delivered.
-Last activity: 2026-03-02 — Completed 12-05-PLAN.md (print CSS, build verification, human verification approved)
+Phase: 13 of 13 (Integration Bugfixes + Cleanup) — COMPLETE
+Plan: 1/1 plans
+Status: ALL PHASES COMPLETE. All audit items closed.
+Last activity: 2026-03-02 — Completed 13-01-PLAN.md (4 surgical fixes: property dropdown, income categories, revenue.py docstrings, @ts-expect-error suppressions)
 
-Progress: [██████████████████████████████] 100% (55/55 plans) — All phases complete
+Progress: [██████████████████████████████] 100% (56/56 plans) — All phases complete
 
 ## Performance Metrics
 
@@ -39,10 +39,11 @@ Progress: [███████████████████████
 | 10-data-import-ui | 4/4 | ~8 min | ~2 min |
 | 11-financial-management-ui | 6/6 | ~12 min | ~2 min |
 | 12-reports-ui | 5/5 | ~10 min | ~2 min |
+| 13-integration-bugfixes-cleanup | 1/1 | ~2 min | ~2 min |
 
 **Final Trend:**
-- Last 5 plans: 12-01 through 12-05 (wave execution + human verification)
-- Overall project: 55 plans, ~114 min total, steady 2 min/plan
+- Last 5 plans: 12-03 through 13-01 (reports monthly view, print CSS, build verification, integration bugfixes)
+- Overall project: 56 plans, ~116 min total, steady 2 min/plan
 
 *Updated after each plan completion*
 
@@ -306,9 +307,11 @@ None.
 - [12-05]: print:hidden wrapper div around Header — non-invasive; does not modify Header.tsx component API
 - [12-05]: print:hidden applied at both AppShell TabsList and ReportsTab TabsList — both nav layers must be hidden for clean single-report print output
 - [12-05]: [data-slot="collapsible"] CSS selector for break-inside avoid — Radix renders CollapsibleRoot with data-slot attribute; more stable than class-based selectors
+- [13-01]: INCOME_CATEGORIES removed from CategorySelect entirely — backend ALL_CATEGORIES never included them; 422 was correct backend behavior, fix belongs in frontend
+- [13-01]: @ts-expect-error suppressions removed from IncomeStatementTab — MonthlyTableRow already declares isSubtotal?: boolean; suppressions were suppressing non-existent errors
 
 ## Session Continuity
 
-Last session: 2026-03-02T21:40:00Z
-Stopped at: Completed 12-05-PLAN.md — print CSS, build verification, all three reports human-approved. Project complete.
+Last session: 2026-03-02T22:49:43Z
+Stopped at: Completed 13-01-PLAN.md — 4 surgical bugfixes and tech debt items from v1-MILESTONE-AUDIT.md. All audit items closed.
 Resume file: None
