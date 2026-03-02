@@ -17,7 +17,7 @@ import { usePropertyStore } from '@/store/usePropertyStore'
 interface Property {
   id: number
   slug: string
-  name: string
+  display_name: string
 }
 
 interface FormFields {
@@ -325,7 +325,7 @@ export function RVshareEntryForm() {
                     <SelectContent>
                       {properties.map((p) => (
                         <SelectItem key={p.slug} value={p.slug}>
-                          {p.name}
+                          {p.display_name}
                         </SelectItem>
                       ))}
                     </SelectContent>

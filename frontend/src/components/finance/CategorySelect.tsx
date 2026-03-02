@@ -30,13 +30,6 @@ export const EXPENSE_CATEGORIES = [
   'cleaning_service',
 ]
 
-export const INCOME_CATEGORIES = [
-  'rental_income',
-  'cleaning_fee',
-  'service_fee',
-  'other_income',
-]
-
 export const NON_EXPENSE_CATEGORIES = [
   'owner_deposit',
   'loan_payment',
@@ -44,7 +37,7 @@ export const NON_EXPENSE_CATEGORIES = [
   'personal',
 ]
 
-export const ALL_CATEGORIES = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES, ...NON_EXPENSE_CATEGORIES]
+export const ALL_CATEGORIES = [...EXPENSE_CATEGORIES, ...NON_EXPENSE_CATEGORIES]
 
 const ATTRIBUTION_OPTIONS = ['jay', 'minnie', 'shared'] as const
 
@@ -148,14 +141,6 @@ export function CategorySelect({ txn, onSaved }: CategorySelectProps) {
           <SelectValue placeholder="Uncategorized" />
         </SelectTrigger>
         <SelectContent position="popper" className="max-h-72">
-          <SelectGroup>
-            <SelectLabel>Income</SelectLabel>
-            {INCOME_CATEGORIES.map((cat) => (
-              <SelectItem key={cat} value={cat}>
-                {formatCategoryName(cat)}
-              </SelectItem>
-            ))}
-          </SelectGroup>
           <SelectGroup>
             <SelectLabel>Expenses</SelectLabel>
             {EXPENSE_CATEGORIES.map((cat) => (
