@@ -9,13 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 12 of 12 (Reports UI) — In progress
-Plan: 4/5 plans
-Status: Phase 12 in progress. Plans 01-04 complete.
-Last activity: 2026-03-02 — Completed 12-04-PLAN.md (IncomeStatementTab with Totals/Monthly sub-views)
+Phase: 12 of 12 (Reports UI) — COMPLETE
+Plan: 5/5 plans
+Status: ALL PHASES COMPLETE. Project delivered.
+Last activity: 2026-03-02 — Completed 12-05-PLAN.md (print CSS, build verification, human verification approved)
 
-Progress: [██████████████████████████████] 100% (50/50 plans) — Phases 1-11
-         [████░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (4/5 plans)
+Progress: [██████████████████████████████] 100% (55/55 plans) — All phases complete
 
 ## Performance Metrics
 
@@ -39,10 +38,11 @@ Progress: [███████████████████████
 | 09-integration-wiring-fixes | 2/2 | ~4 min | ~2 min |
 | 10-data-import-ui | 4/4 | ~8 min | ~2 min |
 | 11-financial-management-ui | 6/6 | ~12 min | ~2 min |
+| 12-reports-ui | 5/5 | ~10 min | ~2 min |
 
-**Recent Trend:**
-- Last 6 plans: 11-01 through 11-06 (wave-parallel execution + human verification)
-- Trend: Steady at ~2 min/plan
+**Final Trend:**
+- Last 5 plans: 12-01 through 12-05 (wave execution + human verification)
+- Overall project: 55 plans, ~114 min total, steady 2 min/plan
 
 *Updated after each plan completion*
 
@@ -303,9 +303,12 @@ None.
 - [12-03]: breakdown='combined' always hardcoded in PLTab — no per-property breakdown in Phase 12 (per [12-01] decision)
 - [12-04]: IncomeStatementTab sub-view requires re-Generate — breakdown is API-level param (totals|monthly); switching views without re-generating shows prompt
 - [12-04]: Account union computed client-side — Set across all months' by_account keys ensures missing-month accounts still appear with em-dash via MonthlyTable undefined handling
+- [12-05]: print:hidden wrapper div around Header — non-invasive; does not modify Header.tsx component API
+- [12-05]: print:hidden applied at both AppShell TabsList and ReportsTab TabsList — both nav layers must be hidden for clean single-report print output
+- [12-05]: [data-slot="collapsible"] CSS selector for break-inside avoid — Radix renders CollapsibleRoot with data-slot attribute; more stable than class-based selectors
 
 ## Session Continuity
 
-Last session: 2026-03-02T21:28:00Z
-Stopped at: Completed 12-04-PLAN.md — IncomeStatementTab with Totals/Monthly sub-views, account union computation, all three report tabs verified
+Last session: 2026-03-02T21:40:00Z
+Stopped at: Completed 12-05-PLAN.md — print CSS, build verification, all three reports human-approved. Project complete.
 Resume file: None
