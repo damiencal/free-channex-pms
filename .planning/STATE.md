@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 12 of 12 (Reports UI) — In progress
-Plan: 3/5 plans
-Status: Phase 12 in progress. Plans 01-03 complete.
-Last activity: 2026-03-02 — Completed 12-03-PLAN.md (MonthlyTable component, PLTab with Totals/Monthly sub-views)
+Plan: 4/5 plans
+Status: Phase 12 in progress. Plans 01-04 complete.
+Last activity: 2026-03-02 — Completed 12-04-PLAN.md (IncomeStatementTab with Totals/Monthly sub-views)
 
 Progress: [██████████████████████████████] 100% (50/50 plans) — Phases 1-11
-         [███░░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (3/5 plans)
+         [████░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (4/5 plans)
 
 ## Performance Metrics
 
@@ -301,10 +301,11 @@ None.
 - [12-03]: PLTab expenses in Monthly sub-view shown as period totals — P&L API returns expenses.by_category as flat dict (no monthly breakdown); correct tradeoff for Phase 12 scope
 - [12-03]: MonthlyTable grand-total-per-month computed client-side from per-platform month arrays — no extra API endpoint needed
 - [12-03]: breakdown='combined' always hardcoded in PLTab — no per-property breakdown in Phase 12 (per [12-01] decision)
+- [12-04]: IncomeStatementTab sub-view requires re-Generate — breakdown is API-level param (totals|monthly); switching views without re-generating shows prompt
+- [12-04]: Account union computed client-side — Set across all months' by_account keys ensures missing-month accounts still appear with em-dash via MonthlyTable undefined handling
 
 ## Session Continuity
 
-Last session: 2026-03-02T21:21:38Z
-Stopped at: Completed 12-03-PLAN.md — MonthlyTable reusable component, PLTab with Totals/Monthly sub-views, per-platform revenue breakdown
-Resume file: None
+Last session: 2026-03-02T21:28:00Z
+Stopped at: Completed 12-04-PLAN.md — IncomeStatementTab with Totals/Monthly sub-views, account union computation, all three report tabs verified
 Resume file: None
