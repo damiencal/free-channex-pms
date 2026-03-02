@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useCreateExpense } from '@/hooks/useExpenses'
-import { useLoans } from '@/hooks/useLoans'
+import { useLoans, useCreateLoan } from '@/hooks/useLoans'
 import { useLoanPayment } from '@/hooks/useLoanPayment'
 import { usePropertyStore } from '@/store/usePropertyStore'
 
@@ -60,7 +60,7 @@ function formatCategoryName(value: string): string {
 // Types
 // ---------------------------------------------------------------------------
 
-type FormType = 'expense' | 'loan_payment'
+type FormType = 'expense' | 'loan_payment' | 'create_loan'
 
 interface Property {
   id: number
@@ -108,9 +108,16 @@ export function ExpenseLoanForm() {
   const [paymentDate, setPaymentDate] = useState(todayString())
   const [paymentRef, setPaymentRef] = useState('')
 
+  // Create loan fields
+  const [newLoanName, setNewLoanName] = useState('')
+  const [newLoanBalance, setNewLoanBalance] = useState('')
+  const [newLoanRate, setNewLoanRate] = useState('')
+  const [newLoanStart, setNewLoanStart] = useState(todayString())
+
   // Hooks
   const expenseMutation = useCreateExpense()
   const loanPaymentMutation = useLoanPayment()
+  const createLoanMutation = useCreateLoan()
   const { data: loans = [], isLoading: loansLoading } = useLoans()
 
   // ---------------------------------------------------------------------------
@@ -148,6 +155,13 @@ export function ExpenseLoanForm() {
     setInterest('')
     setPaymentDate(todayString())
     setPaymentRef('')
+  }
+
+  function resetCreateLoanFields() {
+    setNewLoanName('')
+    setNewLoanBalance('')
+    setNewLoanRate('')
+    setNewLoanStart(todayString())
   }
 
   // Clear feedback on any interaction
@@ -244,12 +258,52 @@ export function ExpenseLoanForm() {
     )
   }
 
+  function handleCreateLoanSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    if (!newLoanName || !newLoanBalance || !newLoanRate || !newLoanStart) {
+      setFeedback({ kind: 'error', message: 'All required fields must be filled.' })
+      return
+    }
+    if (parseFloat(newLoanBalance) <= 0) {
+      setFeedback({ kind: 'error', message: 'Balance must be greater than zero.' })
+      return
+    }
+
+    createLoanMutation.mutate(
+      {
+        name: newLoanName,
+        original_balance: newLoanBalance,
+        interest_rate: newLoanRate,
+        start_date: newLoanStart,
+        property_id: selectedPropertyId,
+      },
+      {
+        onSuccess: () => {
+          setFeedback({
+            kind: 'success',
+            message: `Loan "${newLoanName}" created — ${formatCurrency(newLoanBalance)}`,
+          })
+          resetCreateLoanFields()
+        },
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : 'Failed to create loan.'
+          setFeedback({ kind: 'error', message: msg })
+        },
+      },
+    )
+  }
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
 
   const isPending =
-    formType === 'expense' ? expenseMutation.isPending : loanPaymentMutation.isPending
+    formType === 'expense'
+      ? expenseMutation.isPending
+      : formType === 'loan_payment'
+        ? loanPaymentMutation.isPending
+        : createLoanMutation.isPending
 
   return (
     <div className="space-y-4">
@@ -268,6 +322,13 @@ export function ExpenseLoanForm() {
           onClick={() => handleTypeChange('loan_payment')}
         >
           Loan Payment
+        </Button>
+        <Button
+          type="button"
+          variant={formType === 'create_loan' ? 'default' : 'outline'}
+          onClick={() => handleTypeChange('create_loan')}
+        >
+          New Loan
         </Button>
       </div>
 
@@ -509,6 +570,80 @@ export function ExpenseLoanForm() {
 
           <Button type="submit" disabled={isPending} className="w-full">
             {isPending ? 'Recording...' : 'Record Payment'}
+          </Button>
+        </form>
+      )}
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Create loan form                                                     */}
+      {/* ------------------------------------------------------------------ */}
+
+      {formType === 'create_loan' && (
+        <form onSubmit={handleCreateLoanSubmit} className="space-y-4">
+          {/* Loan name */}
+          <div className="space-y-1">
+            <Label htmlFor="new-loan-name">
+              Loan Name <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="new-loan-name"
+              placeholder="e.g., Home Equity Loan"
+              value={newLoanName}
+              onChange={(e) => { setNewLoanName(e.target.value); clearFeedback() }}
+              required
+            />
+          </div>
+
+          {/* Original balance */}
+          <div className="space-y-1">
+            <Label htmlFor="new-loan-balance">
+              Original Balance <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="new-loan-balance"
+              type="number"
+              step="0.01"
+              min="0.01"
+              placeholder="0.00"
+              value={newLoanBalance}
+              onChange={(e) => { setNewLoanBalance(e.target.value); clearFeedback() }}
+              required
+            />
+          </div>
+
+          {/* Interest rate */}
+          <div className="space-y-1">
+            <Label htmlFor="new-loan-rate">
+              Interest Rate (%) <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="new-loan-rate"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="e.g., 5.25"
+              value={newLoanRate}
+              onChange={(e) => { setNewLoanRate(e.target.value); clearFeedback() }}
+              required
+            />
+          </div>
+
+          {/* Start date */}
+          <div className="space-y-1">
+            <Label htmlFor="new-loan-start">
+              Start Date <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="new-loan-start"
+              type="date"
+              value={newLoanStart}
+              onChange={(e) => { setNewLoanStart(e.target.value); clearFeedback() }}
+              required
+            />
+          </div>
+
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending ? 'Creating...' : 'Create Loan'}
           </Button>
         </form>
       )}

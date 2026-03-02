@@ -563,6 +563,65 @@ def list_expenses(
 # ---------------------------------------------------------------------------
 
 
+class CreateLoanRequest(BaseModel):
+    name: str
+    original_balance: Decimal
+    interest_rate: Decimal  # Annual rate as decimal, e.g. 0.065 = 6.5%
+    start_date: date
+    property_id: int | None = None
+
+
+@router.post("/loans", status_code=201)
+def create_loan(
+    body: CreateLoanRequest,
+    db: Session = Depends(get_db),
+) -> LoanResponse:
+    """Create a new loan with an auto-generated liability account.
+
+    A new liability account is created in the 2xxx range for the loan.
+    """
+    # Find next available liability account number in 2xxx range
+    max_number = (
+        db.query(func.max(Account.number))
+        .filter(Account.number >= 2000, Account.number < 3000)
+        .scalar()
+    ) or 2099
+    next_number = max_number + 10  # increment by 10 for spacing
+
+    # Create liability account
+    account = Account(
+        number=next_number,
+        name=f"{body.name} Payable",
+        account_type="liability",
+        is_active=True,
+    )
+    db.add(account)
+    db.flush()  # get account.id
+
+    # Create loan
+    loan = Loan(
+        name=body.name,
+        account_id=account.id,
+        original_balance=body.original_balance,
+        interest_rate=body.interest_rate,
+        start_date=body.start_date,
+        property_id=body.property_id,
+    )
+    db.add(loan)
+    db.commit()
+    db.refresh(loan)
+
+    return LoanResponse(
+        id=loan.id,
+        name=loan.name,
+        account_id=loan.account_id,
+        original_balance=loan.original_balance,
+        interest_rate=loan.interest_rate,
+        start_date=loan.start_date,
+        current_balance=loan.original_balance,  # new loan, no payments yet
+    )
+
+
 @router.post("/loans/payments", status_code=201)
 def record_loan_payment_endpoint(
     body: LoanPaymentRequest,

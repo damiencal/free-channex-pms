@@ -121,6 +121,14 @@ export interface ExpenseRequest {
   vendor?: string | null
 }
 
+export interface CreateLoanRequest {
+  name: string
+  original_balance: string
+  interest_rate: string
+  start_date: string
+  property_id?: number | null
+}
+
 export interface LoanPaymentRequest {
   loan_id: number
   principal: string
@@ -191,6 +199,13 @@ export function createExpense(body: ExpenseRequest): Promise<ExpenseResponse> {
 
 export function fetchLoans(): Promise<LoanResponse[]> {
   return apiFetch<LoanResponse[]>('/accounting/loans')
+}
+
+export function createLoan(body: CreateLoanRequest): Promise<LoanResponse> {
+  return apiFetch<LoanResponse>('/accounting/loans', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
 }
 
 export function recordLoanPayment(body: LoanPaymentRequest): Promise<LoanPaymentResult> {
