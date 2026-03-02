@@ -246,6 +246,14 @@ Plans:
   2. User can view a balance sheet showing assets, liabilities, equity, and loan balances as of a selected date
   3. User can view an income statement with revenue and expense breakdown, with optional monthly detail view
   4. Reports display cleanly on both desktop and mobile with proper number formatting and section grouping
+**Plans:** 5 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — API fetch functions, manual-fetch hooks, ReportSection/ReportFilters shared components, ReportsTab sub-tab shell
+- [ ] 12-02-PLAN.md — Balance Sheet tab: snapshot date filters, Assets/Liabilities/Equity collapsible sections
+- [ ] 12-03-PLAN.md — P&L tab with Totals/Monthly sub-views, MonthlyTable component, percentage column
+- [ ] 12-04-PLAN.md — Income Statement tab with Totals/Monthly sub-views, account union across months
+- [ ] 12-05-PLAN.md — Print CSS, build verification, and human verification checkpoint
 
 ## Progress
 
