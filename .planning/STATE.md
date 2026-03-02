@@ -9,13 +9,13 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 
 ## Current Position
 
-Phase: 12 of 12 (Reports UI) — Not started
-Plan: 0/? plans
-Status: Phase 11 complete. Phase 12 (Reports UI) is the final phase.
-Last activity: 2026-03-02 — Completed Phase 11 (Financial Management UI) — all 6 plans + human verification
+Phase: 12 of 12 (Reports UI) — In progress
+Plan: 1/? plans
+Status: Phase 12 in progress. Plan 01 (Foundation) complete.
+Last activity: 2026-03-02 — Completed 12-01-PLAN.md (API layer, hooks, shared components, ReportsTab shell)
 
 Progress: [██████████████████████████████] 100% (50/50 plans) — Phases 1-11
-         [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% — Phase 12 (0/? plans)
+         [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (1/? plans)
 
 ## Performance Metrics
 
@@ -246,6 +246,9 @@ None.
 - [08-02]: Decimal/date → float/isoformat before json.dumps — SQLAlchemy Numeric returns Python Decimal which is not JSON-serializable
 - [08-02]: SSE event types fixed: sql, results, token, error, done — frontend 08-03 must consume this exact schema
 - [08-04]: SSE SQL data must be single-line — sse-starlette splits multi-line data into multiple data: lines; frontend ReadableStream parser dispatches per-line, so newlines collapsed with .replace("\n", " ")
+- [12-01]: ReportFilters mode prop (range | snapshot) — same component handles P&L/IncomeStatement (start+end) and BalanceSheet (as_of) date selection; snapshot mode sends end-of-period date as as_of
+- [12-01]: Reports URL param uses rtab (not ftab) — distinct from FinanceTab's ftab; default sub-tab is pl (rtab omitted from URL)
+- [12-01]: Manual-fetch hooks return { ...query, generate, hasGenerated } — generate is setParams trigger; hasGenerated distinguishes never-generated from generated-but-no-data
 - [08-04]: Health polling uses plain fetch('/health') not apiFetch — health endpoint at /health not /api/health
 - [08-04]: Vite proxy added for /health — dev server on :5173 needs to forward to :8000
 - [09-01]: compliance router prefix /compliance -> /api/compliance — matches apiFetch('/compliance/...') in ActionItem.tsx
@@ -294,6 +297,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-02
-Stopped at: Phase 11 complete. All 6 plans executed, human verification passed (2 rounds), phase verified 4/4 must-haves.
+Last session: 2026-03-02T21:15:53Z
+Stopped at: Completed 12-01-PLAN.md — reports API layer, hooks, ReportSection, ReportFilters, ReportsTab shell, stub tabs
 Resume file: None
