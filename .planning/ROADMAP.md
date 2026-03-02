@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 9: Integration & Wiring Fixes** - Router prefix fixes, Airbnb pre-arrival notification, LLM schema correction, revenue recognition automation
 - [ ] **Phase 10: Data Import UI** - Frontend CSV upload, RVshare manual entry form, import history view
 - [x] **Phase 11: Financial Management UI** - Bank transaction categorization, expense management, loan payments, reconciliation dashboard
-- [ ] **Phase 12: Reports UI** - Interactive P&L, balance sheet, and income statement viewers
+- [x] **Phase 12: Reports UI** - Interactive P&L, balance sheet, and income statement viewers
 
 ## Phase Details
 
@@ -249,11 +249,11 @@ Plans:
 **Plans:** 5 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — API fetch functions, manual-fetch hooks, ReportSection/ReportFilters shared components, ReportsTab sub-tab shell
-- [ ] 12-02-PLAN.md — Balance Sheet tab: snapshot date filters, Assets/Liabilities/Equity collapsible sections
-- [ ] 12-03-PLAN.md — P&L tab with Totals/Monthly sub-views, MonthlyTable component, percentage column
-- [ ] 12-04-PLAN.md — Income Statement tab with Totals/Monthly sub-views, account union across months
-- [ ] 12-05-PLAN.md — Print CSS, build verification, and human verification checkpoint
+- [x] 12-01-PLAN.md — API fetch functions, manual-fetch hooks, ReportSection/ReportFilters shared components, ReportsTab sub-tab shell
+- [x] 12-02-PLAN.md — Balance Sheet tab: snapshot date filters, Assets/Liabilities/Equity collapsible sections
+- [x] 12-03-PLAN.md — P&L tab with Totals/Monthly sub-views, MonthlyTable component, percentage column
+- [x] 12-04-PLAN.md — Income Statement tab with Totals/Monthly sub-views, account union across months
+- [x] 12-05-PLAN.md — Print CSS, build verification, and human verification checkpoint
 
 ## Progress
 
@@ -273,4 +273,4 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
 | 9. Integration & Wiring Fixes | 2/2 | Complete ✓ | 2026-02-28 |
 | 10. Data Import UI | 4/4 | Complete ✓ | 2026-03-01 |
 | 11. Financial Management UI | 6/6 | Complete ✓ | 2026-03-02 |
-| 12. Reports UI | 0/? | Not Started | — |
+| 12. Reports UI | 5/5 | Complete ✓ | 2026-03-02 |
