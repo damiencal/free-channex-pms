@@ -1,8 +1,8 @@
 """Revenue recognition logic for all supported rental platforms.
 
-Revenue recognition is OPERATOR-TRIGGERED via API — it is NOT called automatically
-on booking import. The operator reviews imported bookings and then explicitly triggers
-recognition (batch or per-booking) through the API.
+Revenue recognition runs automatically as a BackgroundTask after each CSV import
+(wired by Phase 9). It can also be triggered explicitly via the API operator endpoints
+(POST /api/accounting/revenue/recognize and /recognize-all).
 
 Platforms:
     - Airbnb: Deferred-then-recognized pattern.
@@ -149,8 +149,8 @@ def recognize_booking_revenue(
 ) -> list[JournalEntry | None]:
     """Create revenue recognition journal entries for a booking.
 
-    OPERATOR-TRIGGERED. Must be called explicitly from an API endpoint — this
-    function is never invoked automatically during CSV import.
+    Called automatically as a BackgroundTask after CSV import, and also available
+    via the operator-triggered API endpoints. Safe to call multiple times (idempotent).
 
     For Airbnb:
         - Inspects raw_platform_data["rows"] for row types.

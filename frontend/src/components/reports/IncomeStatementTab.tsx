@@ -286,7 +286,6 @@ export function IncomeStatementTab() {
               label: 'Total Revenue',
               values: revMonthlyTotals,
               total: monthlyData.totals.revenue.total,
-              // @ts-expect-error isSubtotal not in base type but MonthlyTable handles it
               isSubtotal: true,
             })
 
@@ -310,7 +309,6 @@ export function IncomeStatementTab() {
               label: 'Total Expenses',
               values: expMonthlyTotals,
               total: monthlyData.totals.expenses.total,
-              // @ts-expect-error isSubtotal not in base type but MonthlyTable handles it
               isSubtotal: true,
             })
 
