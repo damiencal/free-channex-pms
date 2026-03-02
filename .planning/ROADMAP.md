@@ -2,7 +2,7 @@
 
 ## Overview
 
-Build a self-hosted vacation rental management platform in twelve phases. Phases 1-8 deliver the core backend and read-only dashboard. Phases 9-12 close gaps identified by the v1 milestone audit: integration bug fixes, data import UI, financial management UI, and interactive reports. Each phase delivers a coherent, independently verifiable capability.
+Build a self-hosted vacation rental management platform in thirteen phases. Phases 1-8 deliver the core backend and read-only dashboard. Phases 9-12 close gaps identified by the first v1 milestone audit: integration bug fixes, data import UI, financial management UI, and interactive reports. Phase 13 closes integration bugs and tech debt from the second v1 audit. Each phase delivers a coherent, independently verifiable capability.
 
 ## Phases
 
@@ -24,6 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 10: Data Import UI** - Frontend CSV upload, RVshare manual entry form, import history view
 - [x] **Phase 11: Financial Management UI** - Bank transaction categorization, expense management, loan payments, reconciliation dashboard
 - [x] **Phase 12: Reports UI** - Interactive P&L, balance sheet, and income statement viewers
+- [ ] **Phase 13: Integration Bugfixes & Cleanup** - Fix property dropdown labels, income category 422, stale docstring, @ts-expect-error
 
 ## Phase Details
 
@@ -255,10 +256,25 @@ Plans:
 - [x] 12-04-PLAN.md — Income Statement tab with Totals/Monthly sub-views, account union across months
 - [x] 12-05-PLAN.md — Print CSS, build verification, and human verification checkpoint
 
+### Phase 13: Integration Bugfixes & Cleanup
+**Goal**: All UI components display correctly and accept valid backend values — no blank labels, no 422 errors from valid user actions, no stale code annotations
+**Depends on**: Phase 12
+**Requirements**: (No new requirements — fixes integration bugs and tech debt from v1 audit)
+**Gap Closure**: Closes 2 integration bugs and 2 tech debt items from v1-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. RVshare manual entry form shows property display names (not blank) in the property dropdown
+  2. Selecting any category (including income categories) on a bank transaction succeeds without 422 error
+  3. `app/accounting/revenue.py` docstring accurately describes automatic invocation (not "operator-triggered")
+  4. `IncomeStatementTab.tsx` has no @ts-expect-error suppressions
+**Plans:** TBD
+
+Plans:
+- [ ] 13-01-PLAN.md — Property dropdown fix, income category fix, docstring fix, @ts-expect-error cleanup
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
+Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -274,3 +290,4 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
 | 10. Data Import UI | 4/4 | Complete ✓ | 2026-03-01 |
 | 11. Financial Management UI | 6/6 | Complete ✓ | 2026-03-02 |
 | 12. Reports UI | 5/5 | Complete ✓ | 2026-03-02 |
+| 13. Integration Bugfixes & Cleanup | 0/1 | Not Started | — |
