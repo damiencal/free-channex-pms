@@ -31,7 +31,7 @@ function getCandidates(
     const payoutDate = new Date(payout.check_in_date + 'T00:00:00')
     const daysDiff =
       Math.abs((depositDate.getTime() - payoutDate.getTime()) / (1000 * 60 * 60 * 24))
-    return daysDiff <= 7
+    return daysDiff <= 30
   })
 }
 

@@ -19,7 +19,7 @@ from app.models.bank_transaction import BankTransaction
 from app.models.booking import Booking
 from app.models.reconciliation import ReconciliationMatch
 
-MATCH_WINDOW_DAYS = 7  # per CONTEXT.md decision
+MATCH_WINDOW_DAYS = 14  # Airbnb payouts can take up to ~2 weeks after check-in
 
 
 def run_reconciliation(db: Session) -> dict:

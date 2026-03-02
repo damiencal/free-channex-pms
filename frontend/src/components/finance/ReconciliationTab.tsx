@@ -71,6 +71,7 @@ function ReconciliationSkeleton() {
 
 export function ReconciliationTab() {
   const [hoveredMatchId, setHoveredMatchId] = useState<number | null>(null)
+  const [selectedPayoutId, setSelectedPayoutId] = useState<number | null>(null)
 
   const { data, isLoading, isError, refetch } = useReconciliation()
   const runMutation = useRunReconciliation()
@@ -166,6 +167,18 @@ export function ReconciliationTab() {
     })
   }
 
+  function handleManualMatch(bankTransactionId: number) {
+    if (selectedPayoutId == null) return
+    confirmMutation.mutate(
+      {
+        booking_id: selectedPayoutId,
+        bank_transaction_id: bankTransactionId,
+        confirmed_by: 'user',
+      },
+      { onSuccess: () => setSelectedPayoutId(null) },
+    )
+  }
+
   // ------------------------------------------------------------------
   // Render
   // ------------------------------------------------------------------
@@ -209,6 +222,22 @@ export function ReconciliationTab() {
         </div>
       </div>
 
+      {/* Manual match hint */}
+      {selectedPayoutId != null && (
+        <div className="flex items-center gap-2 rounded-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 px-3 py-2">
+          <span className="text-sm text-blue-700 dark:text-blue-300">
+            Click a deposit on the right to manually match it with the selected payout.
+          </span>
+          <Button
+            size="xs"
+            variant="outline"
+            onClick={() => setSelectedPayoutId(null)}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
+
       {/* Empty state */}
       {isAllReconciled ? (
         <EmptyState
@@ -224,6 +253,8 @@ export function ReconciliationTab() {
             payoutItems={leftItems}
             hoveredMatchId={hoveredMatchId}
             onHoverMatch={setHoveredMatchId}
+            selectedPayoutId={selectedPayoutId}
+            onSelectPayout={setSelectedPayoutId}
           />
           <ReconciliationPanel
             title="Bank Deposits"
@@ -236,6 +267,8 @@ export function ReconciliationTab() {
             onReject={handleReject}
             unmatchedPayouts={unmatched_payouts}
             onReviewConfirm={handleReviewConfirm}
+            selectedPayoutId={selectedPayoutId}
+            onManualMatch={handleManualMatch}
           />
         </div>
       )}

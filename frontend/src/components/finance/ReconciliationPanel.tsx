@@ -42,12 +42,15 @@ interface DepositPanelItem extends UnreconciledDeposit {
 interface PayoutItemRowProps {
   item: PayoutPanelItem
   isHovered: boolean
+  isSelected: boolean
   onMouseEnter: () => void
   onMouseLeave: () => void
+  onClick?: () => void
 }
 
-function PayoutItemRow({ item, isHovered, onMouseEnter, onMouseLeave }: PayoutItemRowProps) {
+function PayoutItemRow({ item, isHovered, isSelected, onMouseEnter, onMouseLeave, onClick }: PayoutItemRowProps) {
   const isPending = item._isPending
+  const isUnmatched = !isPending
 
   return (
     <div
@@ -55,13 +58,17 @@ function PayoutItemRow({ item, isHovered, onMouseEnter, onMouseLeave }: PayoutIt
         'flex items-center justify-between gap-3 px-3 py-2.5 transition-colors',
         isPending
           ? 'bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-500'
-          : 'border-l-4 border-transparent',
+          : isSelected
+            ? 'bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-500'
+            : 'border-l-4 border-transparent',
         isPending && isHovered ? 'ring-2 ring-inset ring-amber-400' : '',
+        isUnmatched ? 'cursor-pointer hover:bg-blue-50/50 dark:hover:bg-blue-950/20' : '',
       ]
         .filter(Boolean)
         .join(' ')}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={isUnmatched ? onClick : undefined}
     >
       <div className="flex items-center gap-2 min-w-0">
         <Badge className={getPlatformClass(item.platform)} variant="outline">
@@ -74,9 +81,14 @@ function PayoutItemRow({ item, isHovered, onMouseEnter, onMouseLeave }: PayoutIt
           </span>
         )}
       </div>
-      <span className="text-sm font-medium tabular-nums shrink-0">
-        ${parseFloat(item.net_amount).toFixed(2)}
-      </span>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-sm font-medium tabular-nums">
+          ${parseFloat(item.net_amount).toFixed(2)}
+        </span>
+        {isSelected && (
+          <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">Selected</span>
+        )}
+      </div>
     </div>
   )
 }
@@ -94,6 +106,8 @@ interface DepositItemRowProps {
   onReject?: (matchId: number) => void
   unmatchedPayouts?: UnreconciledPayout[]
   onReviewConfirm?: (bookingId: number, bankTransactionId: number) => void
+  showManualMatch?: boolean
+  onManualMatch?: (bankTransactionId: number) => void
 }
 
 function DepositItemRow({
@@ -105,6 +119,8 @@ function DepositItemRow({
   onReject,
   unmatchedPayouts,
   onReviewConfirm,
+  showManualMatch,
+  onManualMatch,
 }: DepositItemRowProps) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -208,6 +224,15 @@ function DepositItemRow({
             </Button>
           </>
         )}
+        {showManualMatch && !isPending && !isNeedsReview && (
+          <Button
+            size="xs"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={() => onManualMatch?.(item.id)}
+          >
+            Match
+          </Button>
+        )}
       </div>
     </div>
   )
@@ -230,6 +255,9 @@ interface ReconciliationPanelProps {
   needsReviewItems?: UnreconciledDeposit[]
   unmatchedPayouts?: UnreconciledPayout[]
   onReviewConfirm?: (bookingId: number, bankTransactionId: number) => void
+  selectedPayoutId?: number | null
+  onSelectPayout?: (id: number | null) => void
+  onManualMatch?: (bankTransactionId: number) => void
 }
 
 export function ReconciliationPanel({
@@ -244,6 +272,9 @@ export function ReconciliationPanel({
   onReject,
   unmatchedPayouts,
   onReviewConfirm,
+  selectedPayoutId,
+  onSelectPayout,
+  onManualMatch,
 }: ReconciliationPanelProps) {
   const isEmpty = type === 'payouts' ? payoutItems.length === 0 : depositItems.length === 0
 
@@ -265,8 +296,10 @@ export function ReconciliationPanel({
                   key={`${item._isPending ? 'pending' : 'unmatched'}-${item.id}`}
                   item={item}
                   isHovered={item._matchId != null && item._matchId === hoveredMatchId}
+                  isSelected={selectedPayoutId === item.id}
                   onMouseEnter={() => item._matchId != null && onHoverMatch(item._matchId)}
                   onMouseLeave={() => onHoverMatch(null)}
+                  onClick={() => onSelectPayout?.(selectedPayoutId === item.id ? null : item.id)}
                 />
               ))}
 
@@ -282,6 +315,8 @@ export function ReconciliationPanel({
                   onReject={onReject}
                   unmatchedPayouts={unmatchedPayouts}
                   onReviewConfirm={onReviewConfirm}
+                  showManualMatch={selectedPayoutId != null}
+                  onManualMatch={onManualMatch}
                 />
               ))}
           </div>
