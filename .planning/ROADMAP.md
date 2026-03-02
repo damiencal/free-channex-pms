@@ -24,7 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 10: Data Import UI** - Frontend CSV upload, RVshare manual entry form, import history view
 - [x] **Phase 11: Financial Management UI** - Bank transaction categorization, expense management, loan payments, reconciliation dashboard
 - [x] **Phase 12: Reports UI** - Interactive P&L, balance sheet, and income statement viewers
-- [ ] **Phase 13: Integration Bugfixes & Cleanup** - Fix property dropdown labels, income category 422, stale docstring, @ts-expect-error
+- [x] **Phase 13: Integration Bugfixes & Cleanup** - Fix property dropdown labels, income category 422, stale docstring, @ts-expect-error
 
 ## Phase Details
 
@@ -269,7 +269,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 13-01-PLAN.md — Fix property dropdown blank labels, remove income categories from CategorySelect, update revenue.py docstrings, remove @ts-expect-error suppressions
+- [x] 13-01-PLAN.md — Fix property dropdown blank labels, remove income categories from CategorySelect, update revenue.py docstrings, remove @ts-expect-error suppressions
 
 ## Progress
 
@@ -290,4 +290,4 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 10. Data Import UI | 4/4 | Complete ✓ | 2026-03-01 |
 | 11. Financial Management UI | 6/6 | Complete ✓ | 2026-03-02 |
 | 12. Reports UI | 5/5 | Complete ✓ | 2026-03-02 |
-| 13. Integration Bugfixes & Cleanup | 0/1 | Not Started | — |
+| 13. Integration Bugfixes & Cleanup | 1/1 | Complete ✓ | 2026-03-02 |
