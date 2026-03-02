@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: LLM Natural Language Interface** - Ollama-powered text-to-SQL query interface for plain-English financial questions
 - [ ] **Phase 9: Integration & Wiring Fixes** - Router prefix fixes, Airbnb pre-arrival notification, LLM schema correction, revenue recognition automation
 - [ ] **Phase 10: Data Import UI** - Frontend CSV upload, RVshare manual entry form, import history view
-- [ ] **Phase 11: Financial Management UI** - Bank transaction categorization, expense management, loan payments, reconciliation dashboard
+- [x] **Phase 11: Financial Management UI** - Bank transaction categorization, expense management, loan payments, reconciliation dashboard
 - [ ] **Phase 12: Reports UI** - Interactive P&L, balance sheet, and income statement viewers
 
 ## Phase Details
@@ -229,12 +229,12 @@ Plans:
 **Plans:** 6 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Backend API fixes (pending_confirmation, finance-summary endpoint, property_id + amount filters) + Checkbox and ScrollArea UI primitives
-- [ ] 11-02-PLAN.md — Finance API wrappers, TanStack Query hooks, FinanceTab shell with sub-tabs, AppShell integration with badge
-- [ ] 11-03-PLAN.md — Transactions sub-tab: dense table, category auto-save with attribution, multi-select bulk toolbar, filters, Load More pagination
-- [ ] 11-04-PLAN.md — Expenses & Loans sub-tab: togglable expense/loan form with validation, property attribution, inline success feedback
-- [ ] 11-05-PLAN.md — Reconciliation sub-tab: split-panel layout, pending confirmation matches, needs-review candidates, confirm/reject workflow
-- [ ] 11-06-PLAN.md — Frontend build verification and human verification checkpoint
+- [x] 11-01-PLAN.md — Backend API fixes (pending_confirmation, finance-summary endpoint, property_id + amount filters) + Checkbox and ScrollArea UI primitives
+- [x] 11-02-PLAN.md — Finance API wrappers, TanStack Query hooks, FinanceTab shell with sub-tabs, AppShell integration with badge
+- [x] 11-03-PLAN.md — Transactions sub-tab: dense table, category auto-save with attribution, multi-select bulk toolbar, filters, Load More pagination
+- [x] 11-04-PLAN.md — Expenses & Loans sub-tab: togglable expense/loan form with validation, property attribution, inline success feedback
+- [x] 11-05-PLAN.md — Reconciliation sub-tab: split-panel layout, pending confirmation matches, needs-review candidates, confirm/reject workflow
+- [x] 11-06-PLAN.md — Frontend build verification and human verification checkpoint
 
 ### Phase 12: Reports UI
 **Goal**: Users can generate and view financial reports (P&L, balance sheet, income statement) interactively from the dashboard with property and date filters
@@ -264,5 +264,5 @@ Phases execute in numeric order: 1 -> 2 -> ... -> 8 -> 9 -> 10 -> 11 -> 12
 | 8. LLM Natural Language Interface | 4/4 | Complete ✓ | 2026-03-01 |
 | 9. Integration & Wiring Fixes | 2/2 | Complete ✓ | 2026-02-28 |
 | 10. Data Import UI | 4/4 | Complete ✓ | 2026-03-01 |
-| 11. Financial Management UI | 0/6 | Not Started | — |
+| 11. Financial Management UI | 6/6 | Complete ✓ | 2026-03-02 |
 | 12. Reports UI | 0/? | Not Started | — |
