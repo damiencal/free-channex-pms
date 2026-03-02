@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 12 of 12 (Reports UI) — In progress
-Plan: 1/? plans
-Status: Phase 12 in progress. Plan 01 (Foundation) complete.
-Last activity: 2026-03-02 — Completed 12-01-PLAN.md (API layer, hooks, shared components, ReportsTab shell)
+Plan: 2/5 plans
+Status: Phase 12 in progress. Plans 01-02 complete.
+Last activity: 2026-03-02 — Completed 12-02-PLAN.md (BalanceSheetTab full viewer)
 
 Progress: [██████████████████████████████] 100% (50/50 plans) — Phases 1-11
-         [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (1/? plans)
+         [██░░░░░░░░░░░░░░░░░░░░░░░░░░░░] Phase 12 in progress (2/5 plans)
 
 ## Performance Metrics
 
@@ -249,6 +249,10 @@ None.
 - [12-01]: ReportFilters mode prop (range | snapshot) — same component handles P&L/IncomeStatement (start+end) and BalanceSheet (as_of) date selection; snapshot mode sends end-of-period date as as_of
 - [12-01]: Reports URL param uses rtab (not ftab) — distinct from FinanceTab's ftab; default sub-tab is pl (rtab omitted from URL)
 - [12-01]: Manual-fetch hooks return { ...query, generate, hasGenerated } — generate is setParams trigger; hasGenerated distinguishes never-generated from generated-but-no-data
+- [12-02]: hasContent checked by account array length (not totals string) — empty accounts with "0.00" total = empty state; robust against API returning zeroed totals
+- [12-02]: doesNotBalance uses string comparison — avoids float precision issues; API returns totals as strings
+- [12-02]: AccountTable local component pattern established — account rows + bg-muted/30 subtotal row; Plans 03-04 can reuse
+- [12-02]: formatAmount/AmountCell/formatAsOfDate pattern established — reuse in PLTab and IncomeStatementTab for consistent number display
 - [08-04]: Health polling uses plain fetch('/health') not apiFetch — health endpoint at /health not /api/health
 - [08-04]: Vite proxy added for /health — dev server on :5173 needs to forward to :8000
 - [09-01]: compliance router prefix /compliance -> /api/compliance — matches apiFetch('/compliance/...') in ActionItem.tsx
@@ -297,6 +301,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-02T21:15:53Z
-Stopped at: Completed 12-01-PLAN.md — reports API layer, hooks, ReportSection, ReportFilters, ReportsTab shell, stub tabs
+Last session: 2026-03-02T21:20:55Z
+Stopped at: Completed 12-02-PLAN.md — BalanceSheetTab full viewer with five-state render, formatAmount, AccountTable
 Resume file: None
