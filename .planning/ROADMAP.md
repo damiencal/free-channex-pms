@@ -266,10 +266,10 @@ Plans:
   2. Selecting any category (including income categories) on a bank transaction succeeds without 422 error
   3. `app/accounting/revenue.py` docstring accurately describes automatic invocation (not "operator-triggered")
   4. `IncomeStatementTab.tsx` has no @ts-expect-error suppressions
-**Plans:** TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 13-01-PLAN.md — Property dropdown fix, income category fix, docstring fix, @ts-expect-error cleanup
+- [ ] 13-01-PLAN.md — Fix property dropdown blank labels, remove income categories from CategorySelect, update revenue.py docstrings, remove @ts-expect-error suppressions
 
 ## Progress
 
