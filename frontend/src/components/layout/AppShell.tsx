@@ -76,12 +76,14 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+      <div className="print:hidden">
+        <Header />
+      </div>
 
       <main className="flex-1 p-4 md:p-6">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           {/* Scrollable on mobile so all 4 tabs are reachable without wrapping */}
-          <div className="mb-6 overflow-x-auto">
+          <div className="mb-6 overflow-x-auto print:hidden">
             <TabsList>
               <TabsTrigger value="home">Home</TabsTrigger>
               <TabsTrigger value="calendar">Calendar</TabsTrigger>

@@ -29,7 +29,7 @@ export function ReportsTab() {
   return (
     <div className="space-y-4">
       <Tabs value={activeSubTab} onValueChange={handleSubTabChange}>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto print:hidden">
           <TabsList>
             <TabsTrigger value="pl">P&amp;L</TabsTrigger>
             <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>

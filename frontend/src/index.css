@@ -113,3 +113,22 @@
     min-width: 44px;
   }
 }
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  [data-slot="collapsible"] {
+    break-inside: avoid;
+  }
+
+  tr {
+    break-inside: avoid;
+  }
+}
