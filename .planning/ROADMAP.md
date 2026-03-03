@@ -22,7 +22,7 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full v1.0 phase history.
 
 - [x] **Phase 14: License Audit & Repository Hygiene** - Ensure all dependencies are Apache 2.0-compatible and all private data is excluded from git
 - [x] **Phase 15: Project Rename** - Rename all project identifiers to "Roost" across package configs, Docker, imports, docs, and directory
-- [ ] **Phase 16: Documentation** - Create comprehensive open source documentation (README, CONTRIBUTING, architecture, API, deployment, CHANGELOG)
+- [x] **Phase 16: Documentation** - Create comprehensive open source documentation (README, CONTRIBUTING, architecture, API, deployment, CHANGELOG)
 - [ ] **Phase 17: GitHub Publication** - Create repository, push code, and verify GitHub detects license
 
 ## Phase Details
@@ -75,10 +75,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 16-01-PLAN.md — README.md and CHANGELOG.md (project overview, features, quick start, badges, changelog)
-- [ ] 16-02-PLAN.md — CONTRIBUTING.md and deployment guide (dev setup, self-hosting walkthrough)
-- [ ] 16-03-PLAN.md — Architecture overview (system components, automation pipeline, ERD, Mermaid diagrams)
-- [ ] 16-04-PLAN.md — API documentation (workflow-oriented guide with curl examples, endpoint reference)
+- [x] 16-01-PLAN.md — README.md and CHANGELOG.md (project overview, features, quick start, badges, changelog)
+- [x] 16-02-PLAN.md — CONTRIBUTING.md and deployment guide (dev setup, self-hosting walkthrough)
+- [x] 16-03-PLAN.md — Architecture overview (system components, automation pipeline, ERD, Mermaid diagrams)
+- [x] 16-04-PLAN.md — API documentation (workflow-oriented guide with curl examples, endpoint reference)
 
 ### Phase 17: GitHub Publication
 **Goal**: Roost is publicly available on GitHub with proper metadata, and the repository is ready for community discovery
@@ -102,5 +102,5 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 14. License Audit & Repository Hygiene | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
 | 15. Project Rename | v1.1 | 3/3 | ✓ Complete | 2026-03-03 |
-| 16. Documentation | v1.1 | 0/4 | Not started | - |
+| 16. Documentation | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
 | 17. GitHub Publication | v1.1 | 0/TBD | Not started | - |

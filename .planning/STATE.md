@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** v1.1 Open Source Release — Phase 16: Documentation
+**Current focus:** v1.1 Open Source Release — Phase 17: GitHub Publication
 
 ## Current Position
 
-Phase: 16 of 17 (Documentation)
-Plan: 03 of 4 complete in session (16-03-PLAN.md done)
-Status: In progress — Phase 16 plans 1-2, 3, 4 complete
-Last activity: 2026-03-03 — Completed 16-03-PLAN.md (docs/architecture.md)
+Phase: 17 of 17 (GitHub Publication)
+Plan: Not started
+Status: Ready to begin — Phase 16 complete, Phase 17 plans not yet created
+Last activity: 2026-03-03 — Phase 16 complete (all documentation written and verified)
 
-Progress: [██████░░░░] 68% (2.875/4 phases complete in v1.1)
+Progress: [███████░░░] 75% (3/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,39 +27,16 @@ Progress: [██████░░░░] 68% (2.875/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 11 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01, 16-02, 16-03, 16-04)
+- Total plans completed: 11 (14-01 through 14-04, 15-01 through 15-03, 16-01 through 16-04)
 - Total phases: 4 (Phases 14-17)
-- Phases complete: 2 (Phase 14, Phase 15)
-- Requirements: 27 (17 complete, 10 remaining)
+- Phases complete: 3 (Phase 14, Phase 15, Phase 16)
+- Requirements: 27 (23 complete, 4 remaining)
 
 ## Accumulated Context
 
 ### Decisions
 
 All v1.0 decisions archived in `.planning/milestones/v1.0-ROADMAP.md`.
-
-v1.1 decisions (16-03 additions):
-- 4-diagram structure for architecture doc: system components graph, automation pipeline sequence, full ERD, startup sequence graph
-- Automation pipeline documented as async-after-response pattern (BackgroundTasks fire after HTTP response returns)
-- Airbnb messaging documented as native_configured — platform delivers, Roost only logs and notifies operator
-
-v1.1 decisions (16-04 additions):
-- reconciliation/confirm body uses booking_id + bank_transaction_id (not match_id) — verified from MatchConfirmRequest schema
-- RVshare entry uses confirmation_code field (from RVshareEntryRequest schema)
-- Balance sheet requires as_of query param (required, not optional) — documented from source
-
-v1.1 decisions (16-02 additions):
-- SMTP documented as required in deployment guide — resort form submission silently fails without it; empty-string defaults can mislead
-- listing_slug_map given its own explanation — critical for multi-property CSV assignment; non-obvious to first-time users
-- Gmail App Password guidance added inline in deployment guide — SMTP_PASSWORD is not the Gmail account password
-- auto_submit_threshold: 0 documented as the opt-out for automatic form submission
-- host.docker.internal Linux workaround documented in both Ollama section and troubleshooting
-
-v1.1 decisions (16-01 additions):
-- README badges placed one per line (not inline) — renders identically on GitHub; satisfies grep-countability
-- Screenshots kept as placeholders in README — deferred until running dev instance with populated data
-- CHANGELOG v1.0.0 dated 2026-03-02 (actual ship date) not 2026-03-03 (documentation date)
-- README cross-reference links to docs/architecture.md, docs/api.md, docs/deployment.md, CONTRIBUTING.md established before those files exist
 
 v1.1 decisions:
 - Apache 2.0 license selected for open source release
@@ -79,6 +56,16 @@ v1.1 decisions:
 - Copyright holder name (Thomas Underhill) in LICENSE/NOTICE is legal attribution, not PII
 - Active requirement descriptions in REQUIREMENTS.md and ROADMAP.md must not embed old identity strings — use forward-looking language that passes grep verification
 - research/ directory files are active docs (not historical artifacts) — excluded only .planning/phases/ and .planning/milestones/ from identity verification
+- README badges placed one per line (not inline) — renders identically on GitHub; satisfies grep-countability
+- Screenshots kept as placeholders in README — deferred until running dev instance with populated data
+- CHANGELOG v1.0.0 dated 2026-03-02 (actual ship date) not 2026-03-03 (documentation date)
+- SMTP documented as required in deployment guide — resort form submission silently fails without it
+- listing_slug_map given its own explanation — critical for multi-property CSV assignment
+- Gmail App Password guidance added inline in deployment guide
+- 4-diagram structure for architecture doc: system components graph, automation pipeline sequence, full ERD, startup sequence graph
+- Automation pipeline documented as async-after-response pattern (BackgroundTasks fire after HTTP response returns)
+- Airbnb messaging documented as native_configured — platform delivers, Roost only logs and notifies operator
+- reconciliation/confirm body uses booking_id + bank_transaction_id (not match_id) — verified from MatchConfirmRequest schema
 
 ### Pending Todos
 
@@ -94,7 +81,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03T22:54:26Z
-Stopped at: Completed 16-03-PLAN.md (docs/architecture.md)
+Last session: 2026-03-03
+Stopped at: Phase 16 complete — ready for Phase 17
 Resume file: None
-Next action: Phase 16 plans 1-4 complete; execute 16-05-PLAN.md if it exists, otherwise Phase 16 is done
+Next action: Begin Phase 17 (GitHub Publication) — discuss/plan phase
