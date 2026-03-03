@@ -1,0 +1,16 @@
+# System-wide configuration
+# Copy this file to base.yaml and update values for your setup
+# Secrets (database, API keys, SMTP credentials) go in .env, not here
+
+ollama_url: "http://host.docker.internal:11434"
+ollama_model: "llama3.2:latest"
+archive_dir: "./archive"
+airbnb_fee_model: "split_fee"
+airbnb_host_fee_rate: 0.03
+
+# Resort compliance settings
+confirmations_dir: "./confirmations"
+pdf_template_path: "pdf_mappings/sun_retreats_booking.pdf"
+pdf_mapping_path: "pdf_mappings/sun_retreats_booking.json"
+auto_submit_threshold: 3
+resort_contact_name: "CHANGE_ME"

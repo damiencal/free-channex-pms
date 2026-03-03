@@ -11,7 +11,7 @@ lock_code: "1234"             # Door lock code included in pre-arrival messages
 site_number: "100"            # Resort site/unit number for booking form
 resort_contact_email: "resort@example.com"  # Email address for booking form submissions
 resort_checkin_instructions: "Located at Sun Retreats. Please check in at the Welcome Center upon arrival."  # Resort-specific check-in instructions for pre-arrival messages
-host_name: "CHANGE_ME"  # Property owner/host name for resort booking form
+host_name: "CHANGE_ME"         # Property owner/host name for resort booking form
 host_phone: "555-123-4567"     # Property owner/host phone for resort booking form
 listing_slug_map:
   "My Listing Title on Airbnb": "my-property-slug"

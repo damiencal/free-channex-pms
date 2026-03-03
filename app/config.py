@@ -61,7 +61,7 @@ class PropertyConfig(BaseModel):
 
     host_name: str
     """Property owner/host name for resort booking form.
-    Example: "CHANGE_ME"
+    Example: "Jane Smith"
     """
 
     host_phone: str
@@ -193,8 +193,8 @@ class AppConfig(BaseSettings):
     auto_submit_threshold: int = 3
     """Days before check-in to trigger automatic form submission."""
 
-    resort_contact_name: str = "CHANGE_ME"
-    """Resort contact name used in email subject/body."""
+    resort_contact_name: str = ""
+    """Resort contact name used in email subject/body. Set in base.yaml."""
 
     # --- Populated by load_app_config(), not from YAML directly ---
     properties: list[PropertyConfig] = []

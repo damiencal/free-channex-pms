@@ -78,15 +78,15 @@ def format_email_subject(
 
 def format_email_body(
     contact_name: str,
-    sender_name: str = "Thomas",
+    sender_name: str = "Host",
 ) -> str:
     """Format the resort submission email body.
 
     Uses a casual, friendly tone per CONTEXT.md guidance.
 
     Args:
-        contact_name: Resort contact's first name (e.g., "CHANGE_ME").
-        sender_name: Host/sender name for the sign-off (default: "Thomas").
+        contact_name: Resort contact's first name (e.g., "Jane").
+        sender_name: Host/sender name for the sign-off (default: "Host").
 
     Returns:
         Plain-text email body string.
