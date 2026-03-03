@@ -72,10 +72,13 @@ Plans:
   3. Architecture and API docs exist — a developer can understand the system's components, data flow, and every endpoint with request/response examples
   4. Deployment guide walks through Docker setup, config file creation, Ollama setup, and SMTP configuration — a new user can self-host from scratch
   5. CHANGELOG.md exists with a v1.0 release entry documenting what shipped
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 16-01: [TBD]
+- [ ] 16-01-PLAN.md — README.md and CHANGELOG.md (project overview, features, quick start, badges, changelog)
+- [ ] 16-02-PLAN.md — CONTRIBUTING.md and deployment guide (dev setup, self-hosting walkthrough)
+- [ ] 16-03-PLAN.md — Architecture overview (system components, automation pipeline, ERD, Mermaid diagrams)
+- [ ] 16-04-PLAN.md — API documentation (workflow-oriented guide with curl examples, endpoint reference)
 
 ### Phase 17: GitHub Publication
 **Goal**: Roost is publicly available on GitHub with proper metadata, and the repository is ready for community discovery
@@ -99,5 +102,5 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 14. License Audit & Repository Hygiene | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
 | 15. Project Rename | v1.1 | 3/3 | ✓ Complete | 2026-03-03 |
-| 16. Documentation | v1.1 | 0/TBD | Not started | - |
+| 16. Documentation | v1.1 | 0/4 | Not started | - |
 | 17. GitHub Publication | v1.1 | 0/TBD | Not started | - |
