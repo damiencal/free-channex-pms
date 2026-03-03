@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 16 of 17 (Documentation)
-Plan: 04 of 4 complete (16-04-PLAN.md done)
-Status: In progress — Phase 16 plans 1-2, 4 complete
-Last activity: 2026-03-03 — Completed 16-04-PLAN.md (docs/api.md)
+Plan: 03 of 4 complete in session (16-03-PLAN.md done)
+Status: In progress — Phase 16 plans 1-2, 3, 4 complete
+Last activity: 2026-03-03 — Completed 16-03-PLAN.md (docs/architecture.md)
 
-Progress: [██████░░░░] 63% (2.75/4 phases complete in v1.1)
+Progress: [██████░░░░] 68% (2.875/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,7 +27,7 @@ Progress: [██████░░░░] 63% (2.75/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 10 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01, 16-02, 16-04)
+- Total plans completed: 11 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01, 16-02, 16-03, 16-04)
 - Total phases: 4 (Phases 14-17)
 - Phases complete: 2 (Phase 14, Phase 15)
 - Requirements: 27 (17 complete, 10 remaining)
@@ -37,6 +37,11 @@ Progress: [██████░░░░] 63% (2.75/4 phases complete in v1.1)
 ### Decisions
 
 All v1.0 decisions archived in `.planning/milestones/v1.0-ROADMAP.md`.
+
+v1.1 decisions (16-03 additions):
+- 4-diagram structure for architecture doc: system components graph, automation pipeline sequence, full ERD, startup sequence graph
+- Automation pipeline documented as async-after-response pattern (BackgroundTasks fire after HTTP response returns)
+- Airbnb messaging documented as native_configured — platform delivers, Roost only logs and notifies operator
 
 v1.1 decisions (16-04 additions):
 - reconciliation/confirm body uses booking_id + bank_transaction_id (not match_id) — verified from MatchConfirmRequest schema
@@ -89,7 +94,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03T22:53:57Z
-Stopped at: Completed 16-04-PLAN.md
+Last session: 2026-03-03T22:54:26Z
+Stopped at: Completed 16-03-PLAN.md (docs/architecture.md)
 Resume file: None
-Next action: Execute 16-03-PLAN.md (architecture doc)
+Next action: Phase 16 plans 1-4 complete; execute 16-05-PLAN.md if it exists, otherwise Phase 16 is done
