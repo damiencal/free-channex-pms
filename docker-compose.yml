@@ -1,5 +1,7 @@
+name: roost
+
 services:
-  db:
+  roost-db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
@@ -15,8 +17,9 @@ services:
       retries: 5
       start_period: 10s
 
-  app:
+  roost-api:
     build: .
+    image: roost
     restart: unless-stopped
     command: >
       sh -c "/app/.venv/bin/alembic upgrade head &&
@@ -31,7 +34,7 @@ services:
       - ./archive:/app/archive
       - ./confirmations:/app/confirmations:ro
     depends_on:
-      db:
+      roost-db:
         condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
