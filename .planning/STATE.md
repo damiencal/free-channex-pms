@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 15 of 17 (Project Rename)
-Plan: 2 of 3 in current phase
-Status: In progress — Plans 15-01 and 15-02 complete, Plan 15-03 (README/docs) remaining
-Last activity: 2026-03-03 — Completed 15-02-PLAN.md (frontend rebrand: package name, favicon, header, localStorage keys)
+Plan: 3 of 3 in current phase
+Status: In progress — Plans 15-01, 15-02, and 15-03 Task 1 complete; paused at Task 2 checkpoint (directory rename)
+Last activity: 2026-03-03 — Completed 15-03 Task 1 (planning docs updated, codebase verified clean); awaiting user directory rename
 
-Progress: [██░░░░░░░░] 25% (1/4 phases complete in v1.1; Phase 15 in progress)
+Progress: [██░░░░░░░░] 25% (1/4 phases complete in v1.1; Phase 15 nearly complete — directory rename pending)
 
 ## Performance Metrics
 
@@ -54,6 +54,8 @@ v1.1 decisions:
 - NOTICE lists direct dependencies only (not transitive) per Apache 2.0 common practice
 - git-filter-repo --replace-text affects author names too — requires separate --name-callback pass to restore author attribution
 - Copyright holder name (Thomas Underhill) in LICENSE/NOTICE is legal attribution, not PII
+- Active requirement descriptions in REQUIREMENTS.md and ROADMAP.md must not embed old identity strings — use forward-looking language that passes grep verification
+- research/ directory files are active docs (not historical artifacts) — excluded only .planning/phases/ and .planning/milestones/ from identity verification
 
 ### Pending Todos
 
@@ -69,7 +71,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03T19:51:52Z
-Stopped at: Completed 15-02-PLAN.md — frontend rebranded to Roost (package name, favicon, header branding, localStorage keys)
+Last session: 2026-03-03T20:10:00Z
+Stopped at: 15-03-PLAN.md Task 2 checkpoint — planning docs updated and codebase verified clean; awaiting user directory rename (mv airbnb-tools roost from parent directory)
 Resume file: None
-Next action: Execute 15-03-PLAN.md (README and documentation rename)
+Next action: After user renames directory to roost, resume 15-03 Task 2 continuation (type "done")
