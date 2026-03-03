@@ -267,7 +267,7 @@ export function IncomeStatementTab() {
             const expenseAccounts = Array.from(expenseAccountSet)
 
             // Build revenue rows
-            const revenueRows = revenueAccounts.map((account) => {
+            const revenueRows: { label: string; values: Record<string, string>; total: string; isSubtotal?: boolean }[] = revenueAccounts.map((account) => {
               const values: Record<string, string> = {}
               monthlyData.months.forEach((m) => {
                 const amt = m.revenue.by_account[account]
@@ -290,7 +290,7 @@ export function IncomeStatementTab() {
             })
 
             // Build expense rows
-            const expenseRows = expenseAccounts.map((account) => {
+            const expenseRows: { label: string; values: Record<string, string>; total: string; isSubtotal?: boolean }[] = expenseAccounts.map((account) => {
               const values: Record<string, string> = {}
               monthlyData.months.forEach((m) => {
                 const amt = m.expenses.by_account[account]
