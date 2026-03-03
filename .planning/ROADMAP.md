@@ -55,10 +55,12 @@ Plans:
   3. Frontend package.json name is `roost` and the app builds without errors
   4. A project-wide search for "airbnb-tools" and "Rental Management Suite" returns zero results in any tracked file
   5. The local directory is renamed from `airbnb-tools` to `roost` (final task in this phase)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 15-01: [TBD]
+- [ ] 15-01-PLAN.md — Rename Python package, Docker Compose services, and backend identity strings
+- [ ] 15-02-PLAN.md — Rebrand frontend (package name, page title, favicon, header, localStorage keys)
+- [ ] 15-03-PLAN.md — Update planning docs, verify clean codebase, rename directory
 
 ### Phase 16: Documentation
 **Goal**: A developer or self-hoster can understand, set up, contribute to, and deploy Roost from the documentation alone
@@ -96,6 +98,6 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 14. License Audit & Repository Hygiene | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
-| 15. Project Rename | v1.1 | 0/TBD | Not started | - |
+| 15. Project Rename | v1.1 | 0/3 | Not started | - |
 | 16. Documentation | v1.1 | 0/TBD | Not started | - |
 | 17. GitHub Publication | v1.1 | 0/TBD | Not started | - |
