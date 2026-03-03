@@ -18,7 +18,7 @@ interface Property {
   display_name: string
 }
 
-const DARK_MODE_KEY = 'rental-dashboard-dark-mode'
+const DARK_MODE_KEY = 'roost-dark-mode'
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -50,7 +50,10 @@ export function Header() {
 
   return (
     <header className="border-b bg-card px-4 py-3 flex items-center justify-between gap-2">
-      <h1 className="text-lg font-semibold shrink-0">Rental Dashboard</h1>
+      <div className="flex flex-col leading-tight shrink-0">
+        <h1 className="text-lg font-bold">Roost</h1>
+        <p className="text-xs text-muted-foreground">Rental Operations</p>
+      </div>
 
       <div className="flex items-center gap-2 min-w-0">
         <Select

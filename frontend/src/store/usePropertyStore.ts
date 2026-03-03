@@ -13,7 +13,7 @@ export const usePropertyStore = create<PropertyStore>()(
       setSelectedPropertyId: (id) => set({ selectedPropertyId: id }),
     }),
     {
-      name: 'rental-dashboard-property',
+      name: 'roost-property',
     }
   )
 )
