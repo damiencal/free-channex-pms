@@ -21,7 +21,7 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full v1.0 phase history.
 **Milestone Goal:** Prepare the codebase for open source publication — audit licenses, scrub private data, rename to Roost, write documentation, and publish to GitHub as captainarcher/roost.
 
 - [x] **Phase 14: License Audit & Repository Hygiene** - Ensure all dependencies are Apache 2.0-compatible and all private data is excluded from git
-- [ ] **Phase 15: Project Rename** - Rename everything from "airbnb-tools" to "Roost" across package configs, Docker, imports, docs, and directory
+- [ ] **Phase 15: Project Rename** - Rename all project identifiers to "Roost" across package configs, Docker, imports, docs, and directory
 - [ ] **Phase 16: Documentation** - Create comprehensive open source documentation (README, CONTRIBUTING, architecture, API, deployment, CHANGELOG)
 - [ ] **Phase 17: GitHub Publication** - Create repository, push code, and verify GitHub detects license
 
@@ -46,20 +46,20 @@ Plans:
 - [x] 14-04-PLAN.md — Rewrite git history to remove PII + gitleaks verification
 
 ### Phase 15: Project Rename
-**Goal**: Every reference to "airbnb-tools" and "Rental Management Suite" is replaced with "Roost" — the project builds and runs under its new identity
+**Goal**: All old identity strings replaced with "Roost" — the project builds and runs entirely under its new identity
 **Depends on**: Phase 14 (licenses resolved before renaming — no point renaming a dependency that gets replaced)
 **Requirements**: RNAM-01, RNAM-02, RNAM-03, RNAM-04, RNAM-05, RNAM-06, RNAM-07
 **Success Criteria** (what must be TRUE):
-  1. Python package is named `roost` in pyproject.toml and all imports resolve correctly
+  1. Python package is named `roost-rental` in pyproject.toml and all imports resolve correctly
   2. Docker Compose uses `roost-` prefixed service names and `roost` image name — `docker-compose up` builds and runs successfully
   3. Frontend package.json name is `roost` and the app builds without errors
-  4. A project-wide search for "airbnb-tools" and "Rental Management Suite" returns zero results in any tracked file
-  5. The local directory is renamed from `airbnb-tools` to `roost` (final task in this phase)
+  4. A project-wide search for old identity strings returns zero results in any tracked file
+  5. The local directory is named `roost` (final task in this phase)
 **Plans**: 3 plans
 
 Plans:
-- [ ] 15-01-PLAN.md — Rename Python package, Docker Compose services, and backend identity strings
-- [ ] 15-02-PLAN.md — Rebrand frontend (package name, page title, favicon, header, localStorage keys)
+- [x] 15-01-PLAN.md — Rename Python package, Docker Compose services, and backend identity strings
+- [x] 15-02-PLAN.md — Rebrand frontend (package name, page title, favicon, header, localStorage keys)
 - [ ] 15-03-PLAN.md — Update planning docs, verify clean codebase, rename directory
 
 ### Phase 16: Documentation
@@ -98,6 +98,6 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 14. License Audit & Repository Hygiene | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
-| 15. Project Rename | v1.1 | 0/3 | Not started | - |
+| 15. Project Rename | v1.1 | 2/3 | In progress | - |
 | 16. Documentation | v1.1 | 0/TBD | Not started | - |
 | 17. GitHub Publication | v1.1 | 0/TBD | Not started | - |

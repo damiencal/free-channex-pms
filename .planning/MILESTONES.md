@@ -1,4 +1,4 @@
-# Project Milestones: Rental Management Suite
+# Project Milestones: Roost
 
 ## v1.0 MVP (Shipped: 2026-03-02)
 

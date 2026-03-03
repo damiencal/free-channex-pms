@@ -1,6 +1,6 @@
 # Project Research Summary
 
-**Project:** Airbnb Tools — Self-Hosted Vacation Rental Management Suite
+**Project:** Roost — Self-Hosted Vacation Rental Operations Platform
 **Domain:** Vacation rental operations automation (accounting, compliance, guest communication, financial reporting)
 **Researched:** 2026-02-26
 **Confidence:** MEDIUM (platform-specific data access constraints limit some areas)

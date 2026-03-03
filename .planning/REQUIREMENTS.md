@@ -15,13 +15,13 @@
 
 ### Project Rename
 
-- [ ] **RNAM-01**: Python package renamed from `rental-management` to `roost` in pyproject.toml
-- [ ] **RNAM-02**: Docker Compose service names use `roost-` prefix (roost-app, roost-db)
-- [ ] **RNAM-03**: All Python imports use `app/` package (verify no `rental-management` references remain)
-- [ ] **RNAM-04**: Frontend package.json name changed to `roost`
-- [ ] **RNAM-05**: Docker image name uses `roost` (not `airbnb-tools`)
-- [ ] **RNAM-06**: All documentation, comments, and strings referencing "airbnb-tools" or "Rental Management Suite" updated to "Roost"
-- [ ] **RNAM-07**: Local directory renamed from `airbnb-tools` to `roost`
+- [x] **RNAM-01**: Python package renamed from `rental-management` to `roost-rental` in pyproject.toml
+- [x] **RNAM-02**: Docker Compose service names use `roost-` prefix (roost-api, roost-db)
+- [x] **RNAM-03**: All Python imports use `app/` package (verify no `rental-management` references remain)
+- [x] **RNAM-04**: Frontend package.json name changed to `roost`
+- [x] **RNAM-05**: Docker image name uses `roost`
+- [x] **RNAM-06**: All documentation, comments, and strings updated to reference "Roost" — no old identity strings remain in tracked files
+- [ ] **RNAM-07**: Local directory named `roost`
 
 ### Documentation
 
@@ -66,12 +66,12 @@
 | LICS-03 | Phase 14 | Complete |
 | LICS-04 | Phase 14 | Complete |
 | LICS-05 | Phase 14 | Complete |
-| RNAM-01 | Phase 15 | Pending |
-| RNAM-02 | Phase 15 | Pending |
-| RNAM-03 | Phase 15 | Pending |
-| RNAM-04 | Phase 15 | Pending |
-| RNAM-05 | Phase 15 | Pending |
-| RNAM-06 | Phase 15 | Pending |
+| RNAM-01 | Phase 15 | Complete |
+| RNAM-02 | Phase 15 | Complete |
+| RNAM-03 | Phase 15 | Complete |
+| RNAM-04 | Phase 15 | Complete |
+| RNAM-05 | Phase 15 | Complete |
+| RNAM-06 | Phase 15 | Complete |
 | RNAM-07 | Phase 15 | Pending |
 | DOCS-01 | Phase 16 | Pending |
 | DOCS-02 | Phase 16 | Pending |
@@ -96,4 +96,4 @@
 
 ---
 *Requirements defined: 2026-03-02*
-*Traceability updated: 2026-03-02*
+*Traceability updated: 2026-03-03*

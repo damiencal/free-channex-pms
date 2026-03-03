@@ -29,7 +29,7 @@ Automated end-to-end rental operations — from booking notification to accounti
 ### Active
 
 - [ ] All dependencies use Apache 2.0-compatible licenses
-- [ ] Project renamed from "airbnb-tools" to "Roost" everywhere (package, Docker, imports, configs)
+- [ ] Project identity unified as "Roost" everywhere (package, Docker, imports, configs, directory)
 - [ ] Comprehensive open source documentation (README, CONTRIBUTING, LICENSE, architecture, API, deployment)
 - [ ] All private data excluded from git (env files, configs with secrets, logs, sample data, archive)
 - [ ] Published to GitHub as captainarcher/roost

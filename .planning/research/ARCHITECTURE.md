@@ -87,7 +87,7 @@
 ## Recommended Project Structure
 
 ```
-airbnb-tools/
+roost/
 ├── config/
 │   ├── config.yaml              # Property-specific config (gitignored for private data)
 │   └── config.example.yaml     # Template for open-source users
