@@ -61,38 +61,39 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LICS-01 | — | Pending |
-| LICS-02 | — | Pending |
-| LICS-03 | — | Pending |
-| LICS-04 | — | Pending |
-| LICS-05 | — | Pending |
-| RNAM-01 | — | Pending |
-| RNAM-02 | — | Pending |
-| RNAM-03 | — | Pending |
-| RNAM-04 | — | Pending |
-| RNAM-05 | — | Pending |
-| RNAM-06 | — | Pending |
-| RNAM-07 | — | Pending |
-| DOCS-01 | — | Pending |
-| DOCS-02 | — | Pending |
-| DOCS-03 | — | Pending |
-| DOCS-04 | — | Pending |
-| DOCS-05 | — | Pending |
-| DOCS-06 | — | Pending |
-| HYGN-01 | — | Pending |
-| HYGN-02 | — | Pending |
-| HYGN-03 | — | Pending |
-| HYGN-04 | — | Pending |
-| HYGN-05 | — | Pending |
-| GHUB-01 | — | Pending |
-| GHUB-02 | — | Pending |
-| GHUB-03 | — | Pending |
-| GHUB-04 | — | Pending |
+| LICS-01 | Phase 14 | Pending |
+| LICS-02 | Phase 14 | Pending |
+| LICS-03 | Phase 14 | Pending |
+| LICS-04 | Phase 14 | Pending |
+| LICS-05 | Phase 14 | Pending |
+| RNAM-01 | Phase 15 | Pending |
+| RNAM-02 | Phase 15 | Pending |
+| RNAM-03 | Phase 15 | Pending |
+| RNAM-04 | Phase 15 | Pending |
+| RNAM-05 | Phase 15 | Pending |
+| RNAM-06 | Phase 15 | Pending |
+| RNAM-07 | Phase 15 | Pending |
+| DOCS-01 | Phase 16 | Pending |
+| DOCS-02 | Phase 16 | Pending |
+| DOCS-03 | Phase 16 | Pending |
+| DOCS-04 | Phase 16 | Pending |
+| DOCS-05 | Phase 16 | Pending |
+| DOCS-06 | Phase 16 | Pending |
+| HYGN-01 | Phase 14 | Pending |
+| HYGN-02 | Phase 14 | Pending |
+| HYGN-03 | Phase 14 | Pending |
+| HYGN-04 | Phase 14 | Pending |
+| HYGN-05 | Phase 14 | Pending |
+| GHUB-01 | Phase 17 | Pending |
+| GHUB-02 | Phase 17 | Pending |
+| GHUB-03 | Phase 17 | Pending |
+| GHUB-04 | Phase 17 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 27 total
-- Mapped to phases: 0
-- Unmapped: 27
+- Mapped to phases: 27
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-02*
+*Traceability updated: 2026-03-02*
