@@ -1,0 +1,63 @@
+Roost
+Copyright 2026 CHANGE_ME
+
+This product includes software developed by third parties.
+
+============================================================
+Third-Party Software
+============================================================
+
+Python Dependencies:
+--------------------
+aiosmtplib - MIT - https://aiosmtplib.readthedocs.io
+alembic - MIT - https://alembic.sqlalchemy.org
+APScheduler - MIT - https://apscheduler.readthedocs.io
+fastapi - MIT - https://github.com/fastapi/fastapi
+httpx - BSD-3-Clause - https://github.com/encode/httpx
+jinja2 - BSD-3-Clause - https://jinja.palletsprojects.com
+ollama - MIT - https://ollama.com
+polars - MIT - https://www.pola.rs
+psycopg - LGPL-3.0-only - https://psycopg.org
+pydantic-settings - MIT - https://github.com/pydantic/pydantic-settings
+pypdf - BSD-3-Clause - https://pypdf.readthedocs.io
+python-multipart - Apache-2.0 - https://github.com/Kludex/python-multipart
+python-slugify - MIT - https://github.com/un33k/python-slugify
+questionary - MIT - https://questionary.readthedocs.io
+sqlalchemy - MIT - https://www.sqlalchemy.org
+sqlglot - MIT - https://sqlglot.com
+sse-starlette - BSD-3-Clause - https://github.com/sysid/sse-starlette
+structlog - MIT or Apache-2.0 (dual-licensed) - https://www.structlog.org
+tenacity - Apache-2.0 - https://github.com/jd/tenacity
+typer - MIT - https://github.com/fastapi/typer
+
+JavaScript/TypeScript Dependencies:
+------------------------------------
+Production:
+@tailwindcss/vite - MIT - https://github.com/tailwindlabs/tailwindcss
+@tanstack/react-query - MIT - https://tanstack.com/query
+class-variance-authority - Apache-2.0 - https://cva.style
+clsx - MIT - https://github.com/lukeed/clsx
+lucide-react - ISC - https://lucide.dev
+radix-ui - MIT - https://www.radix-ui.com
+react - MIT - https://react.dev
+react-dom - MIT - https://react.dev
+react-router-dom - MIT - https://reactrouter.com
+recharts - MIT - https://recharts.org
+tailwind-merge - MIT - https://github.com/dcastil/tailwind-merge
+tailwindcss - MIT - https://tailwindcss.com
+zustand - MIT - https://github.com/pmndrs/zustand
+
+Development:
+@eslint/js - MIT - https://github.com/eslint/eslint
+@tanstack/react-query-devtools - MIT - https://tanstack.com/query
+@types/node - MIT - https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/react - MIT - https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/react-dom - MIT - https://github.com/DefinitelyTyped/DefinitelyTyped
+@vitejs/plugin-react - MIT - https://github.com/vitejs/vite-plugin-react
+eslint - MIT - https://eslint.org
+eslint-plugin-react-hooks - MIT - https://github.com/facebook/react
+eslint-plugin-react-refresh - MIT - https://github.com/ArnaudBarre/eslint-plugin-react-refresh
+globals - MIT - https://github.com/sindresorhus/globals
+typescript - Apache-2.0 - https://www.typescriptlang.org
+typescript-eslint - MIT - https://typescript-eslint.io
+vite - MIT - https://vitejs.dev
