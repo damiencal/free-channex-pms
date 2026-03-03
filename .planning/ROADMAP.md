@@ -37,10 +37,13 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full v1.0 phase history.
   3. A NOTICE file lists all third-party dependencies and their licenses
   4. .gitignore excludes .env, archive/, real configs, db_data/, confirmations/, and CSVs — and no real names, addresses, guest data, or financial data exist in any tracked file
   5. config.example.yaml exists with only CHANGE_ME placeholder values, and git history contains no leaked secrets or PII
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 14-01: [TBD]
+- [ ] 14-01-PLAN.md — License audit + replace pymupdf (AGPL) with pypdf (BSD)
+- [ ] 14-02-PLAN.md — Create LICENSE and NOTICE files
+- [ ] 14-03-PLAN.md — Update .gitignore and scrub PII from tracked configs
+- [ ] 14-04-PLAN.md — Rewrite git history to remove PII + gitleaks verification
 
 ### Phase 15: Project Rename
 **Goal**: Every reference to "airbnb-tools" and "Rental Management Suite" is replaced with "Roost" — the project builds and runs under its new identity
@@ -92,7 +95,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 14. License Audit & Repository Hygiene | v1.1 | 0/TBD | Not started | - |
+| 14. License Audit & Repository Hygiene | v1.1 | 0/4 | Planning complete | - |
 | 15. Project Rename | v1.1 | 0/TBD | Not started | - |
 | 16. Documentation | v1.1 | 0/TBD | Not started | - |
 | 17. GitHub Publication | v1.1 | 0/TBD | Not started | - |
