@@ -23,5 +23,18 @@ Thumbs.db
 # uv
 .python-version
 
-# Config (keep examples, ignore real configs with secrets)
-# Note: config/*.yaml files are committed (no secrets — secrets in .env)
+# Private config files (keep only the examples)
+config/*.yaml
+!config/config.example.yaml
+!config/base.example.yaml
+
+# Archive and confirmations (contain real booking data)
+archive/
+confirmations/
+
+# Data files
+*.csv
+!tests/fixtures/*.csv
+
+# Frontend build output
+frontend/node_modules/
