@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** v1.1 Open Source Release — Phase 14: License Audit & Repository Hygiene
+**Current focus:** v1.1 Open Source Release — Phase 15: Project Rename
 
 ## Current Position
 
-Phase: 14 of 17 (License Audit & Repository Hygiene)
-Plan: 4 of 4 in current phase
-Status: In progress — plans 01-03 complete, plan 04 remaining
-Last activity: 2026-03-03 — Completed 14-02-PLAN.md (LICENSE and NOTICE files)
+Phase: 15 of 17 (Project Rename)
+Plan: 0 of TBD in current phase
+Status: Not started — Phase 14 complete, ready to plan Phase 15
+Last activity: 2026-03-03 — Phase 14 complete (4 plans, 3 waves, verified)
 
-Progress: [░░░░░░░░░░] 0% v1.0 complete → v1.1 in progress (3/4 plans done)
+Progress: [██░░░░░░░░] 25% (1/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,9 +27,10 @@ Progress: [░░░░░░░░░░] 0% v1.0 complete → v1.1 in progress
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 3 (14-01, 14-02, 14-03)
+- Total plans completed: 4 (14-01, 14-02, 14-03, 14-04)
 - Total phases: 4 (Phases 14-17)
-- Requirements: 27
+- Phases complete: 1 (Phase 14)
+- Requirements: 27 (10 complete, 17 remaining)
 
 ## Accumulated Context
 
@@ -47,7 +48,8 @@ v1.1 decisions:
 - psycopg (LGPL-3.0), text-unidecode (Artistic/GPL dual), certifi (MPL-2.0) confirmed acceptable for Apache 2.0 distribution
 - pypdf direct annotation /V update used instead of update_page_form_field_values() due to pypdf 6.7.5 bug with WinAnsiEncoding fonts
 - NOTICE lists direct dependencies only (not transitive) per Apache 2.0 common practice
-- structlog listed as MIT or Apache-2.0 dual-licensed in NOTICE
+- git-filter-repo --replace-text affects author names too — requires separate --name-callback pass to restore author attribution
+- Copyright holder name (Thomas Underhill) in LICENSE/NOTICE is legal attribution, not PII
 
 ### Pending Todos
 
@@ -63,7 +65,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03T07:04:00Z
-Stopped at: Completed 14-02-PLAN.md (LICENSE and NOTICE files)
+Last session: 2026-03-03
+Stopped at: Phase 14 complete and verified, ready to plan Phase 15
 Resume file: None
-Next action: Execute 14-04-PLAN.md (rename to Roost)
+Next action: /gsd:discuss-phase 15 or /gsd:plan-phase 15

@@ -7,11 +7,11 @@
 
 ### License Compliance
 
-- [ ] **LICS-01**: All Python dependencies use licenses compatible with Apache 2.0 (MIT, BSD, Apache 2.0, ISC, PSF)
-- [ ] **LICS-02**: All npm dependencies (production + dev) use licenses compatible with Apache 2.0
-- [ ] **LICS-03**: Any LGPL, GPL, or incompatible-licensed dependency is replaced with an Apache 2.0-compatible alternative
-- [ ] **LICS-04**: A LICENSE file with the full Apache 2.0 license text exists at the repo root
-- [ ] **LICS-05**: A NOTICE file lists all third-party dependencies and their licenses per Apache 2.0 requirements
+- [x] **LICS-01**: All Python dependencies use licenses compatible with Apache 2.0 (MIT, BSD, Apache 2.0, ISC, PSF)
+- [x] **LICS-02**: All npm dependencies (production + dev) use licenses compatible with Apache 2.0
+- [x] **LICS-03**: Any LGPL, GPL, or incompatible-licensed dependency is replaced with an Apache 2.0-compatible alternative
+- [x] **LICS-04**: A LICENSE file with the full Apache 2.0 license text exists at the repo root
+- [x] **LICS-05**: A NOTICE file lists all third-party dependencies and their licenses per Apache 2.0 requirements
 
 ### Project Rename
 
@@ -34,11 +34,11 @@
 
 ### Repository Hygiene
 
-- [ ] **HYGN-01**: .gitignore excludes all private data: .env, archive/, config/*.yaml (except config.example.yaml), db_data/, confirmations/, *.csv
-- [ ] **HYGN-02**: No real property names, addresses, guest data, or financial data exists in tracked files
-- [ ] **HYGN-03**: config.example.yaml contains only placeholder/example values (CHANGE_ME pattern)
-- [ ] **HYGN-04**: Any committed sample data uses clearly fake values
-- [ ] **HYGN-05**: git history reviewed — no secrets or PII in any committed file (or clean history if found)
+- [x] **HYGN-01**: .gitignore excludes all private data: .env, archive/, config/*.yaml (except config.example.yaml), db_data/, confirmations/, *.csv
+- [x] **HYGN-02**: No real property names, addresses, guest data, or financial data exists in tracked files
+- [x] **HYGN-03**: config.example.yaml contains only placeholder/example values (CHANGE_ME pattern)
+- [x] **HYGN-04**: Any committed sample data uses clearly fake values
+- [x] **HYGN-05**: git history reviewed — no secrets or PII in any committed file (or clean history if found)
 
 ### GitHub Publication
 
@@ -61,11 +61,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LICS-01 | Phase 14 | Pending |
-| LICS-02 | Phase 14 | Pending |
-| LICS-03 | Phase 14 | Pending |
-| LICS-04 | Phase 14 | Pending |
-| LICS-05 | Phase 14 | Pending |
+| LICS-01 | Phase 14 | Complete |
+| LICS-02 | Phase 14 | Complete |
+| LICS-03 | Phase 14 | Complete |
+| LICS-04 | Phase 14 | Complete |
+| LICS-05 | Phase 14 | Complete |
 | RNAM-01 | Phase 15 | Pending |
 | RNAM-02 | Phase 15 | Pending |
 | RNAM-03 | Phase 15 | Pending |
@@ -79,11 +79,11 @@
 | DOCS-04 | Phase 16 | Pending |
 | DOCS-05 | Phase 16 | Pending |
 | DOCS-06 | Phase 16 | Pending |
-| HYGN-01 | Phase 14 | Pending |
-| HYGN-02 | Phase 14 | Pending |
-| HYGN-03 | Phase 14 | Pending |
-| HYGN-04 | Phase 14 | Pending |
-| HYGN-05 | Phase 14 | Pending |
+| HYGN-01 | Phase 14 | Complete |
+| HYGN-02 | Phase 14 | Complete |
+| HYGN-03 | Phase 14 | Complete |
+| HYGN-04 | Phase 14 | Complete |
+| HYGN-05 | Phase 14 | Complete |
 | GHUB-01 | Phase 17 | Pending |
 | GHUB-02 | Phase 17 | Pending |
 | GHUB-03 | Phase 17 | Pending |
