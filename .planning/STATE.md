@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 15 of 17 (Project Rename)
-Plan: 0 of TBD in current phase
-Status: Not started — Phase 14 complete, ready to plan Phase 15
-Last activity: 2026-03-03 — Phase 14 complete (4 plans, 3 waves, verified)
+Plan: 1 of 3 in current phase
+Status: In progress — Plan 15-01 complete
+Last activity: 2026-03-03 — Completed 15-01-PLAN.md (Python package + Docker Compose + backend strings renamed to Roost)
 
-Progress: [██░░░░░░░░] 25% (1/4 phases complete in v1.1)
+Progress: [██░░░░░░░░] 25% (1/4 phases complete in v1.1; Phase 15 in progress)
 
 ## Performance Metrics
 
@@ -27,7 +27,7 @@ Progress: [██░░░░░░░░] 25% (1/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 4 (14-01, 14-02, 14-03, 14-04)
+- Total plans completed: 5 (14-01, 14-02, 14-03, 14-04, 15-01)
 - Total phases: 4 (Phases 14-17)
 - Phases complete: 1 (Phase 14)
 - Requirements: 27 (10 complete, 17 remaining)
@@ -41,6 +41,10 @@ All v1.0 decisions archived in `.planning/milestones/v1.0-ROADMAP.md`.
 v1.1 decisions:
 - Apache 2.0 license selected for open source release
 - Full rename to "Roost" for professional branding
+- Package distribution name: roost-rental (not roost — avoids PyPI collision risk, more descriptive)
+- Docker service names: roost-api and roost-db (service name == DATABASE_URL hostname)
+- POSTGRES_DB=rental_management and db_data volume left unchanged — database implementation detail, not project identity; changing would break existing installs
+- image: roost added to docker-compose roost-api for named Docker image builds
 - config/*.yaml gitignored; only example templates (base.example.yaml, config.example.yaml) tracked
 - Empty string default (not CHANGE_ME) for resort_contact_name in app/config.py — fails clearly at runtime if unconfigured
 - CHANGE_ME sentinel pattern for all PII placeholder fields in tracked config templates
@@ -65,7 +69,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03
-Stopped at: Phase 14 complete and verified, ready to plan Phase 15
+Last session: 2026-03-03T19:51:22Z
+Stopped at: Completed 15-01-PLAN.md — Python package, Docker services, and backend strings renamed to Roost
 Resume file: None
-Next action: /gsd:discuss-phase 15 or /gsd:plan-phase 15
+Next action: Execute 15-02-PLAN.md (frontend rename)
