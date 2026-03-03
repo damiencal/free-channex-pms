@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 14 of 17 (License Audit & Repository Hygiene)
-Plan: 3 of 4 in current phase
+Plan: 4 of 4 in current phase
 Status: In progress — plans 01-03 complete, plan 04 remaining
-Last activity: 2026-03-03 — Completed 14-03-PLAN.md (gitignore, PII scrub, config templates)
+Last activity: 2026-03-03 — Completed 14-02-PLAN.md (LICENSE and NOTICE files)
 
 Progress: [░░░░░░░░░░] 0% v1.0 complete → v1.1 in progress (3/4 plans done)
 
@@ -46,6 +46,8 @@ v1.1 decisions:
 - pypdf (BSD-3-Clause) replaces pymupdf (AGPL-3.0) as the PDF library
 - psycopg (LGPL-3.0), text-unidecode (Artistic/GPL dual), certifi (MPL-2.0) confirmed acceptable for Apache 2.0 distribution
 - pypdf direct annotation /V update used instead of update_page_form_field_values() due to pypdf 6.7.5 bug with WinAnsiEncoding fonts
+- NOTICE lists direct dependencies only (not transitive) per Apache 2.0 common practice
+- structlog listed as MIT or Apache-2.0 dual-licensed in NOTICE
 
 ### Pending Todos
 
@@ -61,7 +63,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03T06:59:21Z
-Stopped at: Completed 14-01-PLAN.md (license audit + pymupdf → pypdf replacement)
+Last session: 2026-03-03T07:04:00Z
+Stopped at: Completed 14-02-PLAN.md (LICENSE and NOTICE files)
 Resume file: None
 Next action: Execute 14-04-PLAN.md (rename to Roost)
