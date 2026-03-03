@@ -238,7 +238,7 @@ def load_all_properties(config_dir: Path) -> list[PropertyConfig]:
     yaml_files = sorted(config_dir.glob("*.yaml"))
     property_files = [
         f for f in yaml_files
-        if f.name not in ("base.yaml", "config.example.yaml")
+        if f.name not in ("base.yaml", "config.example.yaml", "base.example.yaml")
     ]
 
     if not property_files:
