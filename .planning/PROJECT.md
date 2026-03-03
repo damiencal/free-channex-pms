@@ -12,23 +12,23 @@ Automated end-to-end rental operations — from booking notification to accounti
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Process financial exports from Airbnb, VRBO, RVshare, and Mercury bank into unified bookkeeping — v1.0
+- ✓ Generate P&L statements, balance sheets, and income statements — v1.0
+- ✓ Track revenue, expenses, loans, rent, and utilities across properties — v1.0
+- ✓ Provide a dashboard showing key financial and operational data — v1.0
+- ✓ Offer a natural language query interface (via local Ollama) for non-technical users to ask financial questions — v1.0
+- ✓ Auto-detect new bookings from platform notifications/exports — v1.0
+- ✓ Auto-fill resort PDF booking form with guest and booking details from config-driven mappings — v1.0
+- ✓ Attach booking confirmation and email completed form to resort contact — v1.0
+- ✓ Send welcome message via platform messaging upon booking confirmation — v1.0
+- ✓ Send arrival message via platform messaging 2-3 days before check-in with property details and lock codes — v1.0
+- ✓ All property-specific data (unit names, lock codes, resort contacts, templates, etc.) lives in configuration files — v1.0
+- ✓ Message templates are user-editable and stored in config — v1.0
+- ✓ Fully containerized with Docker for self-hosting — v1.0
 
 ### Active
 
-- [ ] Process financial exports from Airbnb, VRBO, RVshare, and Mercury bank into unified bookkeeping
-- [ ] Generate P&L statements, balance sheets, and income statements
-- [ ] Track revenue, expenses, loans, rent, and utilities across properties
-- [ ] Provide a dashboard showing key financial and operational data
-- [ ] Offer a natural language query interface (via local Ollama) for non-technical users to ask financial questions
-- [ ] Auto-detect new bookings from platform notifications/exports
-- [ ] Auto-fill resort PDF booking form with guest and booking details from config-driven mappings
-- [ ] Attach booking confirmation and email completed form to resort contact
-- [ ] Send welcome message via platform messaging upon booking confirmation
-- [ ] Send arrival message via platform messaging 2-3 days before check-in with property details and lock codes
-- [ ] All property-specific data (unit names, lock codes, resort contacts, templates, etc.) lives in configuration files
-- [ ] Message templates are user-editable and stored in config
-- [ ] Fully containerized with Docker for self-hosting
+(None — planning next milestone)
 
 ### Out of Scope
 
@@ -47,24 +47,31 @@ Automated end-to-end rental operations — from booking notification to accounti
 - **Users:** Thomas (primary operator, technical), Kim (spouse, needs simple interface — no business/financial background)
 - **Infrastructure:** Self-hosted on local network machine running Ollama, deployed via Docker
 - **Open source:** Intended for GitHub publication — all configuration externalized, no hardcoded property-specific data
+- **Codebase:** v1.0 shipped — 10,725 lines Python (FastAPI + SQLAlchemy), 9,734 lines TypeScript (React + Vite + shadcn/ui), PostgreSQL database with Alembic migrations
+- **Tech debt:** 14 low-severity items carried forward (config placeholders, unverified CSV headers, cache invalidation gaps, stale docstrings)
 
 ## Constraints
 
 - **Hosting**: Self-hosted Docker on local network — no cloud services for core functionality
 - **LLM**: Local Ollama instance — no external API calls for the natural language interface
 - **Configuration**: All property-specific data must be in config files, not code — open-source ready
-- **Platform APIs**: Airbnb confirmed to support reservation exports; VRBO and RVshare API/export availability needs research
-- **PDF Form**: Specific Sun Outdoors Booking Form format — but the system should support configurable PDF form filling, not hardcode this form
+- **Platform APIs**: Airbnb supports reservation CSV exports; VRBO supports CSV exports; RVshare has no export format (manual entry)
+- **PDF Form**: Specific Sun Outdoors Booking Form format — but the system supports configurable PDF form filling via field mapping JSON
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Self-hosted Docker deployment | User has local infrastructure, wants data sovereignty | — Pending |
-| Local Ollama for LLM queries | Already running on local network, no external API costs | — Pending |
-| Config-driven architecture | Open-source ready, no hardcoded property data | — Pending |
-| Batch/polling for booking detection | Simpler than real-time webhooks, acceptable latency | — Pending |
-| Platform messaging (not direct email) for guest comms | Messages go through Airbnb/VRBO/RVshare messaging systems | — Pending |
+| Self-hosted Docker deployment | User has local infrastructure, wants data sovereignty | ✓ Good — single `docker-compose up` deploys all services |
+| Local Ollama for LLM queries | Already running on local network, no external API costs | ✓ Good — text-to-SQL with llama3.2, no external calls |
+| Config-driven architecture | Open-source ready, no hardcoded property data | ✓ Good — YAML configs for properties, templates, PDF mappings |
+| Batch/polling for booking detection | Simpler than real-time webhooks, acceptable latency | ✓ Good — CSV upload approach works well for small scale |
+| Platform messaging (not direct email) for guest comms | Messages go through Airbnb/VRBO/RVshare messaging systems | ✓ Good — Airbnb native triggers + operator email for VRBO |
+| Polars for CSV ingestion | 5-25x faster than pandas, less memory | ✓ Good — fast imports with low resource usage |
+| PyMuPDF for PDF form filling | pypdf doesn't regenerate appearance streams (blank in Preview/iOS) | ✓ Good — field.update() + doc.bake() renders in all viewers |
+| Double-entry bookkeeping | Accurate financial tracking with balanced ledger | ✓ Good — every transaction has balanced debits/credits |
+| React + Vite + shadcn/ui for frontend | Modern, fast, accessible component library | ✓ Good — clean dashboard accessible to non-technical users |
+| Text-to-SQL (never LLM arithmetic) | Accuracy and verifiability | ✓ Good — every number comes from SQL, not LLM |
 
 ---
-*Last updated: 2026-02-26 after initialization*
+*Last updated: 2026-03-02 after v1.0 milestone*
