@@ -43,6 +43,9 @@ v1.1 decisions:
 - config/*.yaml gitignored; only example templates (base.example.yaml, config.example.yaml) tracked
 - Empty string default (not CHANGE_ME) for resort_contact_name in app/config.py — fails clearly at runtime if unconfigured
 - CHANGE_ME sentinel pattern for all PII placeholder fields in tracked config templates
+- pypdf (BSD-3-Clause) replaces pymupdf (AGPL-3.0) as the PDF library
+- psycopg (LGPL-3.0), text-unidecode (Artistic/GPL dual), certifi (MPL-2.0) confirmed acceptable for Apache 2.0 distribution
+- pypdf direct annotation /V update used instead of update_page_form_field_values() due to pypdf 6.7.5 bug with WinAnsiEncoding fonts
 
 ### Pending Todos
 
@@ -58,7 +61,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03
-Stopped at: Completed 14-03-PLAN.md (gitignore, PII scrub, config templates)
+Last session: 2026-03-03T06:59:21Z
+Stopped at: Completed 14-01-PLAN.md (license audit + pymupdf → pypdf replacement)
 Resume file: None
 Next action: Execute 14-04-PLAN.md (rename to Roost)
