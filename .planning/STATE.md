@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 16 of 17 (Documentation)
-Plan: 02 of 4 complete (16-02-PLAN.md done)
-Status: In progress — Phase 16 plans 1-2 complete
-Last activity: 2026-03-03 — Completed 16-02-PLAN.md (CONTRIBUTING.md + docs/deployment.md)
+Plan: 04 of 4 complete (16-04-PLAN.md done)
+Status: In progress — Phase 16 plans 1-2, 4 complete
+Last activity: 2026-03-03 — Completed 16-04-PLAN.md (docs/api.md)
 
-Progress: [█████░░░░░] 56% (2.5/4 phases complete in v1.1)
+Progress: [██████░░░░] 63% (2.75/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,7 +27,7 @@ Progress: [█████░░░░░] 56% (2.5/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 9 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01, 16-02)
+- Total plans completed: 10 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01, 16-02, 16-04)
 - Total phases: 4 (Phases 14-17)
 - Phases complete: 2 (Phase 14, Phase 15)
 - Requirements: 27 (17 complete, 10 remaining)
@@ -37,6 +37,11 @@ Progress: [█████░░░░░] 56% (2.5/4 phases complete in v1.1)
 ### Decisions
 
 All v1.0 decisions archived in `.planning/milestones/v1.0-ROADMAP.md`.
+
+v1.1 decisions (16-04 additions):
+- reconciliation/confirm body uses booking_id + bank_transaction_id (not match_id) — verified from MatchConfirmRequest schema
+- RVshare entry uses confirmation_code field (from RVshareEntryRequest schema)
+- Balance sheet requires as_of query param (required, not optional) — documented from source
 
 v1.1 decisions (16-02 additions):
 - SMTP documented as required in deployment guide — resort form submission silently fails without it; empty-string defaults can mislead
@@ -84,7 +89,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03T22:52:58Z
-Stopped at: Completed 16-02-PLAN.md
+Last session: 2026-03-03T22:53:57Z
+Stopped at: Completed 16-04-PLAN.md
 Resume file: None
 Next action: Execute 16-03-PLAN.md (architecture doc)
