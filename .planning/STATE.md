@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 16 of 17 (Documentation)
-Plan: 01 of 4 complete (16-01-PLAN.md done)
-Status: In progress — Phase 16 plan 1 complete
-Last activity: 2026-03-03 — Completed 16-01-PLAN.md (README.md + CHANGELOG.md)
+Plan: 02 of 4 complete (16-02-PLAN.md done)
+Status: In progress — Phase 16 plans 1-2 complete
+Last activity: 2026-03-03 — Completed 16-02-PLAN.md (CONTRIBUTING.md + docs/deployment.md)
 
-Progress: [█████░░░░░] 53% (2.25/4 phases complete in v1.1)
+Progress: [█████░░░░░] 56% (2.5/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,7 +27,7 @@ Progress: [█████░░░░░] 53% (2.25/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 8 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01)
+- Total plans completed: 9 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01, 16-02)
 - Total phases: 4 (Phases 14-17)
 - Phases complete: 2 (Phase 14, Phase 15)
 - Requirements: 27 (17 complete, 10 remaining)
@@ -37,6 +37,13 @@ Progress: [█████░░░░░] 53% (2.25/4 phases complete in v1.1)
 ### Decisions
 
 All v1.0 decisions archived in `.planning/milestones/v1.0-ROADMAP.md`.
+
+v1.1 decisions (16-02 additions):
+- SMTP documented as required in deployment guide — resort form submission silently fails without it; empty-string defaults can mislead
+- listing_slug_map given its own explanation — critical for multi-property CSV assignment; non-obvious to first-time users
+- Gmail App Password guidance added inline in deployment guide — SMTP_PASSWORD is not the Gmail account password
+- auto_submit_threshold: 0 documented as the opt-out for automatic form submission
+- host.docker.internal Linux workaround documented in both Ollama section and troubleshooting
 
 v1.1 decisions (16-01 additions):
 - README badges placed one per line (not inline) — renders identically on GitHub; satisfies grep-countability
@@ -77,7 +84,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03T22:50:46Z
-Stopped at: Completed 16-01-PLAN.md
+Last session: 2026-03-03T22:52:58Z
+Stopped at: Completed 16-02-PLAN.md
 Resume file: None
-Next action: Execute 16-02-PLAN.md (CONTRIBUTING.md)
+Next action: Execute 16-03-PLAN.md (architecture doc)
