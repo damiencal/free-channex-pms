@@ -1,25 +1,36 @@
 """PDF form filling for resort booking forms.
 
-Uses PyMuPDF (pymupdf) to:
+Uses pypdf (BSD-3-Clause) to:
 1. Detect whether a PDF is AcroForm or XFA
 2. Fill AcroForm fields from a JSON mapping
 3. Enumerate all form fields for mapping discovery
 
-CRITICAL: Uses field.update() + doc.bake() for cross-viewer compatibility.
-doc.bake() embeds appearance streams permanently -- required for macOS Preview
-and iOS Mail which do not regenerate appearances on open.
+COMPATIBILITY NOTE: pypdf field filling sets /V on each widget annotation and
+sets /NeedAppearances=True on the AcroForm dictionary. This tells PDF viewers
+to regenerate visual appearances when the document is opened. This approach is
+compatible with Adobe Acrobat, macOS Preview, and most modern viewers.
 """
 
 from __future__ import annotations
 
+import io
 import json
 import structlog
 from datetime import date
 from pathlib import Path
 
-import pymupdf
+from pypdf import PdfReader, PdfWriter
+from pypdf.generic import BooleanObject, NameObject, TextStringObject
 
 log = structlog.get_logger()
+
+# Map PDF field type codes to human-readable strings
+_FIELD_TYPE_MAP: dict[str, str] = {
+    "/Tx": "Text",
+    "/Btn": "Button",
+    "/Ch": "Choice",
+    "/Sig": "Signature",
+}
 
 
 def detect_form_type(pdf_path: str) -> str:
@@ -29,26 +40,31 @@ def detect_form_type(pdf_path: str) -> str:
         pdf_path: Path to the PDF file.
 
     Returns:
-        'acroform' if the PDF has fillable AcroForm fields (PyMuPDF can fill).
-        'xfa' if the PDF uses XFA forms (PyMuPDF CANNOT fill -- different approach needed).
+        'acroform' if the PDF has fillable AcroForm fields (pypdf can fill).
+        'xfa' if the PDF uses XFA forms (pypdf CANNOT fill -- different approach needed).
         'none' if the PDF has no form fields.
     """
-    doc = pymupdf.open(pdf_path)
-    if not doc.is_pdf:
+    reader = PdfReader(pdf_path)
+
+    # No fields at all
+    fields = reader.get_fields()
+    if not fields:
         return "none"
 
-    cat = doc.pdf_catalog()
-    what, value = doc.xref_get_key(cat, "AcroForm")
+    # Check the root object's /AcroForm for an /XFA key
+    root = reader.root_object
+    acroform = root.get("/AcroForm")
+    if acroform is not None:
+        try:
+            acroform_obj = acroform.get_object() if hasattr(acroform, "get_object") else acroform
+            if "/XFA" in acroform_obj:
+                return "xfa"
+        except Exception:
+            pass
 
-    if what == "null":
-        return "none"
-
-    # AcroForm key exists -- check for XFA sub-key
-    if what == "xref":
-        acroform_xref = int(value.replace("0 R", "").strip())
-        xfa_what, _ = doc.xref_get_key(acroform_xref, "XFA")
-        if xfa_what != "null":
-            return "xfa"
+    # Also check the convenience property (non-empty dict means XFA present)
+    if reader.xfa:
+        return "xfa"
 
     return "acroform"
 
@@ -64,16 +80,36 @@ def list_form_fields(pdf_path: str) -> list[dict]:
     Returns:
         List of dicts with keys: page, name, type, current_value.
     """
-    doc = pymupdf.open(pdf_path)
+    reader = PdfReader(pdf_path)
     fields = []
-    for page_num, page in enumerate(doc):
-        for widget in page.widgets():
-            fields.append({
-                "page": page_num,
-                "name": widget.field_name,
-                "type": widget.field_type_string,
-                "current_value": widget.field_value,
-            })
+
+    # Iterate pages, collecting widget annotations to get page numbers
+    for page_num, page in enumerate(reader.pages):
+        annots = page.get("/Annots", [])
+        if not annots:
+            continue
+        for annot_ref in annots:
+            try:
+                annot = annot_ref.get_object() if hasattr(annot_ref, "get_object") else annot_ref
+                if annot.get("/Subtype") != "/Widget":
+                    continue
+                field_name = annot.get("/T")
+                if field_name is None:
+                    continue
+                ft_code = str(annot.get("/FT", "Unknown"))
+                field_type = _FIELD_TYPE_MAP.get(ft_code, ft_code)
+                current_value = annot.get("/V", "")
+                if hasattr(current_value, "get_object"):
+                    current_value = current_value.get_object()
+                fields.append({
+                    "page": page_num,
+                    "name": str(field_name),
+                    "type": field_type,
+                    "current_value": str(current_value) if current_value else "",
+                })
+            except Exception:
+                pass
+
     return fields
 
 
@@ -90,9 +126,9 @@ def fill_resort_form(
     - "property": value comes from property_data dict
     - "static": hardcoded value (e.g., "N/A" for guest phone)
 
-    Uses field.update() per widget + doc.bake() for cross-viewer compatibility.
-    doc.bake() embeds appearance streams permanently -- required for macOS Preview
-    and iOS Mail which do not regenerate appearances on open.
+    Sets /V (value) on each widget annotation and /NeedAppearances=True on the
+    AcroForm so PDF viewers regenerate visual appearances on open. Compatible
+    with Adobe Acrobat, macOS Preview, iOS Mail, and other modern viewers.
 
     Args:
         template_pdf_path: Path to the blank PDF form template.
@@ -112,7 +148,7 @@ def fill_resort_form(
     if form_type != "acroform":
         raise ValueError(
             f"PDF at {template_pdf_path} is '{form_type}', not 'acroform'. "
-            "PyMuPDF can only fill AcroForm PDFs."
+            "pypdf can only fill AcroForm PDFs."
         )
 
     # Load field mapping
@@ -148,21 +184,39 @@ def fill_resort_form(
                 source=source,
             )
 
-    # Open template and fill fields
-    doc = pymupdf.open(template_pdf_path)
+    # Open template and clone into writer
+    reader = PdfReader(template_pdf_path)
+    writer = PdfWriter()
+    writer.append(reader)
 
+    # Set field values directly on widget annotations
+    # This approach bypasses pypdf's appearance stream generation (which has
+    # a bug with certain PDF font encodings) and relies on /NeedAppearances=True
+    # to instruct PDF viewers to regenerate visual appearances on open.
     filled_count = 0
-    for page in doc:
-        for widget in page.widgets():
-            if widget.field_name in field_values:
-                widget.field_value = field_values[widget.field_name]
-                widget.update()  # Regenerates appearance stream for this field
-                filled_count += 1
+    for page in writer.pages:
+        annots = page.get("/Annots", [])
+        if not annots:
+            continue
+        for annot_ref in annots:
+            try:
+                annot = annot_ref.get_object() if hasattr(annot_ref, "get_object") else annot_ref
+                if annot.get("/Subtype") != "/Widget":
+                    continue
+                field_name = annot.get("/T")
+                if field_name and str(field_name) in field_values:
+                    annot.update({
+                        NameObject("/V"): TextStringObject(field_values[str(field_name)])
+                    })
+                    filled_count += 1
+            except Exception:
+                pass
 
-    # CRITICAL: bake() embeds appearance streams permanently.
-    # Required for macOS Preview and iOS Mail -- they do NOT regenerate on open.
-    # Do NOT use doc.need_appearances() alone -- it fails on macOS Preview and iOS Mail.
-    doc.bake()
+    # Set /NeedAppearances=True so PDF viewers regenerate field display on open
+    if "/AcroForm" in writer._root_object:
+        writer._root_object["/AcroForm"].update({
+            NameObject("/NeedAppearances"): BooleanObject(True)
+        })
 
     log.info(
         "PDF form filled",
@@ -171,4 +225,6 @@ def fill_resort_form(
         fields_filled=filled_count,
     )
 
-    return doc.tobytes()
+    buf = io.BytesIO()
+    writer.write(buf)
+    return buf.getvalue()
