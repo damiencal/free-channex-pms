@@ -62,7 +62,7 @@ class SPAStaticFiles(StarletteStaticFiles):
 async def lifespan(app: FastAPI):
     """Application lifespan: startup checks then yield, shutdown on exit."""
     # --- Startup ---
-    log.info("Starting Rental Management Suite")
+    log.info("Starting Roost")
 
     # 1. Load and validate config (FAIL-FAST — aborts if invalid)
     config = load_app_config()
@@ -136,8 +136,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Rental Management Suite",
-    description="Self-hosted vacation rental management platform",
+    title="Roost",
+    description="Rental Operations Platform — Self-hosted vacation rental management",
     version="0.1.0",
     lifespan=lifespan,
 )

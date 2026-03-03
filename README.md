@@ -1,6 +1,6 @@
-# Rental Management Suite
+# Roost
 
-Self-hosted vacation rental management platform. Automates booking operations from notification to accounting entry.
+Self-hosted vacation rental operations platform. Automates booking operations from notification to accounting entry.
 
 ## Quick Start
 
@@ -56,7 +56,7 @@ The response shows status for database, Ollama, and configured properties.
 | `templates/{slug}/` | Per-property template overrides (optional) |
 | `pdf_mappings/` | PDF form field mapping schemas (JSON) |
 
-Config changes require a container restart: `docker compose restart app`
+Config changes require a container restart: `docker compose restart roost-api`
 
 ## CLI
 

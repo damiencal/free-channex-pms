@@ -1,5 +1,5 @@
 """
-Rental Management Suite CLI.
+Roost CLI.
 
 Commands:
   setup            Interactive wizard to create a new property configuration
@@ -22,7 +22,7 @@ from app.logging import configure_logging
 configure_logging()
 log = structlog.get_logger()
 
-cli = typer.Typer(help="Rental Management Suite CLI")
+cli = typer.Typer(help="Roost CLI")
 
 CONFIG_DIR = Path("config")
 EXCLUDED_FILES = {"base.yaml", "config.example.yaml"}
@@ -52,7 +52,7 @@ def get_existing_slugs() -> set[str]:
 def setup():
     """Interactive setup wizard — create a new property configuration."""
     typer.echo("=" * 50)
-    typer.echo("  Rental Management Suite — Property Setup")
+    typer.echo("  Roost — Property Setup")
     typer.echo("=" * 50)
     typer.echo()
 

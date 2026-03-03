@@ -1,5 +1,5 @@
 """
-Structlog configuration for the Rental Management Suite.
+Structlog configuration for Roost.
 
 Uses ConsoleRenderer (human-readable) — appropriate for a self-hosted tool
 where logs are read directly by the operator, not consumed by a log aggregator.
