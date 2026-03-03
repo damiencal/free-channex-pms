@@ -5,13 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** v1.0 shipped. Planning next milestone.
+**Current focus:** v1.1 Open Source Release — license audit, rename to Roost, docs, GitHub publish
 
 ## Current Position
 
-Phase: v1.0 complete (13 phases, 56 plans)
-Status: Milestone shipped. Ready for next milestone.
-Last activity: 2026-03-02 — v1.0 milestone archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements for v1.1
+Last activity: 2026-03-02 — Milestone v1.1 started
 
 ## Performance Metrics
 

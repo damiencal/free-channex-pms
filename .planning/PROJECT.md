@@ -1,4 +1,4 @@
-# Rental Management Suite
+# Roost
 
 ## What This Is
 
@@ -28,7 +28,11 @@ Automated end-to-end rental operations — from booking notification to accounti
 
 ### Active
 
-(None — planning next milestone)
+- [ ] All dependencies use Apache 2.0-compatible licenses
+- [ ] Project renamed from "airbnb-tools" to "Roost" everywhere (package, Docker, imports, configs)
+- [ ] Comprehensive open source documentation (README, CONTRIBUTING, LICENSE, architecture, API, deployment)
+- [ ] All private data excluded from git (env files, configs with secrets, logs, sample data, archive)
+- [ ] Published to GitHub as captainarcher/roost
 
 ### Out of Scope
 
@@ -73,5 +77,8 @@ Automated end-to-end rental operations — from booking notification to accounti
 | React + Vite + shadcn/ui for frontend | Modern, fast, accessible component library | ✓ Good — clean dashboard accessible to non-technical users |
 | Text-to-SQL (never LLM arithmetic) | Accuracy and verifiability | ✓ Good — every number comes from SQL, not LLM |
 
+| Apache 2.0 license for open source release | Standard permissive license, compatible with commercial use | — Pending |
+| Full rename to "Roost" | Professional branding for open source, removes platform-specific name | — Pending |
+
 ---
-*Last updated: 2026-03-02 after v1.0 milestone*
+*Last updated: 2026-03-02 after v1.1 milestone start*
