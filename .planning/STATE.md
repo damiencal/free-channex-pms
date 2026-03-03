@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 16 of 17 (Documentation)
-Plan: Not started
-Status: Ready to begin — Phase 15 complete, Phase 16 plans not yet created
-Last activity: 2026-03-03 — Phase 15 closed out (directory renamed, all RNAM requirements complete)
+Plan: 01 of 4 complete (16-01-PLAN.md done)
+Status: In progress — Phase 16 plan 1 complete
+Last activity: 2026-03-03 — Completed 16-01-PLAN.md (README.md + CHANGELOG.md)
 
-Progress: [█████░░░░░] 50% (2/4 phases complete in v1.1)
+Progress: [█████░░░░░] 53% (2.25/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,7 +27,7 @@ Progress: [█████░░░░░] 50% (2/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 7 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03)
+- Total plans completed: 8 (14-01, 14-02, 14-03, 14-04, 15-01, 15-02, 15-03, 16-01)
 - Total phases: 4 (Phases 14-17)
 - Phases complete: 2 (Phase 14, Phase 15)
 - Requirements: 27 (17 complete, 10 remaining)
@@ -37,6 +37,12 @@ Progress: [█████░░░░░] 50% (2/4 phases complete in v1.1)
 ### Decisions
 
 All v1.0 decisions archived in `.planning/milestones/v1.0-ROADMAP.md`.
+
+v1.1 decisions (16-01 additions):
+- README badges placed one per line (not inline) — renders identically on GitHub; satisfies grep-countability
+- Screenshots kept as placeholders in README — deferred until running dev instance with populated data
+- CHANGELOG v1.0.0 dated 2026-03-02 (actual ship date) not 2026-03-03 (documentation date)
+- README cross-reference links to docs/architecture.md, docs/api.md, docs/deployment.md, CONTRIBUTING.md established before those files exist
 
 v1.1 decisions:
 - Apache 2.0 license selected for open source release
@@ -71,7 +77,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03
-Stopped at: Phase 15 complete — ready for Phase 16
+Last session: 2026-03-03T22:50:46Z
+Stopped at: Completed 16-01-PLAN.md
 Resume file: None
-Next action: Begin Phase 16 (Documentation) — discuss/plan phase
+Next action: Execute 16-02-PLAN.md (CONTRIBUTING.md)
