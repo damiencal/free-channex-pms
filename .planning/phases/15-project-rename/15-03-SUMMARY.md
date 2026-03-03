@@ -16,8 +16,9 @@ provides:
   - REQUIREMENTS.md corrected: RNAM-01 uses roost-rental, RNAM-02 uses roost-api
   - ROADMAP.md Phase 15 success criterion corrected to roost-rental
   - RNAM-01 through RNAM-06 marked complete
-  - Directory rename checklist provided (RNAM-07 pending user action)
-affects: [15-directory-rename, phase-16-documentation, phase-17-publication]
+  - Directory renamed to roost (RNAM-07 complete)
+  - Config fix: base.example.yaml excluded from property config loading
+affects: [phase-16-documentation, phase-17-publication]
 
 # Tech tracking
 tech-stack:
@@ -60,7 +61,7 @@ completed: 2026-03-03
 - **Duration:** ~15 min (Task 1 only; paused at Task 2 checkpoint)
 - **Started:** 2026-03-03T19:54:59Z
 - **Completed:** 2026-03-03T20:10:00Z (approximate)
-- **Tasks:** 1/2 complete (Task 2 is a human-action checkpoint)
+- **Tasks:** 2/2 complete
 - **Files modified:** 6
 
 ## Accomplishments
@@ -78,7 +79,7 @@ Each task was committed atomically:
 
 1. **Task 1: Update active planning docs and verify clean codebase** - `b879674` (docs)
 
-**Task 2 (directory rename):** Pending user action — awaiting checkpoint completion.
+2. **Task 2: Rename directory from airbnb-tools to roost** - User completed manually; old Docker containers stopped and removed; `base.example.yaml` config exclusion fix committed as `00d0540`
 
 ## Files Created/Modified
 
@@ -151,10 +152,10 @@ ls docker-compose.yml  # Should exist
 
 ## Next Phase Readiness
 
-- RNAM-07 (directory rename from `airbnb-tools` to `roost`) is the only remaining Phase 15 requirement — requires user action from parent directory
-- Once RNAM-07 is complete, Phase 15 is done and Phase 16 (Documentation) can begin
-- All code, Docker services, frontend, and planning docs are already using Roost identity
+- All RNAM requirements (01-07) complete — Phase 15 is done
+- Phase 16 (Documentation) can begin immediately
+- All code, Docker services, frontend, and planning docs are using Roost identity
 
 ---
 *Phase: 15-project-rename*
-*Completed: 2026-03-03 (Task 1 only; Task 2 pending user action)*
+*Completed: 2026-03-03*

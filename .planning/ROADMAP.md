@@ -21,7 +21,7 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full v1.0 phase history.
 **Milestone Goal:** Prepare the codebase for open source publication — audit licenses, scrub private data, rename to Roost, write documentation, and publish to GitHub as captainarcher/roost.
 
 - [x] **Phase 14: License Audit & Repository Hygiene** - Ensure all dependencies are Apache 2.0-compatible and all private data is excluded from git
-- [ ] **Phase 15: Project Rename** - Rename all project identifiers to "Roost" across package configs, Docker, imports, docs, and directory
+- [x] **Phase 15: Project Rename** - Rename all project identifiers to "Roost" across package configs, Docker, imports, docs, and directory
 - [ ] **Phase 16: Documentation** - Create comprehensive open source documentation (README, CONTRIBUTING, architecture, API, deployment, CHANGELOG)
 - [ ] **Phase 17: GitHub Publication** - Create repository, push code, and verify GitHub detects license
 
@@ -60,7 +60,7 @@ Plans:
 Plans:
 - [x] 15-01-PLAN.md — Rename Python package, Docker Compose services, and backend identity strings
 - [x] 15-02-PLAN.md — Rebrand frontend (package name, page title, favicon, header, localStorage keys)
-- [ ] 15-03-PLAN.md — Update planning docs, verify clean codebase, rename directory
+- [x] 15-03-PLAN.md — Update planning docs, verify clean codebase, rename directory
 
 ### Phase 16: Documentation
 **Goal**: A developer or self-hoster can understand, set up, contribute to, and deploy Roost from the documentation alone
@@ -98,6 +98,6 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 14. License Audit & Repository Hygiene | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
-| 15. Project Rename | v1.1 | 2/3 | In progress | - |
+| 15. Project Rename | v1.1 | 3/3 | ✓ Complete | 2026-03-03 |
 | 16. Documentation | v1.1 | 0/TBD | Not started | - |
 | 17. GitHub Publication | v1.1 | 0/TBD | Not started | - |

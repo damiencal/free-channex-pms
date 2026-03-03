@@ -21,7 +21,7 @@
 - [x] **RNAM-04**: Frontend package.json name changed to `roost`
 - [x] **RNAM-05**: Docker image name uses `roost`
 - [x] **RNAM-06**: All documentation, comments, and strings updated to reference "Roost" — no old identity strings remain in tracked files
-- [ ] **RNAM-07**: Local directory named `roost`
+- [x] **RNAM-07**: Local directory named `roost`
 
 ### Documentation
 
@@ -72,7 +72,7 @@
 | RNAM-04 | Phase 15 | Complete |
 | RNAM-05 | Phase 15 | Complete |
 | RNAM-06 | Phase 15 | Complete |
-| RNAM-07 | Phase 15 | Pending |
+| RNAM-07 | Phase 15 | Complete |
 | DOCS-01 | Phase 16 | Pending |
 | DOCS-02 | Phase 16 | Pending |
 | DOCS-03 | Phase 16 | Pending |
