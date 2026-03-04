@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 17 of 17 (GitHub Publication)
-Plan: Not started
-Status: Ready to begin — Phase 16 complete, Phase 17 plans not yet created
-Last activity: 2026-03-03 — Phase 16 complete (all documentation written and verified)
+Plan: 1 of 2 complete
+Status: In progress — repository created, awaiting public flip
+Last activity: 2026-03-04 — Completed 17-01-PLAN.md (repository creation and metadata)
 
-Progress: [███████░░░] 75% (3/4 phases complete in v1.1)
+Progress: [████████░░] 87% (3.5/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,9 +27,9 @@ Progress: [███████░░░] 75% (3/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 11 (14-01 through 14-04, 15-01 through 15-03, 16-01 through 16-04)
+- Total plans completed: 12 (14-01 through 14-04, 15-01 through 15-03, 16-01 through 16-04, 17-01)
 - Total phases: 4 (Phases 14-17)
-- Phases complete: 3 (Phase 14, Phase 15, Phase 16)
+- Phases complete: 3 (Phase 14, Phase 15, Phase 16); Phase 17 in progress
 - Requirements: 27 (23 complete, 4 remaining)
 
 ## Accumulated Context
@@ -66,6 +66,8 @@ v1.1 decisions:
 - Automation pipeline documented as async-after-response pattern (BackgroundTasks fire after HTTP response returns)
 - Airbnb messaging documented as native_configured — platform delivers, Roost only logs and notifies operator
 - reconciliation/confirm body uses booking_id + bank_transaction_id (not match_id) — verified from MatchConfirmRequest schema
+- GitHub Licensee requires exact canonical text from choosealicense.com — non-canonical Apache 2.0 variants fail SPDX detection
+- Apache 2.0 copyright attribution belongs in NOTICE only — copyright header in LICENSE blocks GitHub Licensee fingerprinting
 
 ### Pending Todos
 
@@ -81,7 +83,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03
-Stopped at: Phase 16 complete — ready for Phase 17
+Last session: 2026-03-04
+Stopped at: Completed 17-01-PLAN.md — repository created and configured
 Resume file: None
-Next action: Begin Phase 17 (GitHub Publication) — discuss/plan phase
+Next action: Phase 17 Plan 02 — review rendering on GitHub, then flip to public
