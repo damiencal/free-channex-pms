@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** Automated end-to-end rental operations — from booking notification to accounting entry — with zero manual intervention after initial configuration
-**Current focus:** v1.1 Open Source Release — Phase 17: GitHub Publication
+**Current focus:** v1.1 Open Source Release — COMPLETE
 
 ## Current Position
 
 Phase: 17 of 17 (GitHub Publication)
-Plan: 1 of 2 complete
-Status: In progress — repository created, awaiting public flip
-Last activity: 2026-03-04 — Completed 17-01-PLAN.md (repository creation and metadata)
+Plan: 2 of 2 complete
+Status: COMPLETE — repository public, v1.0.0 release live
+Last activity: 2026-03-04 — Completed 17-02-PLAN.md (public flip and v1.0.0 release)
 
-Progress: [████████░░] 87% (3.5/4 phases complete in v1.1)
+Progress: [██████████] 100% (4/4 phases complete in v1.1)
 
 ## Performance Metrics
 
@@ -27,10 +27,10 @@ Progress: [████████░░] 87% (3.5/4 phases complete in v1.1)
 - Timeline: 5 days (2026-02-26 -> 2026-03-02)
 
 **v1.1 Milestone:**
-- Total plans completed: 12 (14-01 through 14-04, 15-01 through 15-03, 16-01 through 16-04, 17-01)
+- Total plans completed: 13 (14-01 through 14-04, 15-01 through 15-03, 16-01 through 16-04, 17-01 through 17-02)
 - Total phases: 4 (Phases 14-17)
-- Phases complete: 3 (Phase 14, Phase 15, Phase 16); Phase 17 in progress
-- Requirements: 27 (23 complete, 4 remaining)
+- Phases complete: 4 (Phase 14, Phase 15, Phase 16, Phase 17) — ALL COMPLETE
+- Requirements: 27 (27 complete, 0 remaining)
 
 ## Accumulated Context
 
@@ -68,6 +68,9 @@ v1.1 decisions:
 - reconciliation/confirm body uses booking_id + bank_transaction_id (not match_id) — verified from MatchConfirmRequest schema
 - GitHub Licensee requires exact canonical text from choosealicense.com — non-canonical Apache 2.0 variants fail SPDX detection
 - Apache 2.0 copyright attribution belongs in NOTICE only — copyright header in LICENSE blocks GitHub Licensee fingerprinting
+- v1.0.0 tag created separately from existing v1.0 — both coexist; v1.0.0 is the canonical SemVer public release tag
+- Release notes written inline (not --notes-from-tag) — v1.0 tag annotation contains internal planning details not suitable for public release notes
+- Screenshot links removed from README before public flip (de5c16e) — clean launch with no broken images
 
 ### Pending Todos
 
@@ -84,6 +87,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-04
-Stopped at: Completed 17-01-PLAN.md — repository created and configured
+Stopped at: Completed 17-02-PLAN.md — repository public, v1.0.0 release live
 Resume file: None
-Next action: Phase 17 Plan 02 — review rendering on GitHub, then flip to public
+Next action: None — v1.1 milestone complete. Roost is publicly available at https://github.com/captainarcher/roost
