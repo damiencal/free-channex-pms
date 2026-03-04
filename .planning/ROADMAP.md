@@ -3,7 +3,7 @@
 ## Milestones
 
 - v1.0 MVP - Phases 1-13 (shipped 2026-03-02)
-- **v1.1 Open Source Release** - Phases 14-17 (in progress)
+- **v1.1 Open Source Release** - Phases 14-17 (shipped 2026-03-04)
 
 ## Phases
 
@@ -16,14 +16,14 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full v1.0 phase history.
 
 </details>
 
-### v1.1 Open Source Release (In Progress)
+### v1.1 Open Source Release (SHIPPED 2026-03-04)
 
 **Milestone Goal:** Prepare the codebase for open source publication — audit licenses, scrub private data, rename to Roost, write documentation, and publish to GitHub as captainarcher/roost.
 
 - [x] **Phase 14: License Audit & Repository Hygiene** - Ensure all dependencies are Apache 2.0-compatible and all private data is excluded from git
 - [x] **Phase 15: Project Rename** - Rename all project identifiers to "Roost" across package configs, Docker, imports, docs, and directory
 - [x] **Phase 16: Documentation** - Create comprehensive open source documentation (README, CONTRIBUTING, architecture, API, deployment, CHANGELOG)
-- [ ] **Phase 17: GitHub Publication** - Create repository, push code, and verify GitHub detects license
+- [x] **Phase 17: GitHub Publication** - Create repository, push code, and verify GitHub detects license
 
 ## Phase Details
 
@@ -92,8 +92,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 17-01-PLAN.md — Create private repo, push history, configure metadata (topics, discussions, issues)
-- [ ] 17-02-PLAN.md — User review, flip to public, create v1.0.0 release, verify license detection
+- [x] 17-01-PLAN.md — Create private repo, push history, configure metadata (topics, discussions, issues)
+- [x] 17-02-PLAN.md — User review, flip to public, create v1.0.0 release, verify license detection
 
 ## Progress
 
@@ -104,4 +104,4 @@ Plans:
 | 14. License Audit & Repository Hygiene | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
 | 15. Project Rename | v1.1 | 3/3 | ✓ Complete | 2026-03-03 |
 | 16. Documentation | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
-| 17. GitHub Publication | v1.1 | 0/2 | Not started | - |
+| 17. GitHub Publication | v1.1 | 2/2 | ✓ Complete | 2026-03-04 |

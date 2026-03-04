@@ -42,10 +42,10 @@
 
 ### GitHub Publication
 
-- [ ] **GHUB-01**: GitHub repository created at captainarcher/roost
-- [ ] **GHUB-02**: Repository has description, topics (vacation-rental, property-management, self-hosted, docker, fastapi, react), and homepage
-- [ ] **GHUB-03**: Initial push includes all code, docs, and LICENSE
-- [ ] **GHUB-04**: GitHub repository has Apache 2.0 license detected by GitHub
+- [x] **GHUB-01**: GitHub repository created at captainarcher/roost
+- [x] **GHUB-02**: Repository has description, topics (vacation-rental, property-management, self-hosted, docker, fastapi, react), and homepage
+- [x] **GHUB-03**: Initial push includes all code, docs, and LICENSE
+- [x] **GHUB-04**: GitHub repository has Apache 2.0 license detected by GitHub
 
 ## Out of Scope
 
@@ -84,18 +84,18 @@
 | HYGN-03 | Phase 14 | Complete |
 | HYGN-04 | Phase 14 | Complete |
 | HYGN-05 | Phase 14 | Complete |
-| GHUB-01 | Phase 17 | Pending |
-| GHUB-02 | Phase 17 | Pending |
-| GHUB-03 | Phase 17 | Pending |
-| GHUB-04 | Phase 17 | Pending |
+| GHUB-01 | Phase 17 | Complete |
+| GHUB-02 | Phase 17 | Complete |
+| GHUB-03 | Phase 17 | Complete |
+| GHUB-04 | Phase 17 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 27 total
-- Complete: 23
-- Pending: 4 (GHUB-01 through GHUB-04)
+- Complete: 27
+- Pending: 0
 - Mapped to phases: 27
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-02*
-*Traceability updated: 2026-03-03*
+*Traceability updated: 2026-03-04*
