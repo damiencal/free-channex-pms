@@ -23,13 +23,7 @@ Roost automates end-to-end vacation rental operations — from booking notificat
 
 ## Screenshots
 
-Screenshots coming soon. The three primary views are:
-
-![Dashboard — key metrics and occupancy overview](docs/screenshots/dashboard.png)
-
-![Booking detail — guest info, compliance status, communication log](docs/screenshots/booking-detail.png)
-
-![Accounting — journal entries, balances, and financial reports](docs/screenshots/accounting.png)
+*Screenshots coming soon — the three primary views are the dashboard (key metrics and occupancy overview), booking detail (guest info, compliance status, communication log), and accounting (journal entries, balances, and financial reports).*
 
 ## Quick Start
 
