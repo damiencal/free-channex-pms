@@ -89,10 +89,11 @@ Plans:
   2. Repository has a description, relevant topics (vacation-rental, property-management, self-hosted, docker, fastapi, react), and homepage set
   3. Initial push includes all code, documentation, and LICENSE file
   4. GitHub's license detection shows Apache 2.0 on the repository page
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 17-01: [TBD]
+- [ ] 17-01-PLAN.md — Create private repo, push history, configure metadata (topics, discussions, issues)
+- [ ] 17-02-PLAN.md — User review, flip to public, create v1.0.0 release, verify license detection
 
 ## Progress
 
@@ -103,4 +104,4 @@ Plans:
 | 14. License Audit & Repository Hygiene | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
 | 15. Project Rename | v1.1 | 3/3 | ✓ Complete | 2026-03-03 |
 | 16. Documentation | v1.1 | 4/4 | ✓ Complete | 2026-03-03 |
-| 17. GitHub Publication | v1.1 | 0/TBD | Not started | - |
+| 17. GitHub Publication | v1.1 | 0/2 | Not started | - |
