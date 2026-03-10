@@ -26,6 +26,7 @@ from app.config import get_config
 from app.db import get_db
 from app.ingestion import normalizer
 from app.ingestion.adapters import airbnb as airbnb_adapter
+from app.ingestion.adapters import expedia as expedia_adapter
 from app.ingestion.adapters import mercury as mercury_adapter
 from app.ingestion.adapters import vrbo as vrbo_adapter
 from app.ingestion.schemas import RVshareEntryRequest
@@ -225,6 +226,53 @@ async def upload_vrbo_csv(
     if welcome_async_ids:
         background_tasks.add_task(
             _fire_background_welcome_messages, welcome_async_ids, "vrbo", db
+        )
+
+    # Revenue recognition: fire unconditionally for all inserted bookings
+    if inserted_db_ids:
+        background_tasks.add_task(_fire_background_revenue_recognition, inserted_db_ids, db)
+
+    return result
+
+
+@router.post("/expedia/upload")
+async def upload_expedia_csv(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+) -> dict:
+    """Upload an Expedia Reservations CSV.
+
+    Parses the CSV, upserts bookings, archives the raw file, and records an
+    ImportRun. Fires background resort form submission and revenue recognition
+    tasks for newly inserted bookings.
+
+    Returns:
+        Dict with platform, filename, inserted, updated, skipped counts.
+
+    Raises:
+        HTTPException 422: On wrong file extension, header mismatch, or row errors.
+    """
+    _require_csv_extension(file.filename)
+    raw_bytes = await file.read()
+    try:
+        result = normalizer.ingest_csv(raw_bytes, file.filename, "expedia", expedia_adapter, db)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    inserted_db_ids = result.get("inserted_db_ids", [])
+
+    # Auto-submit: fire background tasks for new bookings past preview threshold
+    if inserted_db_ids:
+        config = get_config()
+        if should_auto_submit(db, config.auto_submit_threshold):
+            background_tasks.add_task(_fire_background_submissions, inserted_db_ids, db)
+
+    # Welcome messages
+    welcome_async_ids = result.get("welcome_async_ids", [])
+    if welcome_async_ids:
+        background_tasks.add_task(
+            _fire_background_welcome_messages, welcome_async_ids, "expedia", db
         )
 
     # Revenue recognition: fire unconditionally for all inserted bookings

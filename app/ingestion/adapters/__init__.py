@@ -14,5 +14,6 @@ Each adapter exposes:
 Available adapters:
     airbnb  — Airbnb Transaction History CSV        -> list[BookingRecord]
     vrbo    — VRBO Payments Report CSV              -> list[BookingRecord]
+    expedia — Expedia Reservations CSV              -> list[BookingRecord]
     mercury — Mercury bank transaction CSV          -> list[BankTransactionRecord]
 """

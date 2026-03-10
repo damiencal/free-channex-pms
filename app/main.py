@@ -1,52 +1,4 @@
-"""
-FastAPI application entry point.
-
-Startup sequence (via lifespan):
-  1. Load and validate config — FAIL-FAST (SystemExit on any invalid config)
-  2. Validate templates — FAIL-FAST (catches variable typos before accepting requests)
-  3. Verify database connection — FAIL-FAST (can't operate without DB)
-  3b. Sync properties from config YAML → database (upsert)
-  4. Check Ollama connectivity — NON-FATAL (LLM features disabled if unavailable)
-  5. Start compliance scheduler (daily urgency check)
-  6. Rebuild pre-arrival message scheduler jobs from database
-
-Run with:
-  uvicorn app.main:app --host 0.0.0.0 --port 8000
-"""
-
-import os
-from contextlib import asynccontextmanager
-
-import httpx
-import structlog
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import text
-from starlette.staticfiles import StaticFiles as StarletteStaticFiles
-
-from app.api.accounting import router as accounting_router
-from app.api.communication import router as communication_router
-from app.api.compliance import router as compliance_router
-from app.api.dashboard import router as dashboard_router
-from app.api.health import router as health_router
-from app.api.ingestion import router as ingestion_router
-from app.api.query import router as query_router
-from app.api.reports import router as reports_router
-from app.communication.scheduler import rebuild_pre_arrival_jobs
-from app.compliance.urgency import run_urgency_check
-from app.config import load_app_config
-from app.db import SessionLocal, engine
-from app.logging import configure_logging
-from app.models.property import Property
-from app.templates import validate_all_templates
-
-configure_logging()
-log = structlog.get_logger()
-
-scheduler = AsyncIOScheduler()
-
+"""\nFastAPI application entry point.\n\nStartup sequence (via lifespan):\n  1. Load and validate config — FAIL-FAST (SystemExit on any invalid config)\n  2. Validate templates — FAIL-FAST (catches variable typos before accepting requests)\n  3. Verify database connection — FAIL-FAST (can't operate without DB)\n  3b. Sync properties from config YAML → database (upsert)\n  4. Check Ollama connectivity — NON-FATAL (LLM features disabled if unavailable)\n  5. Start compliance scheduler (daily urgency check)\n  6. Rebuild pre-arrival message scheduler jobs from database\n  7. Register Channex sync jobs and webhook (if CHANNEX_API_KEY is set)\n\nRun with:\n  uvicorn app.main:app --host 0.0.0.0 --port 8000\n"""\n\nimport os\nfrom contextlib import asynccontextmanager\n\nimport httpx\nimport structlog\nfrom apscheduler.schedulers.asyncio import AsyncIOScheduler\nfrom apscheduler.triggers.cron import CronTrigger\nfrom apscheduler.triggers.interval import IntervalTrigger\nfrom fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom sqlalchemy import text\nfrom starlette.staticfiles import StaticFiles as StarletteStaticFiles\n\nfrom app.api.accounting import router as accounting_router\nfrom app.api.channex import router as channex_router\nfrom app.api.communication import router as communication_router\nfrom app.api.compliance import router as compliance_router\nfrom app.api.dashboard import router as dashboard_router\nfrom app.api.health import router as health_router\nfrom app.api.ingestion import router as ingestion_router\nfrom app.api.query import router as query_router\nfrom app.api.reports import router as reports_router\nfrom app.channex.sync import sync_messages_job, sync_reservations_job, sync_reviews_job\nfrom app.communication.scheduler import rebuild_pre_arrival_jobs\nfrom app.compliance.urgency import run_urgency_check\nfrom app.config import load_app_config\nfrom app.db import SessionLocal, engine\nfrom app.logging import configure_logging\nfrom app.models.property import Property\nfrom app.templates import validate_all_templates\n\nconfigure_logging()\nlog = structlog.get_logger()\n\nscheduler = AsyncIOScheduler()\n
 
 class SPAStaticFiles(StarletteStaticFiles):
     """Serve index.html for any non-file path (SPA client-side routing fallback)."""
@@ -126,6 +78,36 @@ async def lifespan(app: FastAPI):
     rebuilt_count = await rebuild_pre_arrival_jobs()
     log.info("Pre-arrival scheduler jobs rebuilt", rebuilt_count=rebuilt_count)
 
+    # 7. Channex.io integration (NON-FATAL — system works without it)
+    if config.channex_api_key:
+        try:
+            scheduler.add_job(
+                sync_reservations_job,
+                trigger=IntervalTrigger(minutes=config.channex_sync_interval_minutes),
+                id="channex_reservations_sync",
+                replace_existing=True,
+            )
+            scheduler.add_job(
+                sync_messages_job,
+                trigger=IntervalTrigger(minutes=30),
+                id="channex_messages_sync",
+                replace_existing=True,
+            )
+            scheduler.add_job(
+                sync_reviews_job,
+                trigger=IntervalTrigger(minutes=60),
+                id="channex_reviews_sync",
+                replace_existing=True,
+            )
+            log.info(
+                "Channex sync jobs scheduled",
+                reservations_interval_minutes=config.channex_sync_interval_minutes,
+            )
+        except Exception as exc:
+            log.warning("Channex scheduler setup failed", error=str(exc))
+    else:
+        log.info("Channex integration disabled — CHANNEX_API_KEY not set")
+
     log.info("Startup complete — ready to accept requests")
 
     yield  # App is running
@@ -158,6 +140,7 @@ app.include_router(compliance_router)
 app.include_router(communication_router)
 app.include_router(dashboard_router)
 app.include_router(query_router)
+app.include_router(channex_router)
 
 # SPA static files — MUST be last (catches all unmatched routes)
 # Guarded: app starts without frontend build present (backend-only dev)

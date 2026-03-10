@@ -3,6 +3,8 @@ import { ErrorAlert } from '@/components/shared/ErrorAlert'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { ActionsList } from './ActionsList'
 import { DataImportSection } from './DataImportSection'
+import { ChannexMessagesPanel } from './ChannexMessagesPanel'
+import { ChannexReviewsPanel } from './ChannexReviewsPanel'
 import { useActions } from '@/hooks/useActions'
 
 /**
@@ -19,6 +21,12 @@ export function ActionsTab() {
     <div className="space-y-6">
       {/* Data import is always visible regardless of actions loading state */}
       <DataImportSection />
+
+      {/* Channex guest messages (real-time from Channex.io) */}
+      <ChannexMessagesPanel />
+
+      {/* Channex guest reviews awaiting response */}
+      <ChannexReviewsPanel />
 
       {/* Existing actions section */}
       {isLoading ? (

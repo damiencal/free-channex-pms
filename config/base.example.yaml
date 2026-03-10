@@ -14,3 +14,12 @@ pdf_template_path: "pdf_mappings/sun_retreats_booking.pdf"
 pdf_mapping_path: "pdf_mappings/sun_retreats_booking.json"
 auto_submit_threshold: 3
 resort_contact_name: "CHANGE_ME"
+
+# Channex.io PMS integration
+# Secrets (channex_api_key, channex_property_group_id, channex_webhook_secret) go in .env
+# CHANNEX_API_KEY=your-api-key-here
+# CHANNEX_PROPERTY_GROUP_ID=your-group-id-here
+# CHANNEX_WEBHOOK_SECRET=your-webhook-secret-here
+channex_base_url: "https://app.channex.io/api/v1"
+channex_rate_limit: 10
+channex_sync_interval_minutes: 15

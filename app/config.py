@@ -105,6 +105,13 @@ class PropertyConfig(BaseModel):
     Accessed in templates as {{ custom.pool_code }}, {{ custom.trash_day }}.
     """
 
+    channex_property_id: str = ""
+    """Channex property UUID for this property, used to link Channex sync to local property.
+    Set in the per-property YAML file (e.g. config/my-property.yaml).
+    Example: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    Leave empty to rely on display_name matching during the /api/channex/properties/sync call.
+    """
+
 
 class AppConfig(BaseSettings):
     """Application-wide configuration loaded from .env + config/base.yaml.
@@ -195,6 +202,25 @@ class AppConfig(BaseSettings):
 
     resort_contact_name: str = ""
     """Resort contact name used in email subject/body. Set in base.yaml."""
+
+    # --- Channex.io integration (from .env + base.yaml) ---
+    channex_api_key: str = ""
+    """Channex.io API key. Set CHANNEX_API_KEY in .env."""
+
+    channex_base_url: str = "https://app.channex.io/api/v1"
+    """Channex API base URL. Override in base.yaml if needed."""
+
+    channex_property_group_id: str = ""
+    """Channex property group ID. Set CHANNEX_PROPERTY_GROUP_ID in .env."""
+
+    channex_webhook_secret: str = ""
+    """HMAC secret for webhook signature verification. Set CHANNEX_WEBHOOK_SECRET in .env."""
+
+    channex_rate_limit: int = 10
+    """Maximum concurrent Channex API requests (semaphore size). Default: 10."""
+
+    channex_sync_interval_minutes: int = 15
+    """How often (minutes) to poll Channex for new/updated bookings. Default: 15."""
 
     # --- Populated by load_app_config(), not from YAML directly ---
     properties: list[PropertyConfig] = []
