@@ -1,0 +1,39 @@
+name: roost-dev
+
+services:
+  roost-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rental_management
+      POSTGRES_USER: rental
+      POSTGRES_PASSWORD: changeme
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rental -d rental_management"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    env_file:
+      - ../.env
+    # Override the DATABASE_URL host to use the compose service name
+    environment:
+      DATABASE_URL: postgresql+psycopg://rental:changeme@roost-db:5432/rental_management
+    command: sleep infinity
+    depends_on:
+      roost-db:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  db_data:
