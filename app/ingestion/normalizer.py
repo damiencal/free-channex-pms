@@ -22,11 +22,20 @@ import structlog
 from sqlalchemy import func, literal_column, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from app.communication.scheduler import compute_pre_arrival_send_time, schedule_pre_arrival_job
+from app.communication.scheduler import (
+    compute_pre_arrival_send_time,
+    schedule_pre_arrival_job,
+)
 from app.config import get_config
-from app.ingestion.schemas import BankTransactionRecord, BookingRecord, RVshareEntryRequest
+from app.ingestion.schemas import (
+    BankTransactionRecord,
+    BookingRecord,
+    RVshareEntryRequest,
+)
 from app.models.bank_transaction import BankTransaction
 from app.models.booking import Booking
+from app.models.cleaning_task import CleaningTask
+from app.communication.triggered import schedule_triggered_messages_for_booking
 from app.models.communication_log import CommunicationLog
 from app.models.import_run import ImportRun
 from app.models.property import Property
@@ -42,7 +51,10 @@ log = structlog.get_logger()
 # Private helpers
 # ---------------------------------------------------------------------------
 
-def archive_file(raw_bytes: bytes, filename: str, platform: str, archive_dir: str) -> Path:
+
+def archive_file(
+    raw_bytes: bytes, filename: str, platform: str, archive_dir: str
+) -> Path:
     """Archive raw CSV bytes to a timestamped path.
 
     Writes to ``{archive_dir}/{platform}/YYYY-MM-DD_HH-MM-SS_{filename}``.
@@ -144,9 +156,7 @@ def _create_resort_submissions(
     for booking_id, platform_booking_id in booking_rows:
         # Check if submission already exists (idempotent)
         existing = db.execute(
-            select(ResortSubmission.id).where(
-                ResortSubmission.booking_id == booking_id
-            )
+            select(ResortSubmission.id).where(ResortSubmission.booking_id == booking_id)
         ).scalar_one_or_none()
 
         if existing is not None:
@@ -201,13 +211,17 @@ def _create_communication_logs(
         )
     ).all()
 
-    welcome_needs_async: list[int] = []  # VRBO/RVshare booking IDs needing welcome notification
+    welcome_needs_async: list[
+        int
+    ] = []  # VRBO/RVshare booking IDs needing welcome notification
     created_count = 0
 
     for booking_id, check_in_date, platform_booking_id in booking_rows:
         # Check if logs already exist (idempotent)
         existing_count = db.execute(
-            select(func.count()).select_from(CommunicationLog).where(
+            select(func.count())
+            .select_from(CommunicationLog)
+            .where(
                 CommunicationLog.booking_id == booking_id,
             )
         ).scalar_one()
@@ -218,12 +232,14 @@ def _create_communication_logs(
         if platform == "airbnb":
             # Airbnb welcome: system tracks it as native_configured.
             # Airbnb's own scheduled messaging handles delivery automatically.
-            db.add(CommunicationLog(
-                booking_id=booking_id,
-                message_type="welcome",
-                platform=platform,
-                status="native_configured",
-            ))
+            db.add(
+                CommunicationLog(
+                    booking_id=booking_id,
+                    message_type="welcome",
+                    platform=platform,
+                    status="native_configured",
+                )
+            )
         else:
             # VRBO/RVshare: welcome log created by prepare_welcome_message()
             # in the API layer (async — also sends operator notification email).
@@ -232,13 +248,15 @@ def _create_communication_logs(
 
         # Pre-arrival message for all platforms
         scheduled_for = compute_pre_arrival_send_time(check_in_date)
-        db.add(CommunicationLog(
-            booking_id=booking_id,
-            message_type="pre_arrival",
-            platform=platform,
-            status="pending",
-            scheduled_for=scheduled_for,
-        ))
+        db.add(
+            CommunicationLog(
+                booking_id=booking_id,
+                message_type="pre_arrival",
+                platform=platform,
+                status="pending",
+                scheduled_for=scheduled_for,
+            )
+        )
 
         created_count += 1
 
@@ -257,9 +275,63 @@ def _create_communication_logs(
     return welcome_needs_async
 
 
+def _create_cleaning_tasks(
+    inserted_booking_ids: list[int],
+    db: "Session",
+) -> None:
+    """Auto-create pending cleaning tasks for newly inserted bookings.
+
+    One task per booking, scheduled for the checkout date. Idempotent —
+    skips if a task already exists for the booking.
+
+    Args:
+        inserted_booking_ids: List of local Booking.id values (not platform IDs).
+        db: Active SQLAlchemy session.
+    """
+    if not inserted_booking_ids:
+        return
+
+    booking_rows = db.execute(
+        select(
+            Booking.id,
+            Booking.property_id,
+            Booking.check_out_date,
+        ).where(Booking.id.in_(inserted_booking_ids))
+    ).all()
+
+    existing_booking_ids = {
+        row.booking_id
+        for row in db.execute(
+            select(CleaningTask.booking_id).where(
+                CleaningTask.booking_id.in_(inserted_booking_ids),
+                CleaningTask.booking_id.is_not(None),
+            )
+        ).all()
+    }
+
+    created = 0
+    for booking_id, property_id, check_out_date in booking_rows:
+        if booking_id in existing_booking_ids:
+            continue
+        db.add(
+            CleaningTask(
+                booking_id=booking_id,
+                property_id=property_id,
+                scheduled_date=check_out_date,
+                status="pending",
+            )
+        )
+        created += 1
+
+    if created > 0:
+        db.commit()
+        log.info("cleaning_tasks_auto_created", count=created)
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
 
 def ingest_csv(
     raw_bytes: bytes,
@@ -384,6 +456,12 @@ def ingest_csv(
             )
         ).all()
         inserted_db_ids = [row.id for row in rows]
+
+    # 6d. Auto-create cleaning tasks + schedule triggered messages for new bookings
+    if inserted_db_ids:
+        _create_cleaning_tasks(inserted_db_ids, db)
+        for bid in inserted_db_ids:
+            schedule_triggered_messages_for_booking(bid, db)
 
     # 7. Record ImportRun
     run = ImportRun(
@@ -590,6 +668,12 @@ def create_manual_booking(entry: RVshareEntryRequest, db: "Session") -> dict:
             )
         ).all()
         inserted_db_ids = [row.id for row in rows]
+
+    # Auto-create cleaning tasks + schedule triggered messages for new bookings
+    if inserted_db_ids:
+        _create_cleaning_tasks(inserted_db_ids, db)
+        for bid in inserted_db_ids:
+            schedule_triggered_messages_for_booking(bid, db)
 
     # Record ImportRun — archive_path is "N/A" for manual entries (no file)
     run = ImportRun(

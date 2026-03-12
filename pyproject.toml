@@ -24,6 +24,9 @@ dependencies = [
     "ollama",
     "sse-starlette",
     "sqlglot",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "python-dateutil",
 ]
 
 [project.scripts]

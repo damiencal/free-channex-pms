@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
+import { LoginPage } from '@/components/auth/LoginPage'
+import { useAuth } from '@/store/useAuth'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -11,11 +13,17 @@ const queryClient = new QueryClient({
   },
 })
 
+function AuthGate() {
+  const { token } = useAuth()
+  if (!token) return <LoginPage />
+  return <AppShell />
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AppShell />
+        <AuthGate />
       </BrowserRouter>
     </QueryClientProvider>
   )

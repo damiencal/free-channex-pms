@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Moon, Sun } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
+import { Moon, Sun, Menu } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Select,
   SelectContent,
@@ -11,6 +19,7 @@ import {
 } from '@/components/ui/select'
 import { apiFetch } from '@/api/client'
 import { usePropertyStore } from '@/store/usePropertyStore'
+import { useAuth } from '@/store/useAuth'
 
 interface Property {
   id: number
@@ -41,6 +50,8 @@ function useDarkMode() {
 export function Header() {
   const { isDark, toggle } = useDarkMode()
   const { selectedPropertyId, setSelectedPropertyId } = usePropertyStore()
+  const { logout } = useAuth()
+  const [, setSearchParams] = useSearchParams()
 
   const { data: properties = [] } = useQuery<Property[]>({
     queryKey: ['dashboard', 'properties'],
@@ -78,6 +89,29 @@ export function Header() {
         <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle dark mode" className="shrink-0">
           {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Menu" className="shrink-0">
+              <Menu className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: 'properties' })}>Properties</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: 'automation' })}>Automation</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: 'bookingsite' })}>Booking Site</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: 'metrics' })}>Metrics</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: 'accounts' })}>Connected Accounts</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSearchParams({ tab: 'settings' })}>Settings</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={logout}
+            >
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )

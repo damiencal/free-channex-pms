@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Loader2, Plus, ChevronUp } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
@@ -60,15 +60,18 @@ export function RVshareEntryForm() {
     queryKey: ['dashboard', 'properties'],
   })
 
-  // Pre-select property matching selectedPropertyId from store
-  useEffect(() => {
-    if (properties.length > 0 && selectedPropertyId !== null) {
+  // Pre-select property matching selectedPropertyId from store.
+  // Adjusted during rendering (not in an effect) to avoid cascading renders.
+  const [syncedForId, setSyncedForId] = useState<number | null>(-1)
+  if (properties.length > 0 && selectedPropertyId !== syncedForId) {
+    setSyncedForId(selectedPropertyId)
+    if (selectedPropertyId !== null) {
       const match = properties.find((p) => p.id === selectedPropertyId)
       if (match) {
         setFields((prev) => ({ ...prev, property_slug: match.slug }))
       }
     }
-  }, [properties, selectedPropertyId])
+  }
 
   // --- Validation helpers ---
 

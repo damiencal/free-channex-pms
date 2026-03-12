@@ -181,22 +181,26 @@ def _extract_booking_fields(channex_booking: dict) -> dict:
         or "0"
     )
 
-    # Guest name from nested guest dict or flat fields
-    guest = channex_booking.get("guest") or {}
+    # Guest name from nested customer/guest dict or flat fields
+    customer = channex_booking.get("customer") or channex_booking.get("guest") or {}
     first_name = (
-        guest.get("first_name")
+        customer.get("name")  # Channex uses "name" for first name
+        or customer.get("first_name")
         or channex_booking.get("guest_first_name")
         or ""
     )
     last_name = (
-        guest.get("last_name")
+        customer.get("surname")  # Channex uses "surname" for last name
+        or customer.get("last_name")
         or channex_booking.get("guest_last_name")
         or ""
     )
     guest_name = f"{first_name} {last_name}".strip() or "Unknown"
 
     channex_property_id = str(
-        channex_booking.get("property_id") or channex_booking.get("property", {}).get("id") or ""
+        channex_booking.get("property_id")
+        or channex_booking.get("property", {}).get("id")
+        or ""
     )
 
     return {
@@ -238,13 +242,25 @@ def sync_booking_to_db(
 
     local_property_id = resolve_local_property_id(db, fields["channex_property_id"])
 
+    if local_property_id is None:
+        log.debug(
+            "channex_booking_skipped_no_property",
+            booking_id=booking_id,
+            channex_property_id=fields["channex_property_id"],
+        )
+        return {
+            "action": "skipped",
+            "id": booking_id,
+            "reason": "channex property not linked to a local property",
+        }
+
     # Build the upsert statement (PostgreSQL ON CONFLICT DO UPDATE)
     stmt = (
         pg_insert(Booking)
         .values(
             platform=fields["platform"],
             platform_booking_id=booking_id,
-            property_id=local_property_id or 0,  # 0 is a sentinel — FK will fail if property not seeded
+            property_id=local_property_id,  # guaranteed non-None above
             guest_name=fields["guest_name"],
             check_in_date=fields["check_in_date"],
             check_out_date=fields["check_out_date"],
@@ -260,7 +276,7 @@ def sync_booking_to_db(
                 "check_in_date": fields["check_in_date"],
                 "check_out_date": fields["check_out_date"],
                 "net_amount": fields["net_amount"],
-                "property_id": local_property_id or 0,
+                "property_id": local_property_id,
                 "raw_platform_data": channex_booking,
                 "updated_at": datetime.now(timezone.utc),
             },

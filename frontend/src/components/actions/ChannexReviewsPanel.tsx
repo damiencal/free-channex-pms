@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Sparkles } from 'lucide-react'
 import { fetchChannexReviews, respondToChannexReview, type ChannexReview } from '@/api/channex'
+import { apiFetch } from '@/api/client'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
@@ -34,6 +36,17 @@ function ReviewCard({ review, onResponded }: ReviewCardProps) {
       setShowForm(false)
       void queryClient.invalidateQueries({ queryKey: ['channex', 'reviews'] })
       onResponded()
+    },
+  })
+
+  const aiMutation = useMutation({
+    mutationFn: () =>
+      apiFetch<{ suggestion: string }>(`/channex/reviews/${review.channex_review_id}/ai-suggest`, {
+        method: 'POST',
+      }),
+    onSuccess: (data) => {
+      setResponseText(data.suggestion)
+      setShowForm(true)
     },
   })
 
@@ -72,13 +85,25 @@ function ReviewCard({ review, onResponded }: ReviewCardProps) {
       {review.status === 'new' && (
         <div className="pt-1">
           {!showForm ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowForm(true)}
-            >
-              Write response
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowForm(true)}
+              >
+                Write response
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => aiMutation.mutate()}
+                disabled={aiMutation.isPending}
+                className="gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                {aiMutation.isPending ? 'Thinking…' : 'AI Draft'}
+              </Button>
+            </div>
           ) : (
             <div className="space-y-2">
               <Textarea

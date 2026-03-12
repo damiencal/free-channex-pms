@@ -42,7 +42,11 @@ from app.channex.calendar import (
     update_rates,
 )
 from app.channex.client import ChannexClient, get_channex_client
-from app.channex.exceptions import ChannexAPIError, ChannexAuthError, ChannexWebhookSignatureError
+from app.channex.exceptions import (
+    ChannexAPIError,
+    ChannexAuthError,
+    ChannexWebhookSignatureError,
+)
 from app.channex.messaging import list_messages, send_message, sync_all_messages
 from app.channex.properties import list_properties, sync_properties
 from app.channex.reservations import list_bookings, sync_all_reservations
@@ -52,8 +56,10 @@ from app.channex.webhooks import process_webhook
 from app.config import get_config
 from app.db import get_db
 from app.models.channex_message import ChannexMessage
+from app.models.channex_property import ChannexProperty
 from app.models.channex_review import ChannexReview
 from app.models.channex_webhook_event import ChannexWebhookEvent
+from app.models.property import Property
 
 log = structlog.get_logger()
 router = APIRouter(prefix="/api/channex", tags=["channex"])
@@ -150,7 +156,8 @@ async def get_channex_properties(
 ) -> list[dict]:
     """List all properties from the Channex API."""
     try:
-        return await list_properties(client)
+        async with client:
+            return await list_properties(client)
     except ChannexAPIError as exc:
         _handle_channex_error(exc)
         return []  # unreachable
@@ -173,6 +180,89 @@ async def sync_channex_properties(
         return {}
 
 
+@router.get("/properties/local")
+def get_local_channex_properties(
+    db: Session = Depends(get_db),
+) -> list[dict]:
+    """List locally-synced Channex properties with their mapping to local Property rows.
+
+    Returns each channex_properties row joined with the linked local property name/slug.
+    Does NOT call the live Channex API — reads from the local DB only.
+    """
+    rows = (
+        db.query(ChannexProperty).order_by(ChannexProperty.channex_property_name).all()
+    )
+    local_props = {p.id: p for p in db.query(Property).all()}
+    result = []
+    for row in rows:
+        local = local_props.get(row.property_id) if row.property_id else None
+        result.append(
+            {
+                "id": row.id,
+                "channex_property_id": row.channex_property_id,
+                "channex_property_name": row.channex_property_name,
+                "channex_group_id": row.channex_group_id,
+                "property_id": row.property_id,
+                "property_slug": local.slug if local else None,
+                "property_display_name": local.display_name if local else None,
+                "synced_at": row.synced_at.isoformat() if row.synced_at else None,
+            }
+        )
+    return result
+
+
+class LinkPropertyRequest(BaseModel):
+    property_id: int | None
+
+
+@router.patch("/properties/{channex_property_id}/link")
+def link_channex_property(
+    channex_property_id: str,
+    body: LinkPropertyRequest,
+    db: Session = Depends(get_db),
+) -> dict:
+    """Manually link (or unlink) a Channex property to a local Property row.
+
+    Pass ``property_id: null`` to clear the mapping.
+    """
+    row = (
+        db.query(ChannexProperty)
+        .filter_by(channex_property_id=channex_property_id)
+        .first()
+    )
+    if not row:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Channex property '{channex_property_id}' not found in local DB. Run /properties/sync first.",
+        )
+
+    if body.property_id is not None:
+        local = db.query(Property).filter_by(id=body.property_id).first()
+        if not local:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Local property id={body.property_id} not found.",
+            )
+        row.property_id = body.property_id
+    else:
+        row.property_id = None
+
+    db.commit()
+    db.refresh(row)
+    local = (
+        db.query(Property).filter_by(id=row.property_id).first()
+        if row.property_id
+        else None
+    )
+    return {
+        "channex_property_id": row.channex_property_id,
+        "channex_property_name": row.channex_property_name,
+        "property_id": row.property_id,
+        "property_slug": local.slug if local else None,
+        "property_display_name": local.display_name if local else None,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Calendar (availability + rates)
 # ---------------------------------------------------------------------------
@@ -193,7 +283,7 @@ async def get_channex_calendar(
     """
     try:
         async with client:
-            avail, rate_plans, room_types = await _fetch_calendar_data(
+            avail, rate_plans, room_types, rates = await _fetch_calendar_data(
                 client, channex_property_id, date_from, date_to
             )
         return {
@@ -203,6 +293,7 @@ async def get_channex_calendar(
             "availability": avail,
             "rate_plans": rate_plans,
             "room_types": room_types,
+            "rates": rates,
         }
     except ChannexAPIError as exc:
         _handle_channex_error(exc)
@@ -214,11 +305,57 @@ async def _fetch_calendar_data(
     channex_property_id: str,
     date_from: date,
     date_to: date,
-) -> tuple[dict, list, list]:
-    avail = await get_availability(client, channex_property_id, date_from, date_to)
-    rate_plans = await get_rate_plans(client, channex_property_id)
-    room_types = await get_room_types(client, channex_property_id)
-    return avail, rate_plans, room_types
+) -> tuple[dict, list, list, dict]:
+    """Fetch availability, rate plan metadata, room types, and per-date rates.
+
+    Each sub-request is guarded individually so a missing availability or rates
+    configuration on the Channex side doesn't prevent the rest from loading.
+    """
+    avail: dict = {}
+    rates: dict = {}
+    rate_plans: list = []
+    room_types: list = []
+
+    try:
+        avail = (
+            await get_availability(client, channex_property_id, date_from, date_to)
+            or {}
+        )
+    except ChannexAPIError as exc:
+        log.warning(
+            "channex_availability_fetch_failed",
+            property_id=channex_property_id,
+            error=str(exc),
+        )
+
+    try:
+        rates = await get_rates(client, channex_property_id, date_from, date_to) or {}
+    except ChannexAPIError as exc:
+        log.warning(
+            "channex_rates_fetch_failed",
+            property_id=channex_property_id,
+            error=str(exc),
+        )
+
+    try:
+        rate_plans = await get_rate_plans(client, channex_property_id) or []
+    except ChannexAPIError as exc:
+        log.warning(
+            "channex_rate_plans_fetch_failed",
+            property_id=channex_property_id,
+            error=str(exc),
+        )
+
+    try:
+        room_types = await get_room_types(client, channex_property_id) or []
+    except ChannexAPIError as exc:
+        log.warning(
+            "channex_room_types_fetch_failed",
+            property_id=channex_property_id,
+            error=str(exc),
+        )
+
+    return avail, rate_plans, room_types, rates
 
 
 @router.put("/calendar/{channex_property_id}")
@@ -395,7 +532,9 @@ async def send_channex_message(
     # Persist outbound message locally
     now = datetime.utcnow().replace(tzinfo=None)
     if isinstance(result, dict):
-        msg_id = str(result.get("id") or f"outbound-{body.channex_booking_id}-{now.timestamp()}")
+        msg_id = str(
+            result.get("id") or f"outbound-{body.channex_booking_id}-{now.timestamp()}"
+        )
     else:
         msg_id = f"outbound-{body.channex_booking_id}-{now.timestamp()}"
 
@@ -493,22 +632,83 @@ async def respond_channex_review(
     Updates the local ``channex_reviews`` row with the response text and
     sets ``status = 'responded'``.
     """
-    review = db.query(ChannexReview).filter_by(channex_review_id=channex_review_id).first()
+    review = (
+        db.query(ChannexReview).filter_by(channex_review_id=channex_review_id).first()
+    )
     if not review:
         raise HTTPException(
             status_code=404, detail=f"Review {channex_review_id} not found"
         )
     if review.status == "responded":
-        raise HTTPException(status_code=409, detail="This review has already been responded to")
+        raise HTTPException(
+            status_code=409, detail="This review has already been responded to"
+        )
 
     try:
         async with client:
-            result = await respond_to_review(client, db, channex_review_id, body.response_text)
+            result = await respond_to_review(
+                client, db, channex_review_id, body.response_text
+            )
     except ChannexAPIError as exc:
         _handle_channex_error(exc)
         return {}
 
     return result if isinstance(result, dict) else {"status": "responded"}
+
+
+@router.post("/reviews/{channex_review_id}/ai-suggest")
+async def ai_suggest_review_response(
+    channex_review_id: str,
+    db: Session = Depends(get_db),
+) -> dict:
+    """Generate an AI-suggested response for a guest review using Ollama.
+
+    Returns ``{"suggestion": "..."}`` or raises 503 if Ollama is unavailable.
+    """
+    review = (
+        db.query(ChannexReview).filter_by(channex_review_id=channex_review_id).first()
+    )
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+
+    config = get_config()
+    prop_cfg = None
+    if review.property_id:
+        prop = db.query(Property).filter_by(id=review.property_id).first()
+        if prop:
+            prop_cfg = next((p for p in config.properties if p.slug == prop.slug), None)
+
+    property_name = prop_cfg.display_name if prop_cfg else "our property"
+    host_name = prop_cfg.host_name if prop_cfg else "Your host"
+
+    system = (
+        f"You are {host_name}, the manager of {property_name}, a vacation rental. "
+        "Write a warm, professional, grateful response to the following guest review. "
+        "Keep it under 100 words. Output only the response body — no salutation or signature."
+    )
+
+    review_text = review.review_text or "(no review text provided)"
+    rating_line = f"Rating: {review.rating}/5 stars" if review.rating else ""
+    user_content = f"{rating_line}\nGuest review:\n{review_text}"
+
+    from app.query.ollama_client import get_ollama_client
+
+    try:
+        client = get_ollama_client()
+        response = await client.chat(
+            model=config.ollama_model,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user_content},
+            ],
+            options={"temperature": 0.7},
+        )
+        suggestion = response["message"]["content"].strip()
+    except Exception as exc:
+        log.error("ai_review_suggest_failed", error=str(exc))
+        raise HTTPException(status_code=503, detail=f"AI suggestion failed: {exc}")
+
+    return {"suggestion": suggestion}
 
 
 @router.post("/reviews/sync")
@@ -575,7 +775,9 @@ async def receive_webhook(
 
 @router.get("/webhook-events")
 def list_webhook_events(
-    status: Optional[str] = Query(None, description="'received', 'processed', or 'failed'"),
+    status: Optional[str] = Query(
+        None, description="'received', 'processed', or 'failed'"
+    ),
     event_type: Optional[str] = Query(None),
     limit: int = Query(50, le=200),
     db: Session = Depends(get_db),

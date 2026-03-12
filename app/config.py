@@ -125,6 +125,7 @@ class AppConfig(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         yaml_file="config/base.yaml",
+        extra="ignore",
     )
 
     # --- Secrets (from .env) ---
@@ -263,14 +264,13 @@ def load_all_properties(config_dir: Path) -> list[PropertyConfig]:
 
     yaml_files = sorted(config_dir.glob("*.yaml"))
     property_files = [
-        f for f in yaml_files
+        f
+        for f in yaml_files
         if f.name not in ("base.yaml", "config.example.yaml", "base.example.yaml")
     ]
 
     if not property_files:
-        errors.append(
-            f"{config_dir}: no property config files found (expected *.yaml)"
-        )
+        errors.append(f"{config_dir}: no property config files found (expected *.yaml)")
         raise SystemExit(
             "Config validation failed:\n" + "\n".join(f"  - {e}" for e in errors)
         )
@@ -349,7 +349,5 @@ def get_config() -> AppConfig:
         RuntimeError: If load_app_config() has not been called yet.
     """
     if _config is None:
-        raise RuntimeError(
-            "Config not loaded — call load_app_config() first"
-        )
+        raise RuntimeError("Config not loaded — call load_app_config() first")
     return _config

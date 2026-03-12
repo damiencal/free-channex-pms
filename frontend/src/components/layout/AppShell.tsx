@@ -5,26 +5,44 @@ import { Badge } from '@/components/ui/badge'
 import { Header } from './Header'
 import { HomeTab } from '@/components/home/HomeTab'
 import { CalendarTab } from '@/components/calendar/CalendarTab'
-import { ActionsTab } from '@/components/actions/ActionsTab'
-import { ReportsTab } from '@/components/reports/ReportsTab'
-import { QueryTab } from '@/components/query/QueryTab'
-import { FinanceTab } from '@/components/finance/FinanceTab'
+import { InboxTab } from '@/components/inbox/InboxTab'
+import { TasksTab } from '@/components/tasks/TasksTab'
+import { PriceTab } from '@/components/price/PriceTab'
+import { ReservationsTab } from '@/components/reservations/ReservationsTab'
+import { ReviewsTab } from '@/components/reviews/ReviewsTab'
+import { FrontDeskTab } from '@/components/frontdesk/FrontDeskTab'
+import { GuestsTab } from '@/components/guests/GuestsTab'
+import { InvoicesTab } from '@/components/invoices/InvoicesTab'
+import { RoomsTab } from '@/components/rooms/RoomsTab'
+import { RatesTab } from '@/components/rates/RatesTab'
+import { NightAuditTab } from '@/components/nightaudit/NightAuditTab'
+import { DashboardTab } from '@/components/dashboard/DashboardTab'
+import { PropertiesTab } from '@/components/properties/PropertiesTab'
+import { AutomationTab } from '@/components/automation/AutomationTab'
+import { BookingSiteTab } from '@/components/booking-site/BookingSiteTab'
+import { MetricsTab } from '@/components/metrics/MetricsTab'
+import { ConnectedAccountsTab } from '@/components/connected-accounts/ConnectedAccountsTab'
+import { SettingsTab } from '@/components/settings/SettingsTab'
+import { PricingTab } from '@/components/pricing/PricingTab'
+import { AnalyticsTab } from '@/components/analytics/AnalyticsTab'
+import { MarketTab } from '@/components/market/MarketTab'
+import { EstimatorTab } from '@/components/estimator/EstimatorTab'
+import { OptimizerTab } from '@/components/optimizer/OptimizerTab'
 import { apiFetch } from '@/api/client'
 import { usePropertyStore } from '@/store/usePropertyStore'
-import { useFinanceSummary } from '@/hooks/useFinanceSummary'
+import { useAuth } from '@/store/useAuth'
 
-interface ActionsResponse {
-  actions: unknown[]
-  total: number
-}
-
-interface HealthResponse {
-  status: string
-  ollama: string  // 'available' | 'unavailable'
-}
-
-type TabValue = 'home' | 'calendar' | 'reports' | 'actions' | 'finance' | 'query'
-const VALID_TABS: TabValue[] = ['home', 'calendar', 'reports', 'actions', 'finance', 'query']
+type TabValue =
+  | 'home' | 'inbox' | 'calendar' | 'price' | 'reservations' | 'tasks' | 'reviews'
+  | 'frontdesk' | 'guests' | 'invoices' | 'rooms' | 'rates' | 'nightaudit'
+  | 'properties' | 'automation' | 'bookingsite' | 'metrics' | 'accounts' | 'settings'
+  | 'pricing' | 'analytics' | 'market' | 'estimator' | 'optimizer'
+const VALID_TABS: TabValue[] = [
+  'home', 'inbox', 'calendar', 'price', 'reservations', 'tasks', 'reviews',
+  'frontdesk', 'guests', 'invoices', 'rooms', 'rates', 'nightaudit',
+  'properties', 'automation', 'bookingsite', 'metrics', 'accounts', 'settings',
+  'pricing', 'analytics', 'market', 'estimator', 'optimizer',
+]
 
 function isValidTab(value: string | null): value is TabValue {
   return VALID_TABS.includes(value as TabValue)
@@ -41,34 +59,19 @@ export function AppShell() {
 
   const { selectedPropertyId } = usePropertyStore()
 
-  // Poll /health every 30 seconds to gate the Query tab on Ollama availability
-  const { data: healthData } = useQuery<HealthResponse>({
-    queryKey: ['health'],
+  // Inbox unread badge
+  const { data: inboxThreads } = useQuery<{ unread_count: number }[]>({
+    queryKey: ['inbox', 'threads', selectedPropertyId],
     queryFn: async () => {
-      const res = await fetch('/health')
-      if (!res.ok) return { status: 'degraded', ollama: 'unavailable' }
-      return res.json() as Promise<HealthResponse>
+      const qs = selectedPropertyId != null ? `?property_id=${selectedPropertyId}` : ''
+      return apiFetch<{ unread_count: number }[]>(`/inbox/threads${qs}`)
     },
-    refetchInterval: 30_000,
+    staleTime: 60_000,
+    refetchInterval: 60_000,
   })
-  const ollamaAvailable = healthData?.ollama === 'available'
+  const inboxUnread = (inboxThreads ?? []).reduce((sum, t) => sum + (t.unread_count ?? 0), 0)
 
-  // Fetch actions total count for the badge on the Actions tab
-  const { data: actionsData } = useQuery<ActionsResponse>({
-    queryKey: ['dashboard', 'actions', selectedPropertyId],
-    queryFn: () => {
-      const params = selectedPropertyId !== null ? `?property_id=${selectedPropertyId}` : ''
-      return apiFetch<ActionsResponse>(`/dashboard/actions${params}`)
-    },
-    staleTime: 5 * 60 * 1000,
-  })
-
-  const pendingCount = actionsData?.total ?? 0
-
-  // Finance badge: sum of uncategorized transactions + unreconciled bookings
-  const { data: financeSummary } = useFinanceSummary()
-  const financeBadgeCount = (financeSummary?.uncategorized_count ?? 0)
-    + (financeSummary?.unreconciled_count ?? 0)
+  const { logout, user } = useAuth()
 
   function handleTabChange(value: string) {
     setSearchParams(value === 'home' ? {} : { tab: value })
@@ -82,62 +85,153 @@ export function AppShell() {
 
       <main className="flex-1 p-4 md:p-6">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
-          {/* Scrollable on mobile so all 4 tabs are reachable without wrapping */}
+          {/* Scrollable on mobile so all tabs are reachable without wrapping */}
           <div className="mb-6 overflow-x-auto print:hidden">
             <TabsList>
-              <TabsTrigger value="home">Home</TabsTrigger>
+              <TabsTrigger value="home">Dashboard</TabsTrigger>
+              <TabsTrigger value="inbox" className="gap-2">
+                Inbox
+                {inboxUnread > 0 && (
+                  <Badge variant="destructive" className="h-5 min-w-5 text-xs px-1.5">
+                    {inboxUnread}
+                  </Badge>
+                )}
+              </TabsTrigger>
               <TabsTrigger value="calendar">Calendar</TabsTrigger>
-              <TabsTrigger value="reports">Reports</TabsTrigger>
-              <TabsTrigger value="actions" className="gap-2">
-                Actions
-                {pendingCount > 0 && (
-                  <Badge variant="destructive" className="h-5 min-w-5 text-xs px-1.5">
-                    {pendingCount}
-                  </Badge>
-                )}
-              </TabsTrigger>
-              <TabsTrigger value="finance" className="gap-2">
-                Finance
-                {financeBadgeCount > 0 && (
-                  <Badge variant="destructive" className="h-5 min-w-5 text-xs px-1.5">
-                    {financeBadgeCount}
-                  </Badge>
-                )}
-              </TabsTrigger>
-              <TabsTrigger
-                value="query"
-                disabled={!ollamaAvailable}
-                className={!ollamaAvailable ? 'opacity-50' : ''}
-              >
-                Query
-              </TabsTrigger>
+              <TabsTrigger value="price">Price</TabsTrigger>
+              <TabsTrigger value="reservations">Reservations</TabsTrigger>
+              <TabsTrigger value="tasks">Tasks</TabsTrigger>
+              <TabsTrigger value="reviews">Reviews</TabsTrigger>
+              <TabsTrigger value="frontdesk">Front Desk</TabsTrigger>
+              <TabsTrigger value="guests">Guests</TabsTrigger>
+              <TabsTrigger value="invoices">Invoices</TabsTrigger>
+              <TabsTrigger value="rooms">Rooms</TabsTrigger>
+              <TabsTrigger value="rates">Rates</TabsTrigger>
+              <TabsTrigger value="nightaudit">Night Audit</TabsTrigger>
+              <TabsTrigger value="properties">Properties</TabsTrigger>
+              <TabsTrigger value="automation">Automation</TabsTrigger>
+              <TabsTrigger value="bookingsite">Booking Site</TabsTrigger>
+              <TabsTrigger value="metrics">Metrics</TabsTrigger>
+              <TabsTrigger value="accounts">Accounts</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+              <TabsTrigger value="pricing">Dynamic Pricing</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="market">Market</TabsTrigger>
+              <TabsTrigger value="estimator">Estimator</TabsTrigger>
+              <TabsTrigger value="optimizer">Optimizer</TabsTrigger>
             </TabsList>
           </div>
 
           <TabsContent value="home">
-            <HomeTab />
+            <div className="space-y-8">
+              <DashboardTab />
+              <HomeTab />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="inbox">
+            <InboxTab />
           </TabsContent>
 
           <TabsContent value="calendar">
             <CalendarTab />
           </TabsContent>
 
-          <TabsContent value="reports">
-            <ReportsTab />
+          <TabsContent value="price">
+            <PriceTab />
           </TabsContent>
 
-          <TabsContent value="actions">
-            <ActionsTab />
+          <TabsContent value="reservations">
+            <ReservationsTab />
           </TabsContent>
 
-          <TabsContent value="finance">
-            <FinanceTab />
+          <TabsContent value="tasks">
+            <TasksTab />
           </TabsContent>
 
-          <TabsContent value="query">
-            <QueryTab disabled={!ollamaAvailable} />
+          <TabsContent value="reviews">
+            <ReviewsTab />
+          </TabsContent>
+
+          <TabsContent value="frontdesk">
+            <FrontDeskTab />
+          </TabsContent>
+
+          <TabsContent value="guests">
+            <GuestsTab />
+          </TabsContent>
+
+          <TabsContent value="invoices">
+            <InvoicesTab />
+          </TabsContent>
+
+          <TabsContent value="rooms">
+            <RoomsTab />
+          </TabsContent>
+
+          <TabsContent value="rates">
+            <RatesTab />
+          </TabsContent>
+
+          <TabsContent value="nightaudit">
+            <NightAuditTab />
+          </TabsContent>
+
+          <TabsContent value="properties">
+            <PropertiesTab />
+          </TabsContent>
+
+          <TabsContent value="automation">
+            <AutomationTab />
+          </TabsContent>
+
+          <TabsContent value="bookingsite">
+            <BookingSiteTab />
+          </TabsContent>
+
+          <TabsContent value="metrics">
+            <MetricsTab />
+          </TabsContent>
+
+          <TabsContent value="accounts">
+            <ConnectedAccountsTab />
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <SettingsTab />
+          </TabsContent>
+
+          <TabsContent value="pricing">
+            <PricingTab />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <AnalyticsTab />
+          </TabsContent>
+
+          <TabsContent value="market">
+            <MarketTab />
+          </TabsContent>
+
+          <TabsContent value="estimator">
+            <EstimatorTab />
+          </TabsContent>
+
+          <TabsContent value="optimizer">
+            <OptimizerTab />
           </TabsContent>
         </Tabs>
+
+        {user && (
+          <div className="fixed bottom-4 right-4 print:hidden">
+            <button
+              onClick={logout}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Sign out ({user.email})
+            </button>
+          </div>
+        )}
       </main>
     </div>
   )

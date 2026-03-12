@@ -1,6 +1,7 @@
 /**
  * Typed fetch wrapper for backend API calls.
  * Prepends /api to all paths, sets JSON headers, throws on error responses.
+ * Automatically includes the JWT Bearer token if one is stored.
  */
 export async function apiFetch<T>(
   path: string,
@@ -8,10 +9,24 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const url = `/api${path}`
 
+  // Read token from Zustand-persisted storage
+  let authHeader: Record<string, string> = {}
+  try {
+    const raw = localStorage.getItem('roost-auth')
+    if (raw) {
+      const stored = JSON.parse(raw) as { state?: { token?: string } }
+      const token = stored?.state?.token
+      if (token) authHeader = { Authorization: `Bearer ${token}` }
+    }
+  } catch {
+    // ignore storage errors
+  }
+
   const response = await fetch(url, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...authHeader,
       ...options.headers,
     },
   })
@@ -29,8 +44,11 @@ export async function apiFetch<T>(
     } catch {
       // Body was not JSON — use HTTP status text
     }
-    throw new Error(message)
+    const err = new Error(message) as Error & { status: number }
+    err.status = response.status
+    throw err
   }
 
+  if (response.status === 204) return undefined as T
   return response.json() as Promise<T>
 }

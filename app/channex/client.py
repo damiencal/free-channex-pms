@@ -129,7 +129,9 @@ class ChannexClient:
         if status == 404:
             raise ChannexNotFoundError(message, status_code=status, response_body=body)
         if status == 422:
-            raise ChannexValidationError(message, status_code=status, response_body=body)
+            raise ChannexValidationError(
+                message, status_code=status, response_body=body
+            )
         if status == 429:
             raise ChannexRateLimitError(message, status_code=status, response_body=body)
         if status >= 500:
@@ -213,12 +215,15 @@ class ChannexClient:
 
         Channex uses page-number pagination::
 
-            ?pagination[per_page]=25&pagination[page]=1
+            ?pagination[limit]=25&pagination[page]=1
+
+        The response ``meta`` contains ``total`` (total item count) and ``limit``
+        (items per page), used to compute whether another page exists.
 
         Returns a flat list of all items across all pages.
         """
         base_params: dict[str, Any] = dict(params or {})
-        base_params["pagination[per_page]"] = per_page
+        base_params["pagination[limit]"] = per_page
         items: list[Any] = []
         page = 1
 
@@ -239,10 +244,24 @@ class ChannexClient:
             elif page_items is not None:
                 items.append(page_items)
 
-            # Determine if there are more pages
+            # Channex returns meta.total (total items) and meta.limit (page size).
+            # Fall back to the legacy meta.pagination.total_pages key as well.
+            total_items = meta.get("total")
+            page_limit = meta.get("limit", per_page)
             pagination = meta.get("pagination", {})
-            total_pages = pagination.get("total_pages") or pagination.get("pages")
-            if total_pages is None or page >= int(total_pages):
+            legacy_pages = pagination.get("total_pages") or pagination.get("pages")
+
+            if legacy_pages is not None:
+                if page >= int(legacy_pages):
+                    break
+            elif total_items is not None and page_limit:
+                import math
+
+                total_pages = math.ceil(int(total_items) / int(page_limit))
+                if page >= total_pages:
+                    break
+            else:
+                # No pagination info — assume single page
                 break
             page += 1
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { type BankTransactionResponse, type TransactionFilters } from '@/api/finance'
 import { useTransactions } from '@/hooks/useTransactions'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -18,18 +18,22 @@ export function TransactionsTab() {
   })
   const [selected, setSelected] = useState<Set<number>>(new Set())
   const [allTransactions, setAllTransactions] = useState<BankTransactionResponse[]>([])
+  const [prevData, setPrevData] = useState<BankTransactionResponse[] | undefined>(undefined)
 
   const { data, isLoading, isError, refetch } = useTransactions(filters)
 
-  // Accumulate pages: reset on fresh query (offset 0), append on load-more
-  useEffect(() => {
-    if (!data) return
-    if (filters.offset === 0) {
-      setAllTransactions(data)
-    } else {
-      setAllTransactions((prev) => [...prev, ...data])
+  // Accumulate pages: reset on fresh query (offset 0), append on load-more.
+  // Adjusted during rendering (not in an effect) to avoid cascading renders.
+  if (data !== prevData) {
+    setPrevData(data)
+    if (data !== undefined) {
+      if (filters.offset === 0) {
+        setAllTransactions(data)
+      } else {
+        setAllTransactions((prev) => [...prev, ...data])
+      }
     }
-  }, [data, filters.offset])
+  }
 
   // --------------------------------------------------------------------------
   // Filter handler
@@ -51,7 +55,7 @@ export function TransactionsTab() {
   function toggleRow(id: number) {
     setSelected((prev) => {
       const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
+      if (next.has(id)) { next.delete(id) } else { next.add(id) }
       return next
     })
   }

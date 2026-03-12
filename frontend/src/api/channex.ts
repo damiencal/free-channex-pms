@@ -72,6 +72,8 @@ export interface CalendarData {
   availability: Record<string, unknown>
   rate_plans: unknown[]
   room_types: unknown[]
+  /** Per-date rates keyed by rate_plan_id → date → amount string */
+  rates: Record<string, Record<string, string | null>>
 }
 
 export interface AvailabilityUpdateItem {
@@ -242,5 +244,34 @@ export function registerChannexWebhook(callbackUrl: string): Promise<Record<stri
   return apiFetch<Record<string, unknown>>('/channex/webhooks/register', {
     method: 'POST',
     body: JSON.stringify({ callback_url: callbackUrl }),
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Local property mapping
+// ---------------------------------------------------------------------------
+
+export interface LocalChannexProperty {
+  id: number
+  channex_property_id: string
+  channex_property_name: string
+  channex_group_id: string | null
+  property_id: number | null
+  property_slug: string | null
+  property_display_name: string | null
+  synced_at: string | null
+}
+
+export function fetchLocalChannexProperties(): Promise<LocalChannexProperty[]> {
+  return apiFetch<LocalChannexProperty[]>('/channex/properties/local')
+}
+
+export function linkChannexProperty(
+  channexPropertyId: string,
+  propertyId: number | null,
+): Promise<LocalChannexProperty> {
+  return apiFetch<LocalChannexProperty>(`/channex/properties/${channexPropertyId}/link`, {
+    method: 'PATCH',
+    body: JSON.stringify({ property_id: propertyId }),
   })
 }

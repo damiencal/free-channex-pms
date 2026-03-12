@@ -14,26 +14,50 @@ Period parameters (all endpoints except balance-sheet):
 """
 
 from datetime import date
+from decimal import Decimal
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.accounting.reports import generate_balance_sheet, generate_income_statement, generate_pl, resolve_period
+from app.accounting.reports import (
+    generate_balance_sheet,
+    generate_income_statement,
+    generate_pl,
+    resolve_period,
+)
 from app.db import get_db
+from app.models.booking import Booking
+from app.models.expense import Expense
 
 router = APIRouter(prefix="/api/reports", tags=["reports"])
 
 
 @router.get("/pl")
 def get_pl(
-    start_date: Optional[date] = Query(default=None, description="Explicit period start date (requires end_date)"),
-    end_date: Optional[date] = Query(default=None, description="Explicit period end date (requires start_date)"),
-    month: Optional[int] = Query(default=None, ge=1, le=12, description="Calendar month (1-12), requires year"),
-    quarter: Optional[str] = Query(default=None, description="Quarter: Q1, Q2, Q3, or Q4 (requires year)"),
-    year: Optional[int] = Query(default=None, ge=1900, le=2100, description="Calendar year (e.g., 2026)"),
-    ytd: bool = Query(default=False, description="Year-to-date: Jan 1 of current year through today"),
-    breakdown: str = Query(default="combined", description="'combined' (default) or 'property' for per-property columns"),
+    start_date: Optional[date] = Query(
+        default=None, description="Explicit period start date (requires end_date)"
+    ),
+    end_date: Optional[date] = Query(
+        default=None, description="Explicit period end date (requires start_date)"
+    ),
+    month: Optional[int] = Query(
+        default=None, ge=1, le=12, description="Calendar month (1-12), requires year"
+    ),
+    quarter: Optional[str] = Query(
+        default=None, description="Quarter: Q1, Q2, Q3, or Q4 (requires year)"
+    ),
+    year: Optional[int] = Query(
+        default=None, ge=1900, le=2100, description="Calendar year (e.g., 2026)"
+    ),
+    ytd: bool = Query(
+        default=False, description="Year-to-date: Jan 1 of current year through today"
+    ),
+    breakdown: str = Query(
+        default="combined",
+        description="'combined' (default) or 'property' for per-property columns",
+    ),
     db: Session = Depends(get_db),
 ) -> dict:
     """Generate a Profit & Loss report for a given period.
@@ -89,7 +113,9 @@ def get_pl(
 
 @router.get("/balance-sheet")
 def get_balance_sheet(
-    as_of: date = Query(..., description="Period-end date for the balance sheet snapshot"),
+    as_of: date = Query(
+        ..., description="Period-end date for the balance sheet snapshot"
+    ),
     db: Session = Depends(get_db),
 ) -> dict:
     """Generate a balance sheet snapshot as of a given date.
@@ -114,13 +140,28 @@ def get_balance_sheet(
 
 @router.get("/income-statement")
 def get_income_statement(
-    start_date: Optional[date] = Query(default=None, description="Explicit period start date (requires end_date)"),
-    end_date: Optional[date] = Query(default=None, description="Explicit period end date (requires start_date)"),
-    month: Optional[int] = Query(default=None, ge=1, le=12, description="Calendar month (1-12), requires year"),
-    quarter: Optional[str] = Query(default=None, description="Quarter: Q1, Q2, Q3, or Q4 (requires year)"),
-    year: Optional[int] = Query(default=None, ge=1900, le=2100, description="Calendar year (e.g., 2026)"),
-    ytd: bool = Query(default=False, description="Year-to-date: Jan 1 of current year through today"),
-    breakdown: str = Query(default="totals", description="'totals' (default) or 'monthly' for month-by-month drill-down"),
+    start_date: Optional[date] = Query(
+        default=None, description="Explicit period start date (requires end_date)"
+    ),
+    end_date: Optional[date] = Query(
+        default=None, description="Explicit period end date (requires start_date)"
+    ),
+    month: Optional[int] = Query(
+        default=None, ge=1, le=12, description="Calendar month (1-12), requires year"
+    ),
+    quarter: Optional[str] = Query(
+        default=None, description="Quarter: Q1, Q2, Q3, or Q4 (requires year)"
+    ),
+    year: Optional[int] = Query(
+        default=None, ge=1900, le=2100, description="Calendar year (e.g., 2026)"
+    ),
+    ytd: bool = Query(
+        default=False, description="Year-to-date: Jan 1 of current year through today"
+    ),
+    breakdown: str = Query(
+        default="totals",
+        description="'totals' (default) or 'monthly' for month-by-month drill-down",
+    ),
     db: Session = Depends(get_db),
 ) -> dict:
     """Generate an income statement for a given period.
@@ -175,3 +216,144 @@ def get_income_statement(
         )
 
     return generate_income_statement(db, resolved_start, resolved_end, breakdown)
+
+
+@router.get("/occupancy")
+def get_occupancy(
+    year: int = Query(
+        ..., ge=2000, le=2100, description="Calendar year for occupancy analysis"
+    ),
+    property_id: Optional[int] = Query(
+        default=None, description="Limit to a specific property"
+    ),
+    db: Session = Depends(get_db),
+) -> dict:
+    """Generate a monthly occupancy rate report for a given year.
+
+    Occupancy rate = booked nights / available nights, aggregated by month.
+    Available nights = days in month (28–31). All non-inquiry, non-direct-inquiry
+    bookings are counted as occupied nights.
+
+    Args:
+        year: The calendar year to analyse.
+        property_id: Optional property filter.
+
+    Returns:
+        Dict with `year`, `property_id`, and `months` list of
+        ``{month, booked_nights, available_nights, occupancy_pct}`` dicts.
+    """
+    from calendar import monthrange
+
+    # Fetch all relevant bookings for the year
+    stmt = select(
+        Booking.check_in_date, Booking.check_out_date, Booking.property_id
+    ).where(
+        Booking.platform != "inquiry",
+    )
+    if property_id is not None:
+        stmt = stmt.where(Booking.property_id == property_id)
+    rows = db.execute(stmt).all()
+
+    # Accumulate booked nights per month
+    booked: dict[int, int] = {m: 0 for m in range(1, 13)}
+    for check_in, check_out, _ in rows:
+        # Iterate each night in the booking; only count nights in `year`
+        from datetime import timedelta
+
+        cur = check_in
+        while cur < check_out:
+            if cur.year == year:
+                booked[cur.month] += 1
+            cur += timedelta(days=1)
+
+    months = []
+    for m in range(1, 13):
+        _, days_in_month = monthrange(year, m)
+        booked_nights = booked[m]
+        pct = round(booked_nights / days_in_month * 100, 1) if days_in_month else 0
+        months.append(
+            {
+                "month": m,
+                "booked_nights": booked_nights,
+                "available_nights": days_in_month,
+                "occupancy_pct": pct,
+            }
+        )
+
+    total_booked = sum(b["booked_nights"] for b in months)
+    total_available = sum(b["available_nights"] for b in months)
+    overall_pct = (
+        round(total_booked / total_available * 100, 1) if total_available else 0
+    )
+
+    return {
+        "year": year,
+        "property_id": property_id,
+        "overall_occupancy_pct": overall_pct,
+        "months": months,
+    }
+
+
+@router.get("/schedule-e")
+def get_schedule_e(
+    year: int = Query(
+        ..., ge=2000, le=2100, description="Tax year for Schedule E preparation"
+    ),
+    property_id: Optional[int] = Query(
+        default=None, description="Limit to a specific property"
+    ),
+    db: Session = Depends(get_db),
+) -> dict:
+    """Generate Schedule E (Supplemental Income and Loss) summary data.
+
+    Schedule E is used by US taxpayers to report rental income and expenses.
+    Returns gross rents received, common expense categories, and net income.
+
+    Args:
+        year: The tax year.
+        property_id: Optional property filter.
+
+    Returns:
+        Dict with `year`, `property_id`, `gross_rents`, `expenses` (breakdown
+        by category), `total_expenses`, and `net_income`.  All monetary amounts
+        are strings with 2 decimal places.
+    """
+    from datetime import date as _date
+
+    period_start = _date(year, 1, 1)
+    period_end = _date(year, 12, 31)
+
+    # Gross rents = sum of net_amount for all non-inquiry bookings in the year
+    rent_stmt = select(func.coalesce(func.sum(Booking.net_amount), 0)).where(
+        Booking.check_in_date >= period_start,
+        Booking.check_in_date <= period_end,
+        Booking.platform != "inquiry",
+    )
+    if property_id is not None:
+        rent_stmt = rent_stmt.where(Booking.property_id == property_id)
+    gross_rents: Decimal = db.execute(rent_stmt).scalar_one() or Decimal("0")
+
+    # Expenses grouped by category
+    exp_stmt = select(Expense.category, func.sum(Expense.amount).label("total")).where(
+        Expense.expense_date >= period_start,
+        Expense.expense_date <= period_end,
+    )
+    if property_id is not None:
+        exp_stmt = exp_stmt.where(Expense.property_id == property_id)
+    exp_stmt = exp_stmt.group_by(Expense.category).order_by(Expense.category)
+    expense_rows = db.execute(exp_stmt).all()
+
+    expenses = [
+        {"category": row.category, "amount": str(row.total)} for row in expense_rows
+    ]
+    total_expenses = sum(Decimal(e["amount"]) for e in expenses)
+    net_income = gross_rents - total_expenses
+
+    return {
+        "year": year,
+        "property_id": property_id,
+        "gross_rents": str(gross_rents),
+        "expenses": expenses,
+        "total_expenses": str(total_expenses),
+        "net_income": str(net_income),
+    }

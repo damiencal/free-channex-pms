@@ -143,11 +143,15 @@ def sync_messages_to_db(
         body = str(msg.get("message") or msg.get("body") or msg.get("text") or "")
         guest_name = str(msg.get("guest_name") or msg.get("author_name") or "")
 
-        sent_at_raw = msg.get("inserted_at") or msg.get("sent_at") or msg.get("created_at")
+        sent_at_raw = (
+            msg.get("inserted_at") or msg.get("sent_at") or msg.get("created_at")
+        )
         sent_at: datetime | None = None
         if sent_at_raw:
             try:
-                sent_at = datetime.fromisoformat(str(sent_at_raw).replace("Z", "+00:00"))
+                sent_at = datetime.fromisoformat(
+                    str(sent_at_raw).replace("Z", "+00:00")
+                )
             except ValueError:
                 pass
 
@@ -199,6 +203,128 @@ async def sync_all_messages(
     client: ChannexClient,
     since: datetime | None = None,
 ) -> dict[str, int]:
-    """Pull all messages from Channex and sync to DB."""
-    messages = await list_messages(client, since=since)
-    return sync_messages_to_db(db, messages)
+    """Pull all messages from Channex and sync to DB.
+
+    Falls back to seeding booking-derived messages when the Channex messaging
+    API is unavailable (e.g. plan limitations — /messages returns 404/403).
+    """
+    try:
+        messages = await list_messages(client, since=since)
+        if messages:
+            return sync_messages_to_db(db, messages)
+    except Exception as exc:
+        log.warning(
+            "channex_messages_api_unavailable",
+            error=str(exc),
+            hint="Falling back to booking-derived inbox messages",
+        )
+
+    # Fallback: seed inbox threads from bookings data
+    return await _seed_messages_from_bookings(db, client)
+
+
+async def _seed_messages_from_bookings(
+    db: Session,
+    client: ChannexClient,
+) -> dict[str, int]:
+    """Create one inbox thread per Channex booking as a fallback when the
+    messaging API endpoint is not available for the account."""
+    from app.models.booking import Booking
+
+    try:
+        all_bookings: list[dict] = []
+        page = 1
+        import math
+
+        while True:
+            r = await client.get(
+                "/bookings", params={"pagination[limit]": 50, "pagination[page]": page}
+            )
+            data = r.get("data", [])
+            meta = r.get("meta", {})
+            all_bookings.extend(data)
+            total = meta.get("total", 0)
+            limit = meta.get("limit", 50)
+            total_pages = math.ceil(total / limit) if limit else 1
+            if page >= total_pages:
+                break
+            page += 1
+    except Exception as exc:
+        log.error("channex_booking_list_failed", error=str(exc))
+        return {"upserted": 0, "skipped": 0}
+
+    from sqlalchemy import text
+
+    upserted = 0
+    for b in all_bookings:
+        attrs = b.get("attributes", b)
+        bid = str(b.get("id") or attrs.get("booking_id") or attrs.get("id") or "")
+        if not bid:
+            continue
+
+        cust = attrs.get("customer") or {}
+        first_name = str(cust.get("name") or "")
+        last_name = str(cust.get("surname") or "")
+        guest_name = f"{first_name} {last_name}".strip() or "Guest"
+        notes_text = str(attrs.get("notes") or "")
+        ota = str(attrs.get("ota_name") or "Channel")
+        reservation_code = str(attrs.get("ota_reservation_code") or "")
+        arrival = str(attrs.get("arrival_date") or "")
+        departure = str(attrs.get("departure_date") or "")
+        status = str(attrs.get("status") or "")
+
+        body = f"New {status} booking via {ota} (#{reservation_code})\n"
+        body += f"Check-in: {arrival}, Check-out: {departure}\n"
+        if notes_text.strip():
+            body += f"Notes: {notes_text.strip()[:300]}"
+
+        inserted_at_raw = str(attrs.get("inserted_at") or "")
+        try:
+            sent_at: datetime = (
+                datetime.fromisoformat(inserted_at_raw.replace("Z", "+00:00"))
+                if inserted_at_raw
+                else datetime.now(timezone)
+            )
+        except Exception:
+            sent_at = datetime.now(timezone.utc)
+
+        # Resolve local booking and property IDs
+        local_booking = db.execute(
+            text(
+                "SELECT id, property_id FROM bookings WHERE platform_booking_id = :bid"
+            ),
+            {"bid": bid},
+        ).fetchone()
+        local_booking_id: int | None = local_booking[0] if local_booking else None
+        property_id: int | None = local_booking[1] if local_booking else None
+
+        try:
+            db.execute(
+                text("""
+                    INSERT INTO channex_messages
+                        (channex_message_id, channex_booking_id, booking_id, property_id,
+                         guest_name, direction, body, sent_at)
+                    VALUES (:msg_id, :cbid, :bid, :pid, :gname, 'inbound', :body, :sent_at)
+                    ON CONFLICT (channex_message_id) DO UPDATE SET
+                        guest_name = EXCLUDED.guest_name,
+                        body = EXCLUDED.body,
+                        booking_id = EXCLUDED.booking_id,
+                        property_id = EXCLUDED.property_id
+                """),
+                {
+                    "msg_id": f"booking_{bid}",
+                    "cbid": bid,
+                    "bid": local_booking_id,
+                    "pid": property_id,
+                    "gname": guest_name,
+                    "body": body.strip(),
+                    "sent_at": sent_at,
+                },
+            )
+            upserted += 1
+        except Exception as exc:
+            log.warning("channex_message_seed_failed", booking_id=bid, error=str(exc))
+
+    db.commit()
+    log.info("channex_messages_seeded_from_bookings", upserted=upserted)
+    return {"upserted": upserted, "skipped": 0}

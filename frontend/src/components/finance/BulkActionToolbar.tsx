@@ -15,7 +15,7 @@ import {
   EXPENSE_CATEGORIES,
   NON_EXPENSE_CATEGORIES,
   formatCategoryName,
-} from './CategorySelect'
+} from './categoryConstants'
 
 const ATTRIBUTION_OPTIONS = ['jay', 'minnie', 'shared'] as const
 

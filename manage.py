@@ -58,7 +58,7 @@ def setup():
 
     # 1. Property display name
     display_name = questionary.text(
-        "Property display name (e.g., \"Jay's Cabin\"):"
+        'Property display name (e.g., "Jay\'s Cabin"):'
     ).ask()
     if not display_name:
         typer.echo("Aborted.")
@@ -78,7 +78,9 @@ def setup():
 
     slug = slugify(slug)  # Ensure valid slug format (lowercase, hyphens only)
     if slug in existing_slugs:
-        typer.echo(f"Error: slug '{slug}' already exists in config/. Choose a different name.")
+        typer.echo(
+            f"Error: slug '{slug}' already exists in config/. Choose a different name."
+        )
         raise typer.Exit(1)
 
     # 3. Property details
@@ -117,7 +119,9 @@ def setup():
 
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     config_path = CONFIG_DIR / f"{slug}.yaml"
-    config_path.write_text(yaml.dump(config_data, default_flow_style=False, sort_keys=False))
+    config_path.write_text(
+        yaml.dump(config_data, default_flow_style=False, sort_keys=False)
+    )
 
     typer.echo()
     typer.echo(f"Config written: {config_path}")
@@ -138,6 +142,56 @@ def list_properties():
     typer.echo(f"Configured properties ({len(existing_slugs)}):")
     for slug in sorted(existing_slugs):
         typer.echo(f"  - {slug}")
+
+
+@cli.command()
+def create_user(
+    email: str = typer.Option(..., prompt=True, help="User email address"),
+    password: str = typer.Option(
+        ..., prompt=True, hide_input=True, confirmation_prompt=True, help="Password"
+    ),
+    full_name: str = typer.Option(
+        "", prompt="Full name (optional, press Enter to skip)", help="Display name"
+    ),
+    role: str = typer.Option(
+        "admin",
+        prompt="Role (admin/manager/housekeeper/owner/accountant)",
+        help="User role",
+    ),
+) -> None:
+    """Create a new user account."""
+    import bcrypt as _bcrypt_lib
+    from app.db import SessionLocal
+    from app.models.user import User
+    from sqlalchemy import select
+
+    valid_roles = {"admin", "manager", "housekeeper", "owner", "accountant"}
+    if role not in valid_roles:
+        typer.echo(
+            f"Invalid role '{role}'. Must be one of: {', '.join(sorted(valid_roles))}"
+        )
+        raise typer.Exit(code=1)
+
+    hashed = _bcrypt_lib.hashpw(password.encode(), _bcrypt_lib.gensalt()).decode()
+
+    with SessionLocal() as db:
+        existing = db.execute(
+            select(User).where(User.email == email)
+        ).scalar_one_or_none()
+        if existing:
+            typer.echo(f"User with email '{email}' already exists.")
+            raise typer.Exit(code=1)
+        user = User(
+            email=email,
+            hashed_password=hashed,
+            full_name=full_name or None,
+            role=role,
+            is_active=True,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        typer.echo(f"✓ Created user: {email} (role={role}, id={user.id})")
 
 
 if __name__ == "__main__":
